@@ -1,4 +1,2 @@
-src/RejfpankVisuals.sdf
-src/RejfpankVisuals.sln
-src/RejfpankVisuals.vcxproj
-src/RejfpankVisuals.vcxproj.filters
+src/visualstudio/
+*.exe
