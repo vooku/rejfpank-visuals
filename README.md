@@ -13,10 +13,6 @@ The rest of the readme is mostly for myself.
 		- GLFW ()
 		- SFML (Simple and Fast Multimedia Library)
 		- Allegro
-	- midi 
-		- [RtMidi](https://github.com/thestk/rtmidi)
-		- Juce
-		- SDL
 
 ## Ideas
 - use cmake to create makefile
