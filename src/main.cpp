@@ -11,77 +11,74 @@
  * @date 2016
  */
 
+#include <windows.h>
+//#define GLFW_INCLUDE_GLU // only if I actually need GLU (i probably won't)
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <vector>
-#include <cstdlib>
-#include "RtMidi.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
+//using namespace Windows.Devices.Midi;
+ 
 
-void mycallback (double deltatime, std::vector <unsigned char> *message, void */*userData*/) {
-	unsigned int nBytes = message->size();
-	for (auto it : *message) cout << (int) it << "\t";
-	if (nBytes > 0) cout << "\ttimestamp = " << deltatime << endl;
+static void error_callback(int error, const char* description) {
+	fputs(description, stderr);
 }
 
-// This function should be embedded in a try/catch block in case of
-// an exception.  It offers the user a choice of MIDI ports to open.
-// It returns false if there are no ports available.
-bool chooseMidiPort (RtMidiIn *rtmidi) {
-	unsigned int port;
-	unsigned int nPorts = rtmidi->getPortCount();
-	if (nPorts == 0) {
-		cout << "No input ports available!" << endl;
-		return false;
-	}
-
-	if (nPorts == 1) cout << "\nOpening " << rtmidi->getPortName() << endl;
-	else {
-		cout << "\tMIDI iput ports\n\tnumber\tname" << endl;
-		for (unsigned int i=0; i<nPorts; i++) {
-			cout << "\t" << i << "\t" << rtmidi->getPortName (i) << endl;
-		}
-
-		do {
-			cout << "\nChoose a port number: ";
-			cin >> port;
-		} while (port >= nPorts);
-		string keyHit;
-		getline (cin, keyHit);  // used to clear out stdin
-	}
-
-	rtmidi->openPort (port);
-	return true;
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 int main (void) {
-	RtMidiIn *midiin = 0;
-  
-	try {
-		// RtMidiIn constructor
-		midiin = new RtMidiIn();
+	cout << midiInGetNumDevs () << endl;
+	//system ("PAUSE");
+	
+	GLFWwindow* window;
+	glfwSetErrorCallback (error_callback);
 
-		// Call function to select port.
-		if (chooseMidiPort (midiin) == false) {
-			delete midiin;
-			return 1;
-		}
+	if (!glfwInit()) return 1;
 
-		// Set our callback function.  This should be done immediately after
-		// opening the port to avoid having incoming messages written to the
-		// queue instead of sent to the callback function.
-		midiin->setCallback (&mycallback);
-
-		// Don't ignore sysex, timing, or active sensing messages.
-		midiin->ignoreTypes (false, false, false);
-
-		cout << "\nReading MIDI input ... press <enter> to quit.\n";
-		char input;
-		cin.get (input);
-
-	} catch (RtMidiError &error) {
-		error.printMessage ();
+	window = glfwCreateWindow (640, 480, "Simple example", NULL, NULL);
+	if (!window) {
+		glfwTerminate();
+		return 1;
 	}
+
+	glfwMakeContextCurrent (window);
+	glfwSwapInterval (1);
+	glfwSetKeyCallback (window, key_callback);
+	
+	while (!glfwWindowShouldClose(window)) {
+		float ratio;
+		int width, height;
+
+		glfwGetFramebufferSize (window, &width, &height);
+		ratio = width / (float) height;
+		glViewport (0, 0, width, height);
+		glClear (GL_COLOR_BUFFER_BIT);
+		glMatrixMode (GL_PROJECTION);
+		glLoadIdentity ();
+		glOrtho (-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+		glMatrixMode (GL_MODELVIEW);
+		glLoadIdentity ();
+		glRotatef ((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
+		glBegin (GL_TRIANGLES);
+		glColor3f(1.f, 0.f, 0.f);
+		glVertex3f(-0.6f, -0.4f, 0.f);
+		glColor3f(0.f, 1.f, 0.f);
+		glVertex3f(0.6f, -0.4f, 0.f);
+		glColor3f(0.f, 0.f, 1.f);
+		glVertex3f(0.f, 0.6f, 0.f);
+		glEnd();
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwDestroyWindow (window);
+	glfwTerminate ();
 
   return 0;
 }

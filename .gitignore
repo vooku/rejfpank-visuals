@@ -1,4 +1,3 @@
-src/visualstudio/
+src/visualstudio2015/
 *.exe
 bin/
-libs/
