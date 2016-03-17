@@ -11,33 +11,43 @@
  * @date 2016
  */
 
-#include <windows.h>
+#include "TMIDIControl.h"
+
 //#define GLFW_INCLUDE_GLU // only if I actually need GLU (i probably won't)
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 
 using namespace std;
-//using namespace Windows.Devices.Midi;
  
 
-static void error_callback(int error, const char* description) {
+static void errorCallback(int error, const char* description) {
 	fputs(description, stderr);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 int main (void) {
-	cout << midiInGetNumDevs () << endl;
-	//system ("PAUSE");
+	if (!tMIDIControl.listPorts()) {
+		getchar();
+		return -1;
+	}
 	
+	tMIDIControl.selectPort();
+	tMIDIControl.openPort();
+	
+
+
+
+	// ----------------------------------------------------- glfw stuff
 	GLFWwindow* window;
-	glfwSetErrorCallback (error_callback);
+	glfwSetErrorCallback (errorCallback);
 
 	if (!glfwInit()) return 1;
 
@@ -49,8 +59,10 @@ int main (void) {
 
 	glfwMakeContextCurrent (window);
 	glfwSwapInterval (1);
-	glfwSetKeyCallback (window, key_callback);
+	glfwSetKeyCallback (window, keyCallback);
 	
+
+	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		float ratio;
 		int width, height;
@@ -80,5 +92,5 @@ int main (void) {
 	glfwDestroyWindow (window);
 	glfwTerminate ();
 
-  return 0;
+	return 0;
 }
