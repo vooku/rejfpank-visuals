@@ -65,8 +65,50 @@ void CMIDIControl::selectPort(void) {
 	selectedPort--; // the ports display as starting from 1 instead of 0 
 }
 
+void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+	midiStatus = (unsigned int)((dwParam1 & 0x000000ff) >> 0);
+	midiParam1 = (unsigned int)((dwParam1 & 0x0000ff00) >> 8);
+	midiParam2 = (unsigned int)((dwParam1 & 0x00ff0000) >> 16);
+}
+
 void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
-	cout << "ahoj!" << endl;
+	unsigned int midiStatus;
+	unsigned int midiParam1;
+	unsigned int midiParam2;
+		
+	switch (wMsg) {
+		case MIM_OPEN:
+			cout << "MIDI input ready!" << endl;
+			break;
+		
+		case MIM_ERROR:
+			transMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
+			cerr << "Error: Invalid MIDI message received! Message: " << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+			break;
+		
+		case MIM_DATA:
+			transMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
+			cout << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+			break;
+		
+		case MIM_LONGDATA:
+			cerr << "Received SysEx message!" << endl;
+			break;
+		
+		case MIM_LONGERROR:
+			cerr << "Received an invalid SysEx message!" << endl;
+			break;
+
+		case MIM_CLOSE:
+			cout << "MIDI input finished!" << endl;
+			break;
+
+		//case MIM_MOREDATA
+			
+		default:
+			cerr << "Received unknown MIDI message!" << endl;
+	}
+
 }
 
 void CMIDIControl::manageMMError(const char * comment) {

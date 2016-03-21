@@ -3,7 +3,7 @@
 ## Introduction
 This is my undergraduate thesis at [FIT CTU](https://www.fit.cvut.cz/en). It visualises MIDI data from incoming stream sourced from samplers, drum machines, gameboys etc.
 
-I am a big fan of what I call 'glitch aesthetics,' commonly seen in the context of the chiptune or algorave scenes. It consists of bright colors, glitches and general randomness. Expect this kind of visual turn-on.
+I am a big fan of what I call _glitch aesthetics_, commonly seen in the context of the chiptune or algorave scenes. It consists of bright colors, glitches and general randomness. Expect this kind of visual turn-on.
 
 The rest of the readme is mostly for myself. 
 
@@ -22,14 +22,16 @@ The rest of the readme is mostly for myself.
 - Generate radndom points and draw tham as triangle strip 
 - change directional light on beat
 
+## Known Issues
+- When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.
+
 ## Useful links
 - [Procedural textures inspiration](http://www.upvector.com/?section=Tutorials&subsection=Intro%20to%20Procedural%20Textures)
 - [Windows MIDI reference](https://msdn.microsoft.com/en-us/library/windows/desktop/dd798495(v=vs.85).aspx)
 - [openFrameworks](http://openframeworks.cc/)
-- [mTroll](http://sourceforge.net/p/mtroll/mTroll/ci/default/tree/midi/) — windows midi example
 
 ## Notes
-- Midi yoke proved to be obsolete -- incompatible with 64bit SW such as Ableton Live 9. For testing purposes I am using [loopMIDI](www.tobias-erichsen.de/software/loopmidi.html) instead.
+- Midi yoke proved to be obsolete — incompatible with 64bit SW such as Ableton Live 9. For testing purposes I am using [loopMIDI](www.tobias-erichsen.de/software/loopmidi.html) instead.
 - OSC (Open Sound Control) is (might be) the new MIDI
 
 ## Similar stuff

@@ -2,6 +2,9 @@
 #define _REJFPANK_CMIDIControl
 #include <windows.h>
 
+void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
+void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
+
 class CMIDIControl {
 public:
 	CMIDIControl();
