@@ -11,7 +11,7 @@
  * @date 2016
  */
 
-#include "TMIDIControl.h"
+#include "CMIDIControl.hpp"
 
 //#define GLFW_INCLUDE_GLU // only if I actually need GLU (i probably won't)
 #include <GLFW/glfw3.h>
@@ -23,7 +23,6 @@
 #include <stdio.h>
 
 using namespace std;
- 
 
 static void errorCallback(int error, const char* description) {
 	fputs(description, stderr);
@@ -34,14 +33,12 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 int main (void) {
-	if (!tMIDIControl.listPorts()) {
+	if (!cMIDIControl.init()) {
 		getchar();
 		return -1;
 	}
 	
-	tMIDIControl.selectPort();
-	tMIDIControl.openPort();
-	
+
 
 
 

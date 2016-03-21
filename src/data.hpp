@@ -1,0 +1,6 @@
+#ifndef _REJFPANK_DATA_HPP
+#define _REJFPANK_DATA_HPP
+
+#define MIDI_LONG_BUFFER_SIZE 1024
+
+#endif // !_REJFPANK_DATA_HPP
