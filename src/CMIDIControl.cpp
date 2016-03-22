@@ -1,3 +1,8 @@
+/**
+ * @author	Vadim Petrov
+ * @date	2016
+ */
+
 #include "CMIDIControl.hpp"
 #include "data.hpp"
 
@@ -53,19 +58,21 @@ bool CMIDIControl::listPorts(void) {
 }
 
 void CMIDIControl::selectPort(void) {
-	string data;
-	do {
-		cout << "\nPlease select a MIDI port:" << endl;
-		getline(cin, data);
-		if (data.length() > 3) continue;
-		selectedPort = (unsigned int) atoi(data.c_str());
-	} while (selectedPort < 1 || selectedPort > nPorts);
-	
+	if (SELECT_MIDI_PORT_MAN) {
+		string data;
+		do {
+			cout << "\nPlease select a MIDI port:" << endl;
+			getline(cin, data);
+			if (data.length() > 3) continue;
+			selectedPort = (unsigned int)atoi(data.c_str());
+		} while (selectedPort < 1 || selectedPort > nPorts);
+	}
+	else selectedPort = 9;
 	cout << "Selected port " << selectedPort << "." << endl;
 	selectedPort--; // the ports display as starting from 1 instead of 0 
 }
 
-void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, const DWORD_PTR dwParam1, const DWORD_PTR dwParam2) {
 	midiStatus = (unsigned int)((dwParam1 & 0x000000ff) >> 0);
 	midiParam1 = (unsigned int)((dwParam1 & 0x0000ff00) >> 8);
 	midiParam2 = (unsigned int)((dwParam1 & 0x00ff0000) >> 16);
@@ -108,7 +115,6 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 		default:
 			cerr << "Received unknown MIDI message!" << endl;
 	}
-
 }
 
 void CMIDIControl::manageMMError(const char * comment) {

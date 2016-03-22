@@ -7,14 +7,24 @@
  * (at your option) any later version.
  */
 /**
- * @author Vadim Petrov
- * @date 2016
+ * @author	Vadim Petrov
+ * @date	2016
  */
 
-#include "CMIDIControl.hpp"
+#include "CMIDIControl.hpp" // has to be included before glfw!
 
-//#define GLFW_INCLUDE_GLU // only if I actually need GLU (i probably won't)
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/quaternion.hpp>
+//#include <glm/gtx/quaternion.hpp>
+//#include <glm/gtx/rotate_vector.hpp>
+
+#include "data.hpp"
+#include "CSkybox.hpp"
+#include "TControlState.hpp"
 
 #include <iostream>
 #include <vector>
@@ -24,70 +34,117 @@
 
 using namespace std;
 
+CSkybox * skybox;
+
+void redraw(GLFWwindow* window) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 Vmatrix = glm::lookAt(
+		CAMERA_INIT_POS,
+		CAMERA_INIT_POS + CAMERA_INIT_DIR,
+		CAMERA_INIT_UP);
+
+	glm::mat4 Pmatrix = glm::perspective(
+		CAMERA_VIEW_ANGLE,
+		controlState.winWidth / (float)controlState.winHeight,
+		CAMERA_VIEW_START,
+		CAMERA_VIEW_DIST);
+
+	skybox->draw(Pmatrix, Vmatrix);
+
+	glfwSwapBuffers(window);
+}
+
 static void errorCallback(int error, const char* description) {
-	fputs(description, stderr);
+	cerr << "Error " << error << ": " << description << endl;
 }
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
+static void winRefreshCallback(GLFWwindow* window) {
+	glfwGetFramebufferSize(window, &controlState.winWidth, &controlState.winHeight);
+	glViewport(0, 0, controlState.winWidth, controlState.winHeight);
+
+	redraw(window);
+}
+
+void callbacksInit(GLFWwindow * window) {
+	glfwSetKeyCallback(window, keyCallback);
+	glfwSetWindowRefreshCallback(window, winRefreshCallback);
+}
+
+void shadersInit(void) {
+	//TODO
+}
+
+void modelsInit(void) {
+	skybox = new CSkybox(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(100.0f));
+}
+
+void controlStateInit(void) {
+	controlState.winWidth = INIT_WIN_WIDTH;
+	controlState.winHeight = INIT_WIN_HEIGHT;
+}
+
+void rejfpankInit(GLFWwindow * window) {
+	controlStateInit();
+	shadersInit();
+	modelsInit();
+	callbacksInit(window);
+
+	glClearColor(0.3f, 0.0f, 0.1f, 1.0f);
+	glCullFace(GL_BACK);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
+	glViewport(0, 0, (GLsizei)INIT_WIN_WIDTH, (GLsizei)INIT_WIN_HEIGHT);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_FILL/GL_LINE
+
+	glfwSwapInterval(1);
+}
+
 int main (void) {
+	// MIDI init
 	if (!cMIDIControl.init()) {
 		getchar();
 		return -1;
 	}
-	
 
-
-
-
-	// ----------------------------------------------------- glfw stuff
-	GLFWwindow* window;
+	// GLFW init
+	GLFWwindow * window;
 	glfwSetErrorCallback (errorCallback);
 
 	if (!glfwInit()) return 1;
-
-	window = glfwCreateWindow (640, 480, "Simple example", NULL, NULL);
+	
+	window = glfwCreateWindow (INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		return 1;
 	}
-
 	glfwMakeContextCurrent (window);
-	glfwSwapInterval (1);
-	glfwSetKeyCallback (window, keyCallback);
 	
+	// GLEW init
+	GLenum err = glewInit();
+	if (GLEW_OK != err) {
+		cerr << "Error: " << glewGetErrorString(err) << endl;
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		return 2;
+	}
+	cout << "Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
+	// Leftover inits -- controlState, models, shaders, callbacks
+	rejfpankInit(window);
+	
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
-		float ratio;
-		int width, height;
-
-		glfwGetFramebufferSize (window, &width, &height);
-		ratio = width / (float) height;
-		glViewport (0, 0, width, height);
-		glClear (GL_COLOR_BUFFER_BIT);
-		glMatrixMode (GL_PROJECTION);
-		glLoadIdentity ();
-		glOrtho (-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		glMatrixMode (GL_MODELVIEW);
-		glLoadIdentity ();
-		glRotatef ((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-		glBegin (GL_TRIANGLES);
-		glColor3f(1.f, 0.f, 0.f);
-		glVertex3f(-0.6f, -0.4f, 0.f);
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(0.6f, -0.4f, 0.f);
-		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(0.f, 0.6f, 0.f);
-		glEnd();
-		glfwSwapBuffers(window);
+		redraw(window);
 		glfwPollEvents();
 	}
 
 	glfwDestroyWindow (window);
 	glfwTerminate ();
-
+	
 	return 0;
 }

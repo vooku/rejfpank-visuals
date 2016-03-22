@@ -28,6 +28,7 @@ The rest of the readme is mostly for myself.
 ## Useful links
 - [Procedural textures inspiration](http://www.upvector.com/?section=Tutorials&subsection=Intro%20to%20Procedural%20Textures)
 - [Windows MIDI reference](https://msdn.microsoft.com/en-us/library/windows/desktop/dd798495(v=vs.85).aspx)
+- [MIDI notes reference](http://www.midimountain.com/midi/midi_status.htm)
 - [openFrameworks](http://openframeworks.cc/)
 
 ## Notes
