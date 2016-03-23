@@ -26,6 +26,8 @@
 #include "CSkybox.hpp"
 #include "TControlState.hpp"
 
+#include "pgr/Shader.hpp"
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -76,7 +78,21 @@ void callbacksInit(GLFWwindow * window) {
 }
 
 void shadersInit(void) {
-	//TODO
+	vector <GLuint> shaders;
+	
+	// Init skybox shaders
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
+	skyboxShaderProgram.program = pgr::createProgram(shaders);
+
+	// Get uniform locations
+	skyboxShaderProgram.PVMmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMmatrix");
+	skyboxShaderProgram.VmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "Vmatrix");
+	skyboxShaderProgram.MmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "Mmatrix");
+	// Get input locations
+	skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
+
+	shaders.clear();
 }
 
 void modelsInit(void) {
