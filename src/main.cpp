@@ -87,8 +87,6 @@ void shadersInit(void) {
 
 	// Get uniform locations
 	skyboxShaderProgram.PVMmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMmatrix");
-	skyboxShaderProgram.VmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "Vmatrix");
-	skyboxShaderProgram.MmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "Mmatrix");
 	// Get input locations
 	skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
 
