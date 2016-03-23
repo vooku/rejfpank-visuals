@@ -7,8 +7,10 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 
 The rest of the readme is mostly for myself. 
 
-## DONTFORGET
+## Don't forget
 - sjednotit sr16 bicí se standartem
+- GLFW 3.2 should be released soon and should support toggling fullscreen
+- create a GLFW_ICON when illustrations are ready
 
 ## Ideas
 - use a function to create VBOs

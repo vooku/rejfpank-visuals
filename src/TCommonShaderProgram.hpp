@@ -17,10 +17,6 @@ struct TCommonShaderProgram {
 	GLint MmatrixLocation;
 	GLint VmatrixLocation;
 	GLint normalmatrixLocation; // = -1;  inverse transposed VMmatrix
-								// color animation
-	GLint colorMultiplierLocation; // vadimsky cicoviny
-	GLint timeLocation;
-	GLint glitchTypeLocation;
 	// material 
 	GLint diffuseLocation;    // = -1;
 	GLint ambientLocation;    // = -1;
@@ -35,6 +31,8 @@ struct TCommonShaderProgram {
 	GLint spotLightLocation;
 	// camera parametres
 	GLint cameraDirectionLocation;
+	// lolstuff
+	GLint randVecLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

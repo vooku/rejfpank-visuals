@@ -62,7 +62,16 @@ static void errorCallback(int error, const char* description) {
 }
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
+	if (action = GLFW_PRESS) {
+		switch (key) {
+			case GLFW_KEY_ESCAPE:
+				glfwSetWindowShouldClose(window, GL_TRUE);
+				break;
+			case GLFW_KEY_F11:
+				controlState.switchControl(CTRL_FULLSCREEN);
+				//TODO waiting for GLFW 3.2
+		}
+	}
 }
 
 static void winRefreshCallback(GLFWwindow* window) {

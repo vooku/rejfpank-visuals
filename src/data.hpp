@@ -14,13 +14,19 @@
 #define WIN_TITLE "rejfpank visuals"
 
 #define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, 0.0f)
-#define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, -1.0f)
+#define CAMERA_INIT_DIR glm::vec3(1.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
 #define CAMERA_VIEW_ANGLE 60.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 500.0f
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
+
+ /// controls in controlState
+enum {
+	CTRL_FULLSCREEN,
+	CTRL_COUNT
+};
 
 const unsigned int nCubeVertices = 8;
 const unsigned int nCubeAttribsPerVertex = 6;
