@@ -76,8 +76,7 @@ GLuint createShaderFromFile(GLenum eShaderType, const std::string &filename) {
   if (!f) {
     std::cerr << "Unable to open file " << filename << " for reading" << std::endl;
     return 0;
-  } else
-    std::cout << "loading shader: " << filename << std::endl;
+  }
 
   fseek(f, 0, SEEK_END);
   int length = ftell(f);
@@ -90,6 +89,8 @@ GLuint createShaderFromFile(GLenum eShaderType, const std::string &filename) {
 
   GLuint sh = createShaderFromSource(eShaderType, buffer);
   delete [] buffer;
+
+  std::cout << "loaded shader: " << filename << std::endl;
   return sh;
 }
 

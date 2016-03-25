@@ -1,8 +1,8 @@
 /**
- * @author	Vadim Petrov
- * @date	2016
- * @brief	Basic defines and data structures.
- */
+* @author	Vadim Petrov
+* @date	2016
+* @brief	Basic defines and data structures.
+*/
 
 #ifndef _REJFPANK_DATA_HPP
 #define _REJFPANK_DATA_HPP
@@ -22,34 +22,34 @@
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
 
- /// controls in controlState
+/// controls in controlState
 enum {
 	CTRL_FULLSCREEN,
 	CTRL_COUNT
 };
 
-const unsigned int nCubeVertices = 8;
-const unsigned int nCubeAttribsPerVertex = 6;
-const float cubeVertices [nCubeVertices * nCubeAttribsPerVertex] = {
-// x      y      z       nx     ny    nz
-  -1.0f, -1.0f, -1.0f,  -1.0f, -1.0f, -1.0f,
-  -1.0f, -1.0f,  1.0f,  -1.0f, -1.0f,  1.0f,
-  -1.0f,  1.0f, -1.0f,  -1.0f,  1.0f, -1.0f,
-  -1.0f,  1.0f,  1.0f,  -1.0f,  1.0f,  1.0f,
-   1.0f, -1.0f, -1.0f,   1.0f, -1.0f, -1.0f,
-   1.0f, -1.0f,  1.0f,   1.0f, -1.0f,  1.0f,
-   1.0f,  1.0f, -1.0f,   1.0f,  1.0f, -1.0f,
-   1.0f,  1.0f,  1.0f,   1.0f,  1.0f,  1.0f
+const unsigned int cubeNVertices = 8;
+const unsigned int cubeNAttribsPerVertex = 6;
+const float cubeVertices[cubeNVertices * cubeNAttribsPerVertex] = {
+	// x      y      z       nx     ny    nz
+	-1.0f, -1.0f, -1.0f,  -1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,  -1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,  -1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,  -1.0f,  1.0f,  1.0f,
+	1.0f, -1.0f, -1.0f,   1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f,  1.0f,   1.0f, -1.0f,  1.0f,
+	1.0f,  1.0f, -1.0f,   1.0f,  1.0f, -1.0f,
+	1.0f,  1.0f,  1.0f,   1.0f,  1.0f,  1.0f
 };
 
-const unsigned int nCubeTriangles = 36;
-const unsigned short cubeTriangles [nCubeTriangles] = {
-  0, 2, 4,   4, 2, 6, // back face
-  0, 1, 2,   2, 1, 3, // left face
-  1, 5, 3,   3, 5, 7, // front face
-  5, 4, 7,   7, 4, 6, // right face
-  3, 7, 2,   2, 7, 6, // upper face
-  0, 4, 1,   1, 4, 5, // lower face
+const unsigned int cubeNTriangles = 36;
+const unsigned short cubeTriangles[cubeNTriangles] = {
+	0, 2, 4,   4, 2, 6, // back face
+	0, 1, 2,   2, 1, 3, // left face
+	1, 5, 3,   3, 5, 7, // front face
+	5, 4, 7,   7, 4, 6, // right face
+	3, 7, 2,   2, 7, 6, // upper face
+	0, 4, 1,   1, 4, 5, // lower face
 };
 
 #endif // !_REJFPANK_DATA_HPP

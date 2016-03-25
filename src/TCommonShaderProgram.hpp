@@ -31,8 +31,6 @@ struct TCommonShaderProgram {
 	GLint spotLightLocation;
 	// camera parametres
 	GLint cameraDirectionLocation;
-	// lolstuff
-	GLint randVecLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

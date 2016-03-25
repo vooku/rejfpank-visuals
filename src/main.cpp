@@ -23,8 +23,9 @@
 //#include <glm/gtx/rotate_vector.hpp>
 
 #include "data.hpp"
-#include "CSkybox.hpp"
 #include "TControlState.hpp"
+#include "CSkybox.hpp"
+#include "CLoadedObj.hpp"
 
 #include "pgr/Shader.hpp"
 
@@ -37,6 +38,9 @@
 using namespace std;
 
 CSkybox * skybox;
+CLoadedObj * lego1;
+TCommonShaderProgram skyboxShaderProgram;
+TCommonShaderProgram legoShaderProgram;
 
 void redraw(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,6 +57,7 @@ void redraw(GLFWwindow* window) {
 		CAMERA_VIEW_DIST);
 
 	skybox->draw(Pmatrix, Vmatrix);
+	lego1->draw(Pmatrix, Vmatrix);
 
 	glfwSwapBuffers(window);
 }
@@ -94,16 +99,29 @@ void shadersInit(void) {
 	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
 	skyboxShaderProgram.program = pgr::createProgram(shaders);
 
-	// Get uniform locations
-	skyboxShaderProgram.PVMmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMmatrix");
-	// Get input locations
-	skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
+		// Get uniform locations
+		skyboxShaderProgram.PVMmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMmatrix");
+		// Get input locations
+		skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
+
+	shaders.clear();
+
+	// Init lego shaders
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
+	legoShaderProgram.program = pgr::createProgram(shaders);
+
+		// Get uniform locations
+		legoShaderProgram.PVMmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "PVMmatrix");
+		// Get input locations
+		legoShaderProgram.posLocation = glGetAttribLocation(legoShaderProgram.program, "position");
 
 	shaders.clear();
 }
 
 void modelsInit(void) {
-	skybox = new CSkybox(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(100.0f));
+	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
+	lego1 = new CLoadedObj("../res/lego.obj", glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
 }
 
 void controlStateInit(void) {
@@ -125,6 +143,11 @@ void rejfpankInit(GLFWwindow * window) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_FILL/GL_LINE
 
 	glfwSwapInterval(1);
+}
+
+void rejfpankFin(void) {
+	delete skybox;
+	delete lego1;
 }
 
 int main (void) {
