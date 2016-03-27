@@ -1,4 +1,5 @@
 #include "CSkybox.hpp"
+#include "pgr\Shader.hpp"
 
 using namespace std;
 
@@ -44,7 +45,7 @@ void CSkybox::draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) {
 
 	glBindVertexArray(geometry.vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, cubeNTriangles, GL_UNSIGNED_SHORT, 0);
-
+	//CHECK_GL_ERROR();
 	// reset
 	glBindVertexArray(0);
 	glFinish();

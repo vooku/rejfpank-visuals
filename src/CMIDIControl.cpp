@@ -34,7 +34,7 @@ bool CMIDIControl::init(void) {
 }
 
 bool CMIDIControl::listPorts(void) {
-	cout << "\nAvailable MIDI ports:\n" << endl;
+	cout << "\nAvailable MIDI ports:" << endl;
 	if (nPorts == 0) {
 		cerr << "Error: No MIDI ports available!" << endl;
 		return false;

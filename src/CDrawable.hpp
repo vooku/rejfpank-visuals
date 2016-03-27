@@ -25,10 +25,7 @@ protected:
 		GLuint vertexBufferObject;
 		GLuint elementBufferObject;
 		GLuint vertexArrayObject;
-
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec3> normals;
-		std::vector<GLushort>  elements;
+		unsigned int  numTriangles;
 
 		// material
 		glm::vec3 ambient;

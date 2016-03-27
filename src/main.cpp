@@ -25,7 +25,9 @@
 #include "data.hpp"
 #include "TControlState.hpp"
 #include "CSkybox.hpp"
-#include "CLoadedObj.hpp"
+//#include "CLoadedObj.hpp"
+#include "CDummyObject.hpp"
+#include "CCamera.hpp"
 
 #include "pgr/Shader.hpp"
 
@@ -38,17 +40,19 @@
 using namespace std;
 
 CSkybox * skybox;
-CLoadedObj * lego1;
+//CLoadedObj * lego1;
+CDummyObject * lego1;
 TCommonShaderProgram skyboxShaderProgram;
 TCommonShaderProgram legoShaderProgram;
+TControlState controlState;
 
 void redraw(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 Vmatrix = glm::lookAt(
-		CAMERA_INIT_POS,
-		CAMERA_INIT_POS + CAMERA_INIT_DIR,
-		CAMERA_INIT_UP);
+		camera.position,
+		camera.position + camera.direction,
+		camera.up);
 
 	glm::mat4 Pmatrix = glm::perspective(
 		CAMERA_VIEW_ANGLE,
@@ -57,7 +61,7 @@ void redraw(GLFWwindow* window) {
 		CAMERA_VIEW_DIST);
 
 	skybox->draw(Pmatrix, Vmatrix);
-	lego1->draw(Pmatrix, Vmatrix);
+	//lego1->draw(Pmatrix, Vmatrix);
 
 	glfwSwapBuffers(window);
 }
@@ -67,16 +71,110 @@ static void errorCallback(int error, const char* description) {
 }
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (action = GLFW_PRESS) {
+	if (action == GLFW_PRESS) { // Press turns control on/off
 		switch (key) {
 			case GLFW_KEY_ESCAPE:
 				glfwSetWindowShouldClose(window, GL_TRUE);
 				break;
 			case GLFW_KEY_F11:
-				controlState.switchControl(CTRL_FULLSCREEN);
+				controlState.switchState(CTRL_FULLSCREEN);
 				//TODO waiting for GLFW 3.2
+				break;
+			case GLFW_KEY_F:
+				camera.freedom = !camera.freedom;
+				break;
+			case GLFW_KEY_UP:
+				controlState.keyMap[KEY_UP] = true;
+				break;
+			case GLFW_KEY_DOWN:
+				controlState.keyMap[KEY_DOWN] = true;
+				break;
+			case GLFW_KEY_LEFT:
+				controlState.keyMap[KEY_LEFT] = true;
+				break;
+			case GLFW_KEY_RIGHT:
+				controlState.keyMap[KEY_RIGHT] = true;
+				break;
+			case GLFW_KEY_W:
+				controlState.keyMap[KEY_W] = true;
+				break;
+			case GLFW_KEY_S:
+				controlState.keyMap[KEY_S] = true;
+				break;
+			case GLFW_KEY_A:
+				controlState.keyMap[KEY_A] = true;
+				break;
+			case GLFW_KEY_D:
+				controlState.keyMap[KEY_D] = true;
+				break;
+			case GLFW_KEY_Q:
+				controlState.keyMap[KEY_Q] = true;
+				break;
+			case GLFW_KEY_E:
+				controlState.keyMap[KEY_E] = true;
+				break;
+			default: // do nothing;
+				break;
 		}
 	}
+	else if (action == GLFW_RELEASE) {
+		switch (key) {
+			case GLFW_KEY_UP:
+				controlState.keyMap[KEY_UP] = false;
+				break;
+			case GLFW_KEY_DOWN:
+				controlState.keyMap[KEY_DOWN] = false;
+				break;
+			case GLFW_KEY_LEFT:
+				controlState.keyMap[KEY_LEFT] = false;
+				break;
+			case GLFW_KEY_RIGHT:
+				controlState.keyMap[KEY_RIGHT] = false;
+				break;
+			case GLFW_KEY_W:
+				controlState.keyMap[KEY_W] = false;
+				break;
+			case GLFW_KEY_S:
+				controlState.keyMap[KEY_S] = false;
+				break;
+			case GLFW_KEY_A:
+				controlState.keyMap[KEY_A] = false;
+				break;
+			case GLFW_KEY_D:
+				controlState.keyMap[KEY_D] = false;
+				break;
+			case GLFW_KEY_Q:
+				controlState.keyMap[KEY_Q] = false;
+				break;
+			case GLFW_KEY_E:
+				controlState.keyMap[KEY_E] = false;
+				break;
+			default: // do nothing;
+				break;
+		}
+	}
+}
+
+void cursorPosCallback(GLFWwindow * window, double x, double y) {
+	if (camera.firstMouse) {
+		camera.lastX = (GLfloat)x;
+		camera.lastY = (GLfloat)y;
+		camera.firstMouse = false;
+	}
+
+	GLfloat offsetX = camera.lastX - x;
+	GLfloat offsetY = camera.lastY - y;
+	camera.lastX = (GLfloat)x;
+	camera.lastY = (GLfloat)y;
+
+	// Ignore movement induced by glfwSetCursorPos
+	if (x == controlState.winWidth / 2 && y == controlState.winHeight / 2) return;
+	// If the movement was 'real,' warp the cursor back
+	glfwSetCursorPos(window, controlState.winWidth / 2, controlState.winHeight / 2);
+
+	offsetX *= MOUSE_SENSITIVITY;
+	offsetY *= MOUSE_SENSITIVITY;
+	camera.rotate(offsetX, offsetY);
 }
 
 static void winRefreshCallback(GLFWwindow* window) {
@@ -88,6 +186,7 @@ static void winRefreshCallback(GLFWwindow* window) {
 
 void callbacksInit(GLFWwindow * window) {
 	glfwSetKeyCallback(window, keyCallback);
+	glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetWindowRefreshCallback(window, winRefreshCallback);
 }
 
@@ -121,7 +220,8 @@ void shadersInit(void) {
 
 void modelsInit(void) {
 	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
-	lego1 = new CLoadedObj("../res/lego.obj", glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
+	//lego1 = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
+	//lego1 = new CDummyObject(glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
 }
 
 void controlStateInit(void) {
@@ -143,11 +243,21 @@ void rejfpankInit(GLFWwindow * window) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_FILL/GL_LINE
 
 	glfwSwapInterval(1);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 void rejfpankFin(void) {
 	delete skybox;
-	delete lego1;
+	//delete lego1;
+}
+
+void update(void) {
+	if (controlState.keyMap[KEY_UP] || controlState.keyMap[KEY_W]) camera.move(STEP_LENGTH);
+	if (controlState.keyMap[KEY_DOWN] || controlState.keyMap[KEY_S]) camera.move(-STEP_LENGTH);
+	if (controlState.keyMap[KEY_LEFT] || controlState.keyMap[KEY_A]) camera.sideStep(-STEP_LENGTH);
+	if (controlState.keyMap[KEY_RIGHT] || controlState.keyMap[KEY_D]) camera.sideStep(STEP_LENGTH);
+	if (controlState.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
+	if (controlState.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
 }
 
 int main (void) {
@@ -186,6 +296,7 @@ int main (void) {
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		redraw(window);
+		update();
 		glfwPollEvents();
 	}
 

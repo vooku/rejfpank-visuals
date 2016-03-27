@@ -7,12 +7,14 @@ struct TControlState {
 	GLsizei winWidth;
 	GLsizei winHeight;
 
-	//bool keyMap[KEYS_COUNT];
-	bool controlMap[CTRL_COUNT];
+	bool keyMap[KEY_COUNT];
+	bool ctrlMap[CTRL_COUNT];
 
-	void switchControl(const int ctrl) {
-		controlMap[ctrl] = !controlMap[ctrl];
+	void switchState(const int ctrl) {
+		ctrlMap[ctrl] = !ctrlMap[ctrl];
 	}
-} controlState;
+};
+
+extern TControlState controlState;
 
 #endif // !_REJFPANK_TCONTROLSTATE
