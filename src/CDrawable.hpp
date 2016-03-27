@@ -15,13 +15,14 @@ public:
 	CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
 	
 	virtual void draw (const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) = 0;
-	
+		
 protected:
-	glm::vec3 scale;
+	virtual void sendUniforms(void) = 0;
 
+	glm::vec3 scale;
 	TCommonShaderProgram * shaderProgram;
 
-	struct MeshGeometry {
+	struct TMeshGeometry {
 		GLuint vertexBufferObject;
 		GLuint elementBufferObject;
 		GLuint vertexArrayObject;
@@ -34,6 +35,13 @@ protected:
 		float shininess;
 		GLuint texture;
 	} geometry;
+
+	struct TTempMatrices {
+		glm::mat4 PVMmatrix;
+		glm::mat4 Vmatrix;
+		glm::mat4 Mmatrix;
+		glm::mat4 normalmatrix;
+	} tempMats;
 };
 
 #endif // !_REJFPANK_CDRAWABLE

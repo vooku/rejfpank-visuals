@@ -25,7 +25,7 @@
 #include "data.hpp"
 #include "TControlState.hpp"
 #include "CSkybox.hpp"
-//#include "CLoadedObj.hpp"
+#include "CLoadedObj.hpp"
 #include "CDummyObject.hpp"
 #include "CCamera.hpp"
 
@@ -40,8 +40,8 @@
 using namespace std;
 
 CSkybox * skybox;
-//CLoadedObj * lego1;
-CDummyObject * lego1;
+CLoadedObj * lego1;
+//CDummyObject * lego1;
 TCommonShaderProgram skyboxShaderProgram;
 TCommonShaderProgram legoShaderProgram;
 TControlState controlState;
@@ -61,7 +61,7 @@ void redraw(GLFWwindow* window) {
 		CAMERA_VIEW_DIST);
 
 	skybox->draw(Pmatrix, Vmatrix);
-	//lego1->draw(Pmatrix, Vmatrix);
+	lego1->draw(Pmatrix, Vmatrix);
 
 	glfwSwapBuffers(window);
 }
@@ -157,15 +157,15 @@ static void keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 void cursorPosCallback(GLFWwindow * window, double x, double y) {
 	if (camera.firstMouse) {
-		camera.lastX = (GLfloat)x;
-		camera.lastY = (GLfloat)y;
+		camera.lastX = x;
+		camera.lastY = y;
 		camera.firstMouse = false;
 	}
 
-	GLfloat offsetX = camera.lastX - x;
-	GLfloat offsetY = camera.lastY - y;
-	camera.lastX = (GLfloat)x;
-	camera.lastY = (GLfloat)y;
+	GLdouble offsetX = camera.lastX - x;
+	GLdouble offsetY = camera.lastY - y;
+	camera.lastX = x;
+	camera.lastY = y;
 
 	// Ignore movement induced by glfwSetCursorPos
 	if (x == controlState.winWidth / 2 && y == controlState.winHeight / 2) return;
@@ -220,7 +220,7 @@ void shadersInit(void) {
 
 void modelsInit(void) {
 	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
-	//lego1 = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
+	lego1 = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
 	//lego1 = new CDummyObject(glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
 }
 
@@ -248,7 +248,7 @@ void rejfpankInit(GLFWwindow * window) {
 
 void rejfpankFin(void) {
 	delete skybox;
-	//delete lego1;
+	delete lego1;
 }
 
 void update(void) {
@@ -256,14 +256,44 @@ void update(void) {
 	if (controlState.keyMap[KEY_DOWN] || controlState.keyMap[KEY_S]) camera.move(-STEP_LENGTH);
 	if (controlState.keyMap[KEY_LEFT] || controlState.keyMap[KEY_A]) camera.sideStep(-STEP_LENGTH);
 	if (controlState.keyMap[KEY_RIGHT] || controlState.keyMap[KEY_D]) camera.sideStep(STEP_LENGTH);
-	if (controlState.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
-	if (controlState.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
+	if (controlState.keyMap[KEY_Q]) camera.roll(-VIEW_ANGLE_DELTA);
+	if (controlState.keyMap[KEY_E]) camera.roll(VIEW_ANGLE_DELTA);
+}
+
+GLFWwindow * createWindow(void) {
+	int count;
+	GLFWmonitor** monitors = glfwGetMonitors(&count);
+
+	if (count == 1) return glfwCreateWindow(INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
+
+	cout << "Available monitors:" << endl;
+	for (int i = 0; i < count; i++) cout << "\t" << i + 1 << ":\t" << glfwGetMonitorName(monitors[i]) << endl;
+
+	int selectedMonitor = -1;
+	if (SELECT_MONITOR_MAN) {
+		string data;
+		do {
+			cout << "\nPlease select a monitor:" << endl;
+			getline(cin, data);
+			if (data.length() > 3) continue;
+			selectedMonitor = (unsigned int)atoi(data.c_str());
+		} while (selectedMonitor < 1 || selectedMonitor > count);
+	}
+	else selectedMonitor = 2;
+	cout << "Selected monitor " << selectedMonitor << "." << endl;
+	selectedMonitor--; // the monitors display as starting from 1 instead of 0
+
+	const GLFWvidmode * mode = glfwGetVideoMode(monitors[selectedMonitor]);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	return glfwCreateWindow(mode->width, mode->height, WIN_TITLE, monitors[selectedMonitor], NULL);
 }
 
 int main (void) {
 	// MIDI init
 	if (!cMIDIControl.init()) {
-		getchar();
+		cerr << "Error: Cannot initiate MIDI!" << endl;
 		return -1;
 	}
 
@@ -271,14 +301,17 @@ int main (void) {
 	GLFWwindow * window;
 	glfwSetErrorCallback (errorCallback);
 
-	if (!glfwInit()) return 1;
+	if (!glfwInit()) {
+		cerr << "Error: Cannot initiate GLFW!" << endl;
+		return -2;
+	}
 	
-	window = glfwCreateWindow (INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
+	window = createWindow();
 	if (!window) {
 		glfwTerminate();
-		return 1;
+		return -3;
 	}
-	glfwMakeContextCurrent (window);
+	glfwMakeContextCurrent(window);
 	
 	// GLEW init
 	GLenum err = glewInit();
@@ -286,7 +319,7 @@ int main (void) {
 		cerr << "Error: " << glewGetErrorString(err) << endl;
 		glfwDestroyWindow(window);
 		glfwTerminate();
-		return 2;
+		return -4;
 	}
 	cout << "Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 

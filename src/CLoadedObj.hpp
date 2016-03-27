@@ -13,10 +13,13 @@ class CLoadedObj : public CDrawable {
 public:
 	CLoadedObj(const char* filename, const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
 
-	void sendCLoadedObjUniforms(const glm::mat4 & PVMmatrix, const glm::mat4 & Vmatrix, const glm::mat4 & Mmatrix);
+	bool loadSingleMesh(const std::string &fileName, TCommonShaderProgram * shaderProgram);
+
 	void draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix);
 
 protected:
+	void sendUniforms();
+
 	bool loaded;
 };
 

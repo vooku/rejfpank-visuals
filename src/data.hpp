@@ -7,10 +7,11 @@
 #ifndef _REJFPANK_DATA_HPP
 #define _REJFPANK_DATA_HPP
 
-#define MODEL_LEGO "../res/ghoul.obj"
+#define MODEL_LEGO "../res/lego.obj"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
+#define SELECT_MONITOR_MAN false // for testing purposes
 
 #define INIT_WIN_WIDTH 848 ///< Width to height ratio is 16:9
 #define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9

@@ -10,9 +10,8 @@ CCamera camera;
 CCamera::CCamera (void)
 	: CObject (CAMERA_INIT_POS),
 	  up (glm::normalize(CAMERA_INIT_UP)),
-	  freedom (false),
-	  lastX (controlState.winWidth / 2.0f),
-	  lastY (controlState.winHeight / 2.0f) {
+	  freedom (true),
+	  firstMouse(true) {
 
 	direction = glm::normalize(CAMERA_INIT_DIR);
 	right = glm::normalize (glm::cross (direction, up));

@@ -21,14 +21,13 @@ public:
 
 	glm::vec3 up;
 	glm::vec3 right; ///< Last of the vector trio front, up, right.
-
-	GLfloat lastX;
-	GLfloat lastY;
-	bool firstMouse;
 	bool freedom;
 
+	friend void cursorPosCallback(GLFWwindow * window, double x, double y);
 protected:
-	
+	GLdouble lastX;
+	GLdouble lastY;
+	bool firstMouse;
 };
 
 extern CCamera camera;

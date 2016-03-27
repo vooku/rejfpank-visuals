@@ -14,7 +14,7 @@ public:
 
 	void draw (const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix);
 protected:
-	void sendSkyboxUniforms (const glm::mat4 & PVMmatrix, const glm::mat4 & Vmatrix, const glm::mat4 & Mmatrix);
+	void sendUniforms (void);
 };
 
 #endif // !_REJFPANK_CSKYBOX
