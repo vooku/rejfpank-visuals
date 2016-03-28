@@ -46,7 +46,7 @@ TCommonShaderProgram skyboxShaderProgram;
 TCommonShaderProgram legoShaderProgram;
 TControlState controlState;
 
-void redraw(GLFWwindow* window) {
+void redraw(GLFWwindow * window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 Vmatrix = glm::lookAt(
@@ -70,7 +70,7 @@ static void errorCallback(int error, const char* description) {
 	cerr << "Error " << error << ": " << description << endl;
 }
 
-static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) { // Press turns control on/off
 		switch (key) {
 			case GLFW_KEY_ESCAPE:
@@ -177,7 +177,7 @@ void cursorPosCallback(GLFWwindow * window, double x, double y) {
 	camera.rotate(offsetX, offsetY);
 }
 
-static void winRefreshCallback(GLFWwindow* window) {
+static void winRefreshCallback(GLFWwindow * window) {
 	glfwGetFramebufferSize(window, &controlState.winWidth, &controlState.winHeight);
 	glViewport(0, 0, controlState.winWidth, controlState.winHeight);
 
@@ -206,14 +206,15 @@ void shadersInit(void) {
 	shaders.clear();
 
 	// Init lego shaders
-	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
-	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/commonShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/commonShader.frag"));
 	legoShaderProgram.program = pgr::createProgram(shaders);
 
 		// Get uniform locations
 		legoShaderProgram.PVMmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "PVMmatrix");
 		// Get input locations
 		legoShaderProgram.posLocation = glGetAttribLocation(legoShaderProgram.program, "position");
+		legoShaderProgram.normalLocation = glGetAttribLocation(legoShaderProgram.program, "normal");
 
 	shaders.clear();
 }
@@ -262,7 +263,7 @@ void update(void) {
 
 GLFWwindow * createWindow(void) {
 	int count;
-	GLFWmonitor** monitors = glfwGetMonitors(&count);
+	GLFWmonitor ** monitors = glfwGetMonitors(&count);
 
 	if (count == 1) return glfwCreateWindow(INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
 
@@ -305,7 +306,11 @@ int main (void) {
 		cerr << "Error: Cannot initiate GLFW!" << endl;
 		return -2;
 	}
-	
+	// print glfw version
+	int glfwMaj, glfwMin, glfwRev;
+	glfwGetVersion(&glfwMaj, &glfwMin, &glfwRev);
+	cout << "Initialized GLFW " << glfwMaj << "." << glfwMin << "." << glfwRev << endl;
+
 	window = createWindow();
 	if (!window) {
 		glfwTerminate();
@@ -321,7 +326,7 @@ int main (void) {
 		glfwTerminate();
 		return -4;
 	}
-	cout << "Using GLEW " << glewGetString(GLEW_VERSION) << endl;
+	cout << "Initialized GLEW " << glewGetString(GLEW_VERSION) << endl;
 
 	// Leftover inits -- controlState, models, shaders, callbacks
 	rejfpankInit(window);
