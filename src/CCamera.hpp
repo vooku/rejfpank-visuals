@@ -20,7 +20,7 @@ public:
 	void sideStep (const GLfloat stepLen); ///< Move left or right, the direction is resolved by the + or - sign.
 
 	glm::vec3 up;
-	glm::vec3 right; ///< Last of the vector trio front, up, right.
+	glm::vec3 right;
 	bool freedom;
 
 	friend void cursorPosCallback(GLFWwindow * window, double x, double y);

@@ -46,6 +46,7 @@ bool CLoadedObj::loadObj(const char * filename) {
 
 	// process the data
 	const aiMesh * loadedMesh = scene->mMeshes[0];
+
 	float * vertices;
 	vertices = new float[loadedMesh->mNumVertices * 8];
 	for (unsigned int i = 0; i < loadedMesh->mNumVertices; i++) {

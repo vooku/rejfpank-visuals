@@ -26,7 +26,6 @@
 #include "TControlState.hpp"
 #include "CSkybox.hpp"
 #include "CLoadedObj.hpp"
-#include "CDummyObject.hpp"
 #include "CCamera.hpp"
 
 #include "pgr/Shader.hpp"
@@ -112,6 +111,12 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 				break;
 			case GLFW_KEY_E:
 				controlState.keyMap[KEY_E] = true;
+				break;
+			case GLFW_KEY_1:
+				camera.position = CAMERA_INIT_POS;
+				camera.direction = CAMERA_INIT_DIR;
+				camera.up = CAMERA_INIT_UP;
+				camera.right = glm::normalize(glm::cross(camera.direction, camera.up));
 				break;
 			default: // do nothing;
 				break;

@@ -1,7 +1,7 @@
 #version 140
 
 in vec3 positionTrans;
-out vec3 normalTrans;
+in vec3 normalTrans;
 
 out vec4 color;
 
