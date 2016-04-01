@@ -7,6 +7,10 @@
 #ifndef _REJFPANK_DATA_HPP
 #define _REJFPANK_DATA_HPP
 
+#include <glm/glm.hpp>
+
+// lego brick model kindly provided by Floris 'floriuszzz' Smit  www.tf3dm.com/3d-model/lego-all-colors-95592.html
+// i might eventually want to use www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
 #define MODEL_LEGO "../res/lego.obj"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
@@ -17,10 +21,10 @@
 #define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
 #define WIN_TITLE "rejfpank visuals"
 
-#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, 5.0f)
-#define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, -1.0f)
+#define CAMERA_INIT_POS glm::vec3(-5.0f, 0.0f, 0.0f)
+#define CAMERA_INIT_DIR glm::vec3(1.0f, 0.0f, 0.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
-#define CAMERA_VIEW_ANGLE 90.0f
+#define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 350.0f
 
@@ -28,6 +32,12 @@
 #define VIEW_ANGLE_DELTA 0.03f ///< in degrees
 #define STEP_LENGTH 0.2f
 
+const glm::vec3 legoBrickColors[4] = {
+	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
+	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
+	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
+	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)};
+	
 /// controls in controlState
 enum {
 	CTRL_FULLSCREEN,

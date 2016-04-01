@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-#include "pgr\Shader.hpp" // GL_CHECK_ERROR
+#include "pgr\Shader.hpp" // CHECK_GL_ERROR
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
@@ -19,11 +19,20 @@ CLoadedObj::CLoadedObj(const char* filename, const glm::vec3 position, const glm
 		return;
 	}
 	cout << "loaded file: " << filename << endl;
+
+	if (filename == MODEL_LEGO) {
+		glm::vec3 color = legoBrickColors[rand() % 4];
+		
+		material.ambient = color * 0.1f;
+		material.diffuse = color;
+		material.specular = glm::vec3 (0.3f);
+		material.shininess = 3.0f;
+	}
 }
 
 /** Load mesh using assimp library
-* @param filename [in] file to open/load
-*/
+ * @param filename [in] file to open/load
+ */
 bool CLoadedObj::loadObj(const char * filename) {
 	Assimp::Importer importer;
 
@@ -97,6 +106,13 @@ void CLoadedObj::sendUniforms(void) {
 	glUseProgram(shaderProgram->program);
 
 	glUniformMatrix4fv(shaderProgram->PVMmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMmatrix));
+	glUniformMatrix4fv(shaderProgram->VmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.Vmatrix));
+	glUniformMatrix4fv(shaderProgram->MmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.Mmatrix));
+	glUniformMatrix4fv(shaderProgram->normalmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.normalmatrix));
+	glUniform3fv(shaderProgram->ambientLocation, 1, glm::value_ptr(material.ambient));
+	glUniform3fv(shaderProgram->diffuseLocation, 1, glm::value_ptr(material.diffuse));
+	glUniform3fv(shaderProgram->specularLocation, 1, glm::value_ptr(material.specular));
+	glUniform1f(shaderProgram->shininessLocation, material.shininess);
 }
 
 void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) {
@@ -104,12 +120,10 @@ void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) {
 
 	tempMats.Mmatrix = glm::translate(glm::mat4(1.0f), position);
 	tempMats.Mmatrix = glm::scale(tempMats.Mmatrix, scale);
-	////Mmatrix = Mmatrix * glm::toMat4 (rotQuat);
-	//tempMats.Vmatrix = Vmatrix; // not necessary
-	//tempMats.Pmatrix = Pmatrix; // not necessary
+	//Mmatrix = Mmatrix * glm::toMat4 (rotQuat);
+	tempMats.Vmatrix = Vmatrix;
 	tempMats.PVMmatrix = Pmatrix * Vmatrix * tempMats.Mmatrix;
-
-	//tempMats.normalmatrix = glm::transpose(glm::inverse(tempMats.Mmatrix));
+	tempMats.normalmatrix = glm::transpose(glm::inverse(tempMats.Mmatrix));
 
 	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, geometry.texture);

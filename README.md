@@ -8,12 +8,12 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 The rest of the readme is mostly for myself. 
 
 ## Don't forget
-- sjednotit sr16 bicí se standartem
+- unify sr16 and mpx16 midi notes with the standard
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - create a GLFW_ICON when illustrations are ready
+- don't load models for each instance
 
 ## Ideas
-- use a function to create VBOs
 - create an algorithm to tessellate a rectangle
 	- parameter (starting from 1) is the 'tessellation lvl' -> cell count equals 1 / (tessellation lvl + 1)^2
 - Voronoi diagram with taxicab geometry
@@ -43,3 +43,6 @@ The rest of the readme is mostly for myself.
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI
 - [midi2opengl](http://chancesend.com/2004/12/midi-2-opengl-visualization/) — Similar concept developed for the Oxygen8 keyboard controller. The site is cluttered with dead links and the project seems to be dead since it's publication in 2004.
 - [MIDI.live](http://www.zaposerver.net/projects/midilive/files/midilive.pdf) — abandoned in 2009 pre-beta
+
+## Thanks
+- Thanks to [Floris 'floriuszzz' Smit](http://tf3dm.com/user/floriuszzz) whose Lego Brick 3D model I'm using

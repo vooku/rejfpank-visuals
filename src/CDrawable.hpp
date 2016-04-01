@@ -26,15 +26,7 @@ protected:
 		GLuint vertexBufferObject;
 		GLuint elementBufferObject;
 		GLuint vertexArrayObject;
-		unsigned int  numTriangles;
-
-		// material
-		glm::vec3 ambient;
-		glm::vec3 diffuse;
-		glm::vec3 specular;
-		float shininess;
-
-		GLuint texture;
+		unsigned int numTriangles;
 	} geometry;
 
 	struct TTempMatrices {

@@ -16,9 +16,18 @@ public:
 	void draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix);
 
 protected:
-	void sendUniforms();
+	void sendUniforms(void);
 
 	bool loaded;
+
+	struct TMaterial {
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+		float shininess;
+
+		GLuint texture;
+	} material;
 };
 
 #endif // !_REJFPANK_CLOADEDOBJ

@@ -6,31 +6,23 @@
 #include <GLFW/glfw3.h>
 
 struct TCommonShaderProgram {
-	// identifier for the program
-	GLuint program;          // = 0;
-							 // vertex attributes
-	GLint posLocation;       // = -1;
-	GLint normalLocation;    // = -1;
-	GLint texCoordsLocation;  // = -1;
-							  // matrices
-	GLint PVMmatrixLocation;    // = -1;
+	GLuint program;
+	// vertex attributes
+	GLint posLocation;
+	GLint normalLocation;
+	GLint texCoordsLocation;
+	// matrices
+	GLint PVMmatrixLocation;
 	GLint MmatrixLocation;
 	GLint VmatrixLocation;
-	GLint normalmatrixLocation; // = -1;  inverse transposed VMmatrix
+	GLint normalmatrixLocation; //  inverse transposed VMmatrix
 	// material 
-	GLint diffuseLocation;    // = -1;
-	GLint ambientLocation;    // = -1;
-	GLint specularLocation;   // = -1;
-	GLint shininessLocation;  // = -1;
-							  // texture 
-	GLint texSamplerLocation; // = -1;
-							  // light controls
-	GLint fogLocation;
-	GLint pointLightLocation;
-	GLint directionalLightLocation;
-	GLint spotLightLocation;
-	// camera parametres
-	GLint cameraDirectionLocation;
+	GLint diffuseLocation;
+	GLint ambientLocation;
+	GLint specularLocation;
+	GLint shininessLocation;
+
+	GLint texSamplerLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM
