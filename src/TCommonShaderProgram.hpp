@@ -12,10 +12,10 @@ struct TCommonShaderProgram {
 	GLint normalLocation;
 	GLint texCoordsLocation;
 	// matrices
-	GLint PVMmatrixLocation;
-	GLint MmatrixLocation;
-	GLint VmatrixLocation;
-	GLint normalmatrixLocation; //  inverse transposed VMmatrix
+	GLint PVMMatrixLocation;
+	GLint MMatrixLocation;
+	GLint VMatrixLocation;
+	GLint normalMatrixLocation; //  inverse transposed VMatrix
 	// material 
 	GLint diffuseLocation;
 	GLint ambientLocation;

@@ -20,10 +20,10 @@ in vec3 positionTrans;
 in vec3 normalTrans;
 //in vec2 texCoordsTrans;
 
-uniform mat4 PVMmatrix;
-uniform mat4 Mmatrix;
-uniform mat4 Vmatrix;
-uniform mat4 normalmatrix; // inverse transposed Mmatrix
+uniform mat4 PVMMatrix;
+uniform mat4 MMatrix;
+uniform mat4 VMatrix;
+uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
 //uniform sampler2D texSampler;
 
@@ -33,17 +33,17 @@ out vec4 color;
 
 // ----------------------------------------------------------------------------------- Functions
 void lightsInit(void) {
-	whiteLight.position = (Vmatrix * vec4 (-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
+	whiteLight.position = (VMatrix * vec4 (-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
 	whiteLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	whiteLight.diffuse = vec3 (0.5f, 0.5f, 0.5f);
 	whiteLight.specular = vec3 (0.3f, 0.3f, 0.3f);
 	
-	redLight.position = (Vmatrix * vec4 (-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
+	redLight.position = (VMatrix * vec4 (-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
 	redLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	redLight.diffuse = vec3 (0.5f, 0.0f, 0.0f);
 	redLight.specular = vec3 (3.0f, 0.0f, 0.0f);
 
-	blueLight.position = (Vmatrix * vec4 (-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
+	blueLight.position = (VMatrix * vec4 (-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
 	blueLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	blueLight.diffuse = vec3 (0.0f, 0.0f, 0.5f);
 	blueLight.specular = vec3 (3.0f, 0.0f, 0.0f);
@@ -78,15 +78,15 @@ vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const
 vec4 lightItUp (const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
 	vec4 result = vec4 (0.0f);
 	//result += vec4 (0.1f) * objectColor (); // Global ambient
-	//result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
-	result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
-	result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));
+	result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
+	//result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
+	//result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));
 	return result;
 }
 
 void main (void) {
-	vec3 cameraSpacePosition = (Vmatrix * Mmatrix * vec4 (positionTrans, 1.0f)).xyz;
-	vec3 cameraSpaceNormal = normalize ((Vmatrix * Mmatrix * vec4 (normalTrans, 0.0)).xyz); // normalmatrix ?!!!
+	vec3 cameraSpacePosition = (VMatrix * MMatrix * vec4 (positionTrans, 1.0f)).xyz;
+	vec3 cameraSpaceNormal = normalize ((VMatrix * MMatrix * vec4 (normalTrans, 0.0)).xyz); // normalmatrix ?!!!
 	
 	lightsInit();
 	color = lightItUp(cameraSpacePosition, cameraSpaceNormal);

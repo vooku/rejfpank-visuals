@@ -105,25 +105,25 @@ bool CLoadedObj::loadObj(const char * filename) {
 void CLoadedObj::sendUniforms(void) {
 	glUseProgram(shaderProgram->program);
 
-	glUniformMatrix4fv(shaderProgram->PVMmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMmatrix));
-	glUniformMatrix4fv(shaderProgram->VmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.Vmatrix));
-	glUniformMatrix4fv(shaderProgram->MmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.Mmatrix));
-	glUniformMatrix4fv(shaderProgram->normalmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.normalmatrix));
+	glUniformMatrix4fv(shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMMatrix));
+	glUniformMatrix4fv(shaderProgram->VMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.VMatrix));
+	glUniformMatrix4fv(shaderProgram->MMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.MMatrix));
+	glUniformMatrix4fv(shaderProgram->normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.normalMatrix));
 	glUniform3fv(shaderProgram->ambientLocation, 1, glm::value_ptr(material.ambient));
 	glUniform3fv(shaderProgram->diffuseLocation, 1, glm::value_ptr(material.diffuse));
 	glUniform3fv(shaderProgram->specularLocation, 1, glm::value_ptr(material.specular));
 	glUniform1f(shaderProgram->shininessLocation, material.shininess);
 }
 
-void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) {
+void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
 	if (!loaded) return;
 
-	tempMats.Mmatrix = glm::translate(glm::mat4(1.0f), position);
-	tempMats.Mmatrix = glm::scale(tempMats.Mmatrix, scale);
-	//Mmatrix = Mmatrix * glm::toMat4 (rotQuat);
-	tempMats.Vmatrix = Vmatrix;
-	tempMats.PVMmatrix = Pmatrix * Vmatrix * tempMats.Mmatrix;
-	tempMats.normalmatrix = glm::transpose(glm::inverse(tempMats.Mmatrix));
+	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
+	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
+	tempMats.MMatrix = tempMats.MMatrix * rotMatrix;
+	tempMats.VMatrix = VMatrix;
+	tempMats.PVMMatrix = Pmatrix * VMatrix * tempMats.MMatrix;
+	tempMats.normalMatrix = glm::transpose(glm::inverse(tempMats.MMatrix));
 
 	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, geometry.texture);

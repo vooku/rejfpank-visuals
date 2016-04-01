@@ -2,11 +2,11 @@
 
 in vec3 position;
 
-uniform mat4 PVMmatrix;
+uniform mat4 PVMMatrix;
 
 out vec3 positionTrans;
 
 void main (void) {
-	gl_Position = PVMmatrix * vec4 (position, 1.0f);
+	gl_Position = PVMMatrix * vec4 (position, 1.0f);
 	positionTrans = position;
 }

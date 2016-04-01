@@ -8,17 +8,20 @@
 
 #include "CObject.hpp"
 #include "TCommonShaderProgram.hpp"
-#include <vector>
 
 class CDrawable : public CObject {
 public:
-	CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
+	CDrawable(const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
 	
-	virtual void draw (const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) = 0;
+	virtual void draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) = 0;
+	void rotate(const double & time);
 		
 protected:
 	virtual void sendUniforms(void) = 0;
 
+	double triggerTime;
+	glm::mat4 rotMatrix;
+	glm::vec3 axis;
 	glm::vec3 scale;
 	TCommonShaderProgram * shaderProgram;
 
@@ -30,10 +33,10 @@ protected:
 	} geometry;
 
 	struct TTempMatrices {
-		glm::mat4 PVMmatrix;
-		glm::mat4 Vmatrix;
-		glm::mat4 Mmatrix;
-		glm::mat4 normalmatrix;
+		glm::mat4 PVMMatrix;
+		glm::mat4 VMatrix;
+		glm::mat4 MMatrix;
+		glm::mat4 normalMatrix;
 	} tempMats;
 };
 

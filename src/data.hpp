@@ -32,6 +32,8 @@
 #define VIEW_ANGLE_DELTA 0.03f ///< in degrees
 #define STEP_LENGTH 0.2f
 
+#define LEGO_BRICKS_COUNT 8
+
 const glm::vec3 legoBrickColors[4] = {
 	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),

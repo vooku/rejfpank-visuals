@@ -27,15 +27,15 @@ CSkybox::CSkybox(const glm::vec3 position, const glm::vec3 scale, TCommonShaderP
 void CSkybox::sendUniforms(void) {
 	glUseProgram(shaderProgram->program);
 
-	glUniformMatrix4fv(shaderProgram->PVMmatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMmatrix));
+	glUniformMatrix4fv(shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMMatrix));
 }
 
-void CSkybox::draw(const glm::mat4 & Pmatrix, const glm::mat4 & Vmatrix) {
-	tempMats.Mmatrix = glm::translate(glm::mat4(1.0f), position);
-	tempMats.Mmatrix = glm::scale(tempMats.Mmatrix, scale);
-	//tempMats.Vmatrix = Vmatrix; // not necessary
+void CSkybox::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
+	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
+	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
+	//tempMats.VMatrix = VMatrix; // not necessary
 	//tempMats.Pmatrix = Pmatrix; // not necessary
-	tempMats.PVMmatrix = Pmatrix * Vmatrix * tempMats.Mmatrix;
+	tempMats.PVMMatrix = Pmatrix * VMatrix * tempMats.MMatrix;
 
 	this->sendUniforms();
 

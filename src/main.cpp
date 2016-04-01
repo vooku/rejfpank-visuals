@@ -48,7 +48,7 @@ TControlState controlState;
 void redraw(GLFWwindow * window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::mat4 Vmatrix = glm::lookAt(
+	glm::mat4 VMatrix = glm::lookAt(
 		camera.position,
 		camera.position + camera.direction,
 		camera.up);
@@ -59,8 +59,8 @@ void redraw(GLFWwindow * window) {
 		CAMERA_VIEW_START,
 		CAMERA_VIEW_DIST);
 
-	skybox->draw(Pmatrix, Vmatrix);
-	for (int i = 0; i < 8; i++) lego[i]->draw(Pmatrix, Vmatrix);
+	skybox->draw(Pmatrix, VMatrix);
+	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->draw(Pmatrix, VMatrix);
 
 	glfwSwapBuffers(window);
 }
@@ -204,7 +204,7 @@ void shadersInit(void) {
 	skyboxShaderProgram.program = pgr::createProgram(shaders);
 
 		// Get uniform locations
-		skyboxShaderProgram.PVMmatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMmatrix");
+		skyboxShaderProgram.PVMMatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMMatrix");
 		// Get input locations
 		skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
 
@@ -216,10 +216,10 @@ void shadersInit(void) {
 	legoShaderProgram.program = pgr::createProgram(shaders);
 
 		// Get uniform locations
-		legoShaderProgram.PVMmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "PVMmatrix");
-		legoShaderProgram.VmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "Vmatrix");
-		legoShaderProgram.MmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "Mmatrix");
-		legoShaderProgram.normalmatrixLocation = glGetUniformLocation(legoShaderProgram.program, "normalmatrix");
+		legoShaderProgram.PVMMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "PVMMatrix");
+		legoShaderProgram.VMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "VMatrix");
+		legoShaderProgram.MMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "MMatrix");
+		legoShaderProgram.normalMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "normalMatrix");
 		legoShaderProgram.diffuseLocation = glGetUniformLocation(legoShaderProgram.program, "material.diffuse");
 		legoShaderProgram.ambientLocation = glGetUniformLocation(legoShaderProgram.program, "material.ambient");
 		legoShaderProgram.specularLocation = glGetUniformLocation(legoShaderProgram.program, "material.specular");
@@ -233,7 +233,7 @@ void shadersInit(void) {
 
 void modelsInit(void) {
 	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
-	lego = new CLoadedObj * [8];
+	lego = new CLoadedObj * [LEGO_BRICKS_COUNT];
 	lego[0] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, -2.0f, -2.0f), glm::vec3(1.0f), &legoShaderProgram);
 	lego[1] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, -2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
 	lego[2] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
@@ -270,7 +270,7 @@ void rejfpankInit(GLFWwindow * window) {
 
 void rejfpankFin(void) {
 	delete skybox;
-	for (int i = 0; i <8; i++) delete lego[i];
+	for (int i=0; i<LEGO_BRICKS_COUNT; i++) delete lego[i];
 	delete[] lego;
 }
 
@@ -281,6 +281,8 @@ void update(void) {
 	if (controlState.keyMap[KEY_RIGHT] || controlState.keyMap[KEY_D]) camera.sideStep(STEP_LENGTH);
 	if (controlState.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
 	if (controlState.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
+
+	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->rotate(glfwGetTime());
 }
 
 GLFWwindow * createWindow(void) {
