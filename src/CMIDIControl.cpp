@@ -5,6 +5,8 @@
 
 #include "CMIDIControl.hpp"
 #include "data.hpp"
+#include "CLoadedObj.hpp"
+#include "TControlState.hpp"
 
 #include <iostream>
 #include <string>
@@ -67,15 +69,26 @@ void CMIDIControl::selectPort(void) {
 			selectedPort = (unsigned int)atoi(data.c_str());
 		} while (selectedPort < 1 || selectedPort > nPorts);
 	}
-	else selectedPort = 9;
+	else selectedPort = SELECT_MIDI_PORT_DEFAULT;
 	cout << "Selected port " << selectedPort << "." << endl;
 	selectedPort--; // the ports display as starting from 1 instead of 0 
 }
 
-void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, const DWORD_PTR dwParam1, const DWORD_PTR dwParam2) {
-	midiStatus = (unsigned int)((dwParam1 & 0x000000ff) >> 0);
-	midiParam1 = (unsigned int)((dwParam1 & 0x0000ff00) >> 8);
-	midiParam2 = (unsigned int)((dwParam1 & 0x00ff0000) >> 16);
+void evalMidiMsg(const UINT wMsg, const DWORD_PTR dwParam1, const DWORD_PTR dwParam2) {
+	const unsigned int midiStatus = (unsigned int)((dwParam1 & 0x000000ff) >> 0);
+	const unsigned int midiParam1 = (unsigned int)((dwParam1 & 0x0000ff00) >> 8);
+	const unsigned int midiParam2 = (unsigned int)((dwParam1 & 0x00ff0000) >> 16);
+
+	if (wMsg == MIM_ERROR) {
+		cerr << "Error: Invalid MIDI message received! Message: " << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+		return;
+	}
+	cout << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+
+	if (!controlState.ctrlMap[CTRL_INIT]) return; // MIDI received before everything's initialized
+
+	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->switchRotAxis(glfwGetTime());
+
 }
 
 void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
@@ -87,33 +100,27 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 		case MIM_OPEN:
 			cout << "MIDI input ready!" << endl;
 			break;
-		
 		case MIM_ERROR:
-			transMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
-			cerr << "Error: Invalid MIDI message received! Message: " << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+			evalMidiMsg(wMsg, dwParam1, dwParam2);
 			break;
-		
 		case MIM_DATA:
-			transMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
-			cout << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
-			break;
-		
+			evalMidiMsg(wMsg, dwParam1, dwParam2);
+			break;		
 		case MIM_LONGDATA:
 			cerr << "Received SysEx message!" << endl;
-			break;
-		
+			break;		
 		case MIM_LONGERROR:
 			cerr << "Received an invalid SysEx message!" << endl;
 			break;
-
 		case MIM_CLOSE:
 			cout << "MIDI input finished!" << endl;
 			break;
-
-		//case MIM_MOREDATA
-			
+		case MIM_MOREDATA:
+			cerr << "Error: Too much MIDI data incoming!" << endl;
+			break;
 		default:
 			cerr << "Received unknown MIDI message!" << endl;
+			break;
 	}
 }
 

@@ -15,7 +15,9 @@
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
+#define SELECT_MIDI_PORT_DEFAULT 11
 #define SELECT_MONITOR_MAN false // for testing purposes
+#define SELECT_MONITOR_DEFAULT 2
 
 #define INIT_WIN_WIDTH 848 ///< Width to height ratio is 16:9
 #define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
@@ -32,6 +34,10 @@
 #define VIEW_ANGLE_DELTA 0.03f ///< in degrees
 #define STEP_LENGTH 0.2f
 
+#define MATERIAL_GEN_AMBIENT_MULTI 0.1f
+#define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
+#define MATERIAL_LEGO_SHININES 3.0f
+
 #define LEGO_BRICKS_COUNT 8
 
 const glm::vec3 legoBrickColors[4] = {
@@ -39,10 +45,10 @@ const glm::vec3 legoBrickColors[4] = {
 	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
 	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)};
-	
+
 /// controls in controlState
 enum {
-	CTRL_FULLSCREEN,
+	CTRL_FULLSCREEN, CTRL_INIT,
 	CTRL_COUNT
 };
 

@@ -30,4 +30,6 @@ protected:
 	} material;
 };
 
+extern CLoadedObj ** lego;
+
 #endif // !_REJFPANK_CLOADEDOBJ

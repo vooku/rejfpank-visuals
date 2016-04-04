@@ -21,7 +21,7 @@ The rest of the readme is mostly for myself.
 - Switch dynamically between ortographic and perspective projection
 - Toy with glm::frustum
 - Create light emiting objects via fog
-- Generate radndom points and draw tham as triangle strip 
+- Generate random points and draw tham as triangle strip 
 - change directional light on beat
 - King Midas: White (yellow) over everything, aplha slowly fading
 - trailing lego bricks in fifo

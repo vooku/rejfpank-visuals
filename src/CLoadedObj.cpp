@@ -10,6 +10,8 @@
 
 using namespace std;
 
+CLoadedObj ** lego;
+
 CLoadedObj::CLoadedObj(const char* filename, const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram)
 	: loaded (true),
 	  CDrawable (position, scale, shaderProgram) {
@@ -23,10 +25,10 @@ CLoadedObj::CLoadedObj(const char* filename, const glm::vec3 position, const glm
 	if (filename == MODEL_LEGO) {
 		glm::vec3 color = legoBrickColors[rand() % 4];
 		
-		material.ambient = color * 0.1f;
+		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
 		material.diffuse = color;
-		material.specular = glm::vec3 (0.3f);
-		material.shininess = 3.0f;
+		material.specular = MATERIAL_LEGO_SPECULAR;
+		material.shininess = MATERIAL_LEGO_SHININES;
 	}
 }
 
@@ -120,7 +122,7 @@ void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
 
 	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
 	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
-	tempMats.MMatrix = tempMats.MMatrix * rotMatrix;
+	tempMats.MMatrix = tempMats.MMatrix * pastRotMatrix * rotMatrix;
 	tempMats.VMatrix = VMatrix;
 	tempMats.PVMMatrix = Pmatrix * VMatrix * tempMats.MMatrix;
 	tempMats.normalMatrix = glm::transpose(glm::inverse(tempMats.MMatrix));

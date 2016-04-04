@@ -40,7 +40,6 @@
 using namespace std;
 
 CSkybox * skybox;
-CLoadedObj ** lego;
 TCommonShaderProgram skyboxShaderProgram;
 TCommonShaderProgram legoShaderProgram;
 TControlState controlState;
@@ -304,7 +303,7 @@ GLFWwindow * createWindow(void) {
 			selectedMonitor = (unsigned int)atoi(data.c_str());
 		} while (selectedMonitor < 1 || selectedMonitor > count);
 	}
-	else selectedMonitor = 2;
+	else selectedMonitor = SELECT_MONITOR_DEFAULT;
 	cout << "Selected monitor " << selectedMonitor << "." << endl;
 	selectedMonitor--; // the monitors display as starting from 1 instead of 0
 
@@ -318,6 +317,8 @@ GLFWwindow * createWindow(void) {
 }
 
 int main (void) {
+	controlState.ctrlMap[CTRL_INIT] = false; // for synchro
+
 	// MIDI init
 	if (!cMIDIControl.init()) {
 		cerr << "Error: Cannot initiate MIDI!" << endl;
@@ -356,7 +357,8 @@ int main (void) {
 
 	// Leftover inits -- controlState, models, shaders, callbacks
 	rejfpankInit(window);
-	
+	controlState.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
+
 	// main loop
 	while (!glfwWindowShouldClose(window)) {
 		redraw(window);

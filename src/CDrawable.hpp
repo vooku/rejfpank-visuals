@@ -14,13 +14,16 @@ public:
 	CDrawable(const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
 	
 	virtual void draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) = 0;
+	
 	void rotate(const double & time);
+	void switchRotAxis(const double & time);
 		
 protected:
 	virtual void sendUniforms(void) = 0;
 
 	double triggerTime;
 	glm::mat4 rotMatrix;
+	glm::mat4 pastRotMatrix; // remembers previous rotations around different axes
 	glm::vec3 axis;
 	glm::vec3 scale;
 	TCommonShaderProgram * shaderProgram;
