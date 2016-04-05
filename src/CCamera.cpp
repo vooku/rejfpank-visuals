@@ -7,7 +7,7 @@ using namespace std;
 CCamera::CCamera (void)
 	: CObject (CAMERA_INIT_POS),
 	  up (glm::normalize(CAMERA_INIT_UP)),
-	  freedom (true),
+	  freedom (CAMERA_INIT_FREE),
 	  firstMouse(true) {
 
 	direction = glm::normalize(CAMERA_INIT_DIR);

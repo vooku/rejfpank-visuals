@@ -16,7 +16,7 @@ CLoadedObj::CLoadedObj(const char * filename,
 					   TCommonShaderProgram * shaderProgram)
 	: CDrawable (position, scale, shaderProgram),
 	  containsData(true),
-	  dataObj(NULL) {
+	  dataObj(this) {
 
 	if (!this->loadObj(filename)) {
 		cerr << "Error: Cannot load " << filename << "!" << endl;
@@ -154,8 +154,8 @@ void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
 
 	this->sendUniforms();
 
-	glBindVertexArray(geometry.vertexArrayObject);
-	glDrawElements(GL_TRIANGLES, geometry.numTriangles * 3, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(dataObj->geometry.vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, dataObj->geometry.numTriangles * 3, GL_UNSIGNED_INT, 0);
 
 	CHECK_GL_ERROR();
 	

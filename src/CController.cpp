@@ -14,15 +14,13 @@ CController controller;
 CController::CController() {
 	state.winWidth = INIT_WIN_WIDTH;
 	state.winHeight = INIT_WIN_HEIGHT;
-
-	//shadersInit();
-	//modelsInit();
 }
 
 CController::~CController(void) {
 	delete skybox;
 	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) delete lego[i];
 	delete[] lego;
+	delete legoDataObj;
 }
 
 void CController::redraw(GLFWwindow * window) {
@@ -82,16 +80,18 @@ void CController::shadersInit(void) {
 }
 
 void CController::modelsInit(void) {
+	// skybox
 	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
-	lego = new CLoadedObj *[LEGO_BRICKS_COUNT];
-	lego[0] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, -2.0f, -2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[1] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, -2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[2] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[3] = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f, 2.0f, -2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[4] = new CLoadedObj(MODEL_LEGO, glm::vec3(3.0f, -2.0f, -2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[5] = new CLoadedObj(MODEL_LEGO, glm::vec3(3.0f, -2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[6] = new CLoadedObj(MODEL_LEGO, glm::vec3(3.0f, 2.0f, 2.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego[7] = new CLoadedObj(MODEL_LEGO, glm::vec3(3.0f, 2.0f, -2.0f), glm::vec3(1.0f), &legoShaderProgram);
+	
+	// lego
+	legoDataObj = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
+	lego = new CLoadedObj * [LEGO_BRICKS_COUNT];
+	for (int i = 0; i < LEGO_BRICKS_COUNT; i += 4) {
+		lego[i + 0] = new CLoadedObj(MODEL_LEGO, glm::vec3(i, -2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 1] = new CLoadedObj(MODEL_LEGO, glm::vec3(i, -2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 2] = new CLoadedObj(MODEL_LEGO, glm::vec3(i,  2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 3] = new CLoadedObj(MODEL_LEGO, glm::vec3(i,  2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+	}
 }
 
 void CController::update(void) {

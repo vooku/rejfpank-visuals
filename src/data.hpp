@@ -14,6 +14,7 @@
 #define MODEL_LEGO "../res/lego.obj"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
+
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
 #define SELECT_MIDI_PORT_DEFAULT 9
 #define SELECT_MONITOR_MAN false // for testing purposes
@@ -26,6 +27,7 @@
 #define CAMERA_INIT_POS glm::vec3(-5.0f, 0.0f, 0.0f)
 #define CAMERA_INIT_DIR glm::vec3(1.0f, 0.0f, 0.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
+#define CAMERA_INIT_FREE false
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 350.0f
@@ -38,7 +40,7 @@
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
 
-#define LEGO_BRICKS_COUNT 8
+#define LEGO_BRICKS_COUNT 64 // only multiplies of 4, other numbers might cause segfaults
 
 const glm::vec3 legoBrickColors[4] = {
 	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),

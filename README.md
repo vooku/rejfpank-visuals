@@ -11,7 +11,6 @@ The rest of the readme is mostly for myself.
 - unify sr16 and mpx16 midi notes with the standard
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - create a GLFW_ICON when illustrations are ready
-- don't load models for each instance
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

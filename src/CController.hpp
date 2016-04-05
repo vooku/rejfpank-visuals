@@ -41,6 +41,7 @@ public:
 		}
 	} state;
 protected:
+	CLoadedObj * legoDataObj;
 	CLoadedObj ** lego;
 	CSkybox * skybox;
 
