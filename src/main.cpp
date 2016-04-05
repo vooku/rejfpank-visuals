@@ -260,8 +260,8 @@ int main (void) {
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow (window);
-	glfwTerminate ();
+	glfwDestroyWindow(window);
+	glfwTerminate();
 	
 	return 0;
 }

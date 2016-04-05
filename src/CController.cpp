@@ -1,11 +1,8 @@
 #include "CController.hpp"
-
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
+#include "midicodes.hpp"
+#include "pgr/Shader.hpp"
 
 #include <vector>
-
-#include "pgr/Shader.hpp"
 
 using namespace std;
 
@@ -87,10 +84,10 @@ void CController::modelsInit(void) {
 	legoDataObj = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
 	lego = new CLoadedObj * [LEGO_BRICKS_COUNT];
 	for (int i = 0; i < LEGO_BRICKS_COUNT; i += 4) {
-		lego[i + 0] = new CLoadedObj(MODEL_LEGO, glm::vec3(i, -2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 1] = new CLoadedObj(MODEL_LEGO, glm::vec3(i, -2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 2] = new CLoadedObj(MODEL_LEGO, glm::vec3(i,  2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 3] = new CLoadedObj(MODEL_LEGO, glm::vec3(i,  2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 0] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST, -2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 1] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST, -2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 2] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST,  2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+		lego[i + 3] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST,  2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
 	}
 }
 
@@ -105,6 +102,18 @@ void CController::update(void) {
 	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->rotate(glfwGetTime());
 }
 
-void CController::midiIn(const unsigned int midiStatus, const unsigned int midiParam1, const unsigned int midiParam2) {
-	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->switchRotAxis(glfwGetTime());
+void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+	if (status == MIDI_NOTE_ON_CH02) {
+		switch (note) {
+			case MIDI_DRUM_KICK1:
+				for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->setMaterials(MODEL_LEGO);
+				break;
+			case MIDI_DRUM_HIHAT_CLOSED:
+				for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->switchRotAxis(glfwGetTime());
+				break;
+			default: 
+				cout  << "Unresolved midi note:" << status << " " << note << " " << velocity << endl;
+				break;
+		}
+	}
 }

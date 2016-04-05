@@ -99,7 +99,6 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 			break;
 		case MIM_DATA:
 			evalMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
-			//cout << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
 			break;		
 		case MIM_LONGDATA:
 			cerr << "Received SysEx message!" << endl;

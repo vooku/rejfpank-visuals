@@ -8,7 +8,7 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 The rest of the readme is mostly for myself. 
 
 ## Don't forget
-- unify sr16 and mpx16 midi notes with the standard
+- setup mpx16 midi
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - create a GLFW_ICON when illustrations are ready
 

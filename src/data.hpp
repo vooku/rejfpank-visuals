@@ -33,14 +33,16 @@
 #define CAMERA_VIEW_DIST 350.0f
 
 #define MOUSE_SENSITIVITY 0.01f
-#define VIEW_ANGLE_DELTA 0.03f ///< in degrees
-#define STEP_LENGTH 0.2f
+#define VIEW_ANGLE_DELTA 0.01f ///< in degrees
+#define STEP_LENGTH 0.1f
+#define ROTATION_SPEED 1.5f
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
 
 #define LEGO_BRICKS_COUNT 64 // only multiplies of 4, other numbers might cause segfaults
+#define LEGO_BRICKS_DIST 2
 
 const glm::vec3 legoBrickColors[4] = {
 	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),

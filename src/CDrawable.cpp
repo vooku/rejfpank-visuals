@@ -15,7 +15,7 @@ CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonSh
 
 void CDrawable::rotate(const double & time) {
 	const double elapsedTime = time - triggerTime;
-	const float angle = elapsedTime;
+	const float angle = ROTATION_SPEED * elapsedTime;
 	rotMatrix = glm::rotate(glm::mat4(1.0f), angle, axis);
 }
 
