@@ -10,26 +10,37 @@
 
 using namespace std;
 
-CLoadedObj ** lego;
+CLoadedObj::CLoadedObj(const char * filename,
+					   const glm::vec3 position,
+					   const glm::vec3 scale,
+					   TCommonShaderProgram * shaderProgram)
+	: CDrawable (position, scale, shaderProgram),
+	  containsData(true),
+	  dataObj(NULL) {
 
-CLoadedObj::CLoadedObj(const char* filename, const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram)
-	: loaded (true),
-	  CDrawable (position, scale, shaderProgram) {
 	if (!this->loadObj(filename)) {
 		cerr << "Error: Cannot load " << filename << "!" << endl;
-		loaded = false;
+		enableDraw = false;
 		return;
 	}
 	cout << "loaded file: " << filename << endl;
+	enableDraw = true;
 
-	if (filename == MODEL_LEGO) {
-		glm::vec3 color = legoBrickColors[rand() % 4];
-		
-		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
-		material.diffuse = color;
-		material.specular = MATERIAL_LEGO_SPECULAR;
-		material.shininess = MATERIAL_LEGO_SHININES;
-	}
+	this->setMaterials(filename);
+}
+
+CLoadedObj::CLoadedObj(const char * filename,
+					   const glm::vec3 position,
+					   const glm::vec3 scale,
+					   TCommonShaderProgram * shaderProgram,
+					   const CLoadedObj * dataObj)
+	: CDrawable(position, scale, shaderProgram),
+	  containsData(false),
+	  dataObj(dataObj) {
+
+	enableDraw = true;
+
+	this->setMaterials(filename);
 }
 
 /** Load mesh using assimp library
@@ -104,6 +115,17 @@ bool CLoadedObj::loadObj(const char * filename) {
 	return true;
 }
 
+void CLoadedObj::setMaterials(const char * filename) {
+	if (filename == MODEL_LEGO) {
+		glm::vec3 color = legoBrickColors[rand() % 4];
+
+		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
+		material.diffuse = color;
+		material.specular = MATERIAL_LEGO_SPECULAR;
+		material.shininess = MATERIAL_LEGO_SHININES;
+	}
+}
+
 void CLoadedObj::sendUniforms(void) {
 	glUseProgram(shaderProgram->program);
 
@@ -118,7 +140,7 @@ void CLoadedObj::sendUniforms(void) {
 }
 
 void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
-	if (!loaded) return;
+	if (!enableDraw) return;
 
 	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
 	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);

@@ -15,7 +15,7 @@
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
-#define SELECT_MIDI_PORT_DEFAULT 11
+#define SELECT_MIDI_PORT_DEFAULT 9
 #define SELECT_MONITOR_MAN false // for testing purposes
 #define SELECT_MONITOR_DEFAULT 2
 

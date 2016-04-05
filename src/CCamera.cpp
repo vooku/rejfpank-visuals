@@ -1,11 +1,8 @@
 #include "CCamera.hpp"
-#include "TControlState.hpp"
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 using namespace std;
-
-CCamera camera;
 
 CCamera::CCamera (void)
 	: CObject (CAMERA_INIT_POS),
@@ -50,4 +47,11 @@ void CCamera::sideStep (const GLfloat stepLen) {
 	glm::vec3 newPos = position + stepLen * right;
 	if (abs (newPos.x) >= 100.f || abs (newPos.y) >= 100.f || abs (newPos.z) >= 100.f) return;
 	position = newPos;
+}
+
+void CCamera::reset(void) {
+	position = CAMERA_INIT_POS;
+	direction = CAMERA_INIT_DIR;
+	up = CAMERA_INIT_UP;
+	right = glm::normalize(glm::cross(direction, up));
 }
