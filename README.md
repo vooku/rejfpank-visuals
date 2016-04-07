@@ -44,4 +44,4 @@ The rest of the readme is mostly for myself.
 - [MIDI.live](http://www.zaposerver.net/projects/midilive/files/midilive.pdf) — abandoned in 2009 pre-beta
 
 ## Thanks
-- Thanks to [Floris 'floriuszzz' Smit](http://tf3dm.com/user/floriuszzz) whose Lego Brick 3D model I'm using
+- Thanks to [Floris 'floriuszzz' Smit](www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using

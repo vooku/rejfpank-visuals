@@ -35,13 +35,14 @@ public:
 
 		bool keyMap[KEY_COUNT];
 		bool ctrlMap[CTRL_COUNT];
+		bool drumMap[DRUM_COUNT];
 
 		void switchState(const int ctrl) {
 			ctrlMap[ctrl] = !ctrlMap[ctrl];
 		}
 	} state;
 protected:
-	CLoadedObj * legoDataObj;
+	CLoadedObj ** legoData;
 	CLoadedObj ** lego;
 	CSkybox * skybox;
 

@@ -1,6 +1,7 @@
 #include "CLoadedObj.hpp"
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <sstream>
 
 #include "pgr\Shader.hpp" // CHECK_GL_ERROR
@@ -116,7 +117,7 @@ bool CLoadedObj::loadObj(const char * filename) {
 }
 
 void CLoadedObj::setMaterials(const char * filename) {
-	if (filename == MODEL_LEGO) {
+	if (strstr(filename, "lego") != NULL) {
 		glm::vec3 color = legoBrickColors[rand() % 4];
 
 		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;

@@ -15,9 +15,10 @@ CController::CController() {
 
 CController::~CController(void) {
 	delete skybox;
-	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) delete lego[i];
+	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) delete lego[i];
 	delete[] lego;
-	delete legoDataObj;
+	for (int i = 0; i < 3; i++) delete legoData[i];
+	delete legoData;
 }
 
 void CController::redraw(GLFWwindow * window) {
@@ -35,7 +36,19 @@ void CController::redraw(GLFWwindow * window) {
 		CAMERA_VIEW_DIST);
 
 	skybox->draw(Pmatrix, VMatrix);
-	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->draw(Pmatrix, VMatrix);
+	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10) {
+		if (state.drumMap[DRUM_KICK1])
+			for (int j = 0; j < 4; j++)
+				lego[i + j]->draw(Pmatrix, VMatrix);
+
+		if (state.drumMap[DRUM_HIHAT_CLOSED])
+			for (int j = 4; j < 6; j++)
+				lego[i + j]->draw(Pmatrix, VMatrix);
+
+		if (state.drumMap[DRUM_PLUCK])
+			for (int j = 6; j < 10; j++)
+				lego[i + j]->draw(Pmatrix, VMatrix);
+	}
 
 	glfwSwapBuffers(window);
 }
@@ -81,13 +94,29 @@ void CController::modelsInit(void) {
 	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
 	
 	// lego
-	legoDataObj = new CLoadedObj(MODEL_LEGO, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram);
-	lego = new CLoadedObj * [LEGO_BRICKS_COUNT];
-	for (int i = 0; i < LEGO_BRICKS_COUNT; i += 4) {
-		lego[i + 0] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST, -2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 1] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST, -2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 2] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST,  2.0f,  3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
-		lego[i + 3] = new CLoadedObj(MODEL_LEGO, glm::vec3(i * LEGO_BRICKS_DIST,  2.0f, -3.0f), glm::vec3(1.0f), &legoShaderProgram, legoDataObj);
+	legoData = new CLoadedObj * [3];
+	legoData[0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // kick
+	legoData[1] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // hihat
+	legoData[2] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // pluck
+
+	lego = new CLoadedObj * [LEGO_BRICKS_LOOPS * 10];
+	glm::vec2 kickPos  = glm::vec2(LEGO_BRICKS_DIST * glm::cos(glm::radians(45.0f)), LEGO_BRICKS_DIST * glm::sin(glm::radians(45.0f)));
+	glm::vec2 hihatPos = glm::vec2(LEGO_BRICKS_DIST * 1.0f, LEGO_BRICKS_DIST * 0.0f);
+	glm::vec2 pluckPos = glm::vec2(LEGO_BRICKS_DIST * glm::cos(glm::radians(22.5f)), LEGO_BRICKS_DIST * glm::sin(glm::radians(22.5f)));
+	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10) {
+		// kick bricks
+		lego[i + 0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
+		lego[i + 1] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
+		lego[i + 2] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
+		lego[i + 3] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
+		// hihat bricks
+		lego[i + 4] = new CLoadedObj(MODEL_LEGO_7, glm::vec3( hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[1]);
+		lego[i + 5] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(-hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[1]);
+		// pluck bricks
+		lego[i + 6] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
+		lego[i + 7] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
+		lego[i + 8] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
+		lego[i + 9] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
 	}
 }
 
@@ -99,17 +128,29 @@ void CController::update(void) {
 	if (state.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
 	if (state.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
 
-	for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->rotate(glfwGetTime());
+	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) lego[i]->rotate(glfwGetTime());
 }
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 			case MIDI_DRUM_KICK1:
-				for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->setMaterials(MODEL_LEGO);
+				state.drumMap[DRUM_KICK1] = true;
+				for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10)
+					for (int j = 0; j < 4; j++)
+						lego[i + j]->switchRotAxis(glfwGetTime());
 				break;
 			case MIDI_DRUM_HIHAT_CLOSED:
-				for (int i = 0; i < LEGO_BRICKS_COUNT; i++) lego[i]->switchRotAxis(glfwGetTime());
+				state.drumMap[DRUM_HIHAT_CLOSED] = true;
+				for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10)
+					for (int j = 4; j < 6; j++)
+						lego[i + j]->switchRotAxis(glfwGetTime());
+				break;
+			case MIDI_DRUM_SNARE2:
+				state.drumMap[DRUM_PLUCK] = true;
+				for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10)
+					for (int j = 6; j < 10; j++)
+						lego[i + j]->switchRotAxis(glfwGetTime());
 				break;
 			default: 
 				cout  << "Unresolved midi note:" << status << " " << note << " " << velocity << endl;
