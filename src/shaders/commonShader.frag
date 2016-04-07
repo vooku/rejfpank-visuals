@@ -34,9 +34,9 @@ out vec4 color;
 // ----------------------------------------------------------------------------------- Functions
 void lightsInit(void) {
 	whiteLight.position = (VMatrix * vec4 (-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
-	whiteLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
-	whiteLight.diffuse = vec3 (0.5f, 0.5f, 0.5f);
-	whiteLight.specular = vec3 (0.3f, 0.3f, 0.3f);
+	whiteLight.ambient =  vec3(1.0f);
+	whiteLight.diffuse =  vec3(1.0f);
+	whiteLight.specular = vec3(0.5f);
 	
 	redLight.position = (VMatrix * vec4 (-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
 	redLight.ambient = vec3 (1.0f, 1.0f, 1.0f);

@@ -14,11 +14,16 @@ CController::CController() {
 }
 
 CController::~CController(void) {
+	delete shaderPrograms;
+
 	delete skybox;
+
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) delete lego[i];
 	delete[] lego;
 	for (int i = 0; i < 3; i++) delete legoData[i];
 	delete legoData;
+
+	delete banner;
 }
 
 void CController::redraw(GLFWwindow * window) {
@@ -29,95 +34,121 @@ void CController::redraw(GLFWwindow * window) {
 		camera.position + camera.direction,
 		camera.up);
 
-	glm::mat4 Pmatrix = glm::perspective(
+	glm::mat4 PMatrix = glm::perspective(
 		glm::radians(CAMERA_VIEW_ANGLE),
 		state.winWidth / (float)state.winHeight,
 		CAMERA_VIEW_START,
 		CAMERA_VIEW_DIST);
 
-	skybox->draw(Pmatrix, VMatrix);
+	// skybox
+	skybox->draw(PMatrix, VMatrix);
+
+	// lego
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10) {
 		if (state.drumMap[DRUM_KICK1])
 			for (int j = 0; j < 4; j++)
-				lego[i + j]->draw(Pmatrix, VMatrix);
+				lego[i + j]->draw(PMatrix, VMatrix);
 
 		if (state.drumMap[DRUM_HIHAT_CLOSED])
 			for (int j = 4; j < 6; j++)
-				lego[i + j]->draw(Pmatrix, VMatrix);
+				lego[i + j]->draw(PMatrix, VMatrix);
 
 		if (state.drumMap[DRUM_PLUCK])
 			for (int j = 6; j < 10; j++)
-				lego[i + j]->draw(Pmatrix, VMatrix);
+				lego[i + j]->draw(PMatrix, VMatrix);
 	}
+
+	// banner
+	banner->draw(PMatrix, VMatrix);
 
 	glfwSwapBuffers(window);
 }
 
 void CController::shadersInit(void) {
 	vector<GLuint> shaders;
+	shaderPrograms = new TCommonShaderProgram[3];
 
 	// Init skybox shaders
 	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
 	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
-	skyboxShaderProgram.program = pgr::createProgram(shaders);
+	shaderPrograms[0].program = pgr::createProgram(shaders);
 
 		// Get uniform locations
-		skyboxShaderProgram.PVMMatrixLocation = glGetUniformLocation(skyboxShaderProgram.program, "PVMMatrix");
+		shaderPrograms[0].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[0].program, "PVMMatrix");
+		shaderPrograms[0].colorMultiplierLocation = glGetUniformLocation(shaderPrograms[0].program, "colorMultiplier");
 		// Get input locations
-		skyboxShaderProgram.posLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
+		shaderPrograms[0].posLocation = glGetAttribLocation(shaderPrograms[0].program, "position");
 
 	shaders.clear();
 
 	// Init lego shaders
 	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/commonShader.vert"));
 	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/commonShader.frag"));
-	legoShaderProgram.program = pgr::createProgram(shaders);
+	shaderPrograms[1].program = pgr::createProgram(shaders);
 
 		// Get uniform locations
-		legoShaderProgram.PVMMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "PVMMatrix");
-		legoShaderProgram.VMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "VMatrix");
-		legoShaderProgram.MMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "MMatrix");
-		legoShaderProgram.normalMatrixLocation = glGetUniformLocation(legoShaderProgram.program, "normalMatrix");
-		legoShaderProgram.diffuseLocation = glGetUniformLocation(legoShaderProgram.program, "material.diffuse");
-		legoShaderProgram.ambientLocation = glGetUniformLocation(legoShaderProgram.program, "material.ambient");
-		legoShaderProgram.specularLocation = glGetUniformLocation(legoShaderProgram.program, "material.specular");
-		legoShaderProgram.shininessLocation = glGetUniformLocation(legoShaderProgram.program, "material.shininess");
+		shaderPrograms[1].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[1].program, "PVMMatrix");
+		shaderPrograms[1].VMatrixLocation = glGetUniformLocation(shaderPrograms[1].program, "VMatrix");
+		shaderPrograms[1].MMatrixLocation = glGetUniformLocation(shaderPrograms[1].program, "MMatrix");
+		shaderPrograms[1].normalMatrixLocation = glGetUniformLocation(shaderPrograms[1].program, "normalMatrix");
+		shaderPrograms[1].diffuseLocation = glGetUniformLocation(shaderPrograms[1].program, "material.diffuse");
+		shaderPrograms[1].ambientLocation = glGetUniformLocation(shaderPrograms[1].program, "material.ambient");
+		shaderPrograms[1].specularLocation = glGetUniformLocation(shaderPrograms[1].program, "material.specular");
+		shaderPrograms[1].shininessLocation = glGetUniformLocation(shaderPrograms[1].program, "material.shininess");
 		// Get input locations
-		legoShaderProgram.posLocation = glGetAttribLocation(legoShaderProgram.program, "position");
-		legoShaderProgram.normalLocation = glGetAttribLocation(legoShaderProgram.program, "normal");
+		shaderPrograms[1].posLocation = glGetAttribLocation(shaderPrograms[1].program, "position");
+		shaderPrograms[1].normalLocation = glGetAttribLocation(shaderPrograms[1].program, "normal");
 
+	shaders.clear();
+
+	// Init banner shaders
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/bannerShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/bannerShader.frag"));
+	shaderPrograms[2].program = pgr::createProgram(shaders);
+
+		// Get uniform locations
+		shaderPrograms[2].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[2].program, "PVMMatrix");
+		// Get input locations
+		shaderPrograms[2].posLocation = glGetAttribLocation(shaderPrograms[2].program, "position");
+		shaderPrograms[2].texCoordsLocation = glGetAttribLocation(shaderPrograms[2].program, "texCoords");
+		
 	shaders.clear();
 }
 
 void CController::modelsInit(void) {
 	// skybox
-	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &skyboxShaderProgram);
+	skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &shaderPrograms[0]);
 	
 	// lego
 	legoData = new CLoadedObj * [3];
-	legoData[0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // kick
-	legoData[1] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // hihat
-	legoData[2] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(0.0f), glm::vec3(1.0f), &legoShaderProgram); // pluck
+	legoData[0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(0.0f), glm::vec3(1.0f), &shaderPrograms[1]); // kick
+	legoData[1] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(0.0f), glm::vec3(1.0f), &shaderPrograms[1]); // hihat
+	legoData[2] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(0.0f), glm::vec3(1.0f), &shaderPrograms[1]); // pluck
 
 	lego = new CLoadedObj * [LEGO_BRICKS_LOOPS * 10];
+	
 	glm::vec2 kickPos  = glm::vec2(LEGO_BRICKS_DIST * glm::cos(glm::radians(45.0f)), LEGO_BRICKS_DIST * glm::sin(glm::radians(45.0f)));
 	glm::vec2 hihatPos = glm::vec2(LEGO_BRICKS_DIST * 1.0f, LEGO_BRICKS_DIST * 0.0f);
 	glm::vec2 pluckPos = glm::vec2(LEGO_BRICKS_DIST * glm::cos(glm::radians(22.5f)), LEGO_BRICKS_DIST * glm::sin(glm::radians(22.5f)));
+	
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i += 10) {
 		// kick bricks
-		lego[i + 0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
-		lego[i + 1] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
-		lego[i + 2] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
-		lego[i + 3] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[0]);
+		lego[i + 0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[0]);
+		lego[i + 1] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x,  kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[0]);
+		lego[i + 2] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[0]);
+		lego[i + 3] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x, -kickPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[0]);
 		// hihat bricks
-		lego[i + 4] = new CLoadedObj(MODEL_LEGO_7, glm::vec3( hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[1]);
-		lego[i + 5] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(-hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[1]);
+		lego[i + 4] = new CLoadedObj(MODEL_LEGO_7, glm::vec3( hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[1]);
+		lego[i + 5] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(-hihatPos.x, hihatPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[1]);
 		// pluck bricks
-		lego[i + 6] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
-		lego[i + 7] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
-		lego[i + 8] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
-		lego[i + 9] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &legoShaderProgram, legoData[2]);
+		lego[i + 6] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[2]);
+		lego[i + 7] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x,  pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[2]);
+		lego[i + 8] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(-pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[2]);
+		lego[i + 9] = new CLoadedObj(MODEL_LEGO_9, glm::vec3( pluckPos.x, -pluckPos.y, i / 10 * LEGO_BRICKS_DIST), glm::vec3(1.0f), &shaderPrograms[1], legoData[2]);
 	}
+
+	// banner
+	banner = new CBanner(glm::vec3(0.0f), &shaderPrograms[2]);
 }
 
 void CController::update(void) {

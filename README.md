@@ -11,6 +11,7 @@ The rest of the readme is mostly for myself.
 - setup mpx16 midi
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - create a GLFW_ICON when illustrations are ready
+- try exporting smooth shaded obj from blender
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

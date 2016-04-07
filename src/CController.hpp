@@ -7,9 +7,10 @@
 #define _REJFPANK_CCONTAINER
 
 #include "data.hpp"
+#include "CCamera.hpp"
 #include "CSkybox.hpp"
 #include "CLoadedObj.hpp"
-#include "CCamera.hpp"
+#include "CBanner.hpp"
 
 /** A class serving as both a container and a controller for all objects.
  *
@@ -45,9 +46,9 @@ protected:
 	CLoadedObj ** legoData;
 	CLoadedObj ** lego;
 	CSkybox * skybox;
+	CBanner * banner;
 
-	TCommonShaderProgram skyboxShaderProgram;
-	TCommonShaderProgram legoShaderProgram;
+	TCommonShaderProgram * shaderPrograms;
 };
 
 extern CController controller;

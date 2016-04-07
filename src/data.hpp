@@ -37,6 +37,8 @@
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
 
+#define BANNER_SIZE 10.0f
+
 #define LEGO_BRICKS_LOOPS 5
 #define LEGO_BRICKS_DIST 5
 
@@ -77,9 +79,9 @@ enum {
 	KEY_COUNT
 };
 
-const unsigned int cubeNVertices = 8;
-const unsigned int cubeNAttribsPerVertex = 6;
-const float cubeVertices[cubeNVertices * cubeNAttribsPerVertex] = {
+const unsigned int nCubeVertices = 8;
+const unsigned int nCubeAttribsPerVertex = 6;
+const float cubeVertices[nCubeVertices * nCubeAttribsPerVertex] = {
 	// x      y      z       nx     ny    nz
 	-1.0f, -1.0f, -1.0f,  -1.0f, -1.0f, -1.0f,
 	-1.0f, -1.0f,  1.0f,  -1.0f, -1.0f,  1.0f,
@@ -91,14 +93,25 @@ const float cubeVertices[cubeNVertices * cubeNAttribsPerVertex] = {
 	1.0f,  1.0f,  1.0f,   1.0f,  1.0f,  1.0f
 };
 
-const unsigned int cubeNTriangles = 36;
-const unsigned short cubeTriangles[cubeNTriangles] = {
+const unsigned int nCubeTriangles = 36;
+const unsigned short cubeTriangles[nCubeTriangles] = {
 	0, 2, 4,   4, 2, 6, // back face
 	0, 1, 2,   2, 1, 3, // left face
 	1, 5, 3,   3, 5, 7, // front face
 	5, 4, 7,   7, 4, 6, // right face
 	3, 7, 2,   2, 7, 6, // upper face
 	0, 4, 1,   1, 4, 5, // lower face
+};
+
+const unsigned int nBannerVertices = 4;
+const unsigned int nBannerAttribsPerVertex = 5;
+const unsigned int nBannerTriangles = 2;
+const float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
+	// x      y     z     u     v
+	-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+	 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
 };
 
 #endif // !_REJFPANK_DATA_HPP

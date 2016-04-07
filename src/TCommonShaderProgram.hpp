@@ -15,7 +15,7 @@ struct TCommonShaderProgram {
 	GLint PVMMatrixLocation;
 	GLint MMatrixLocation;
 	GLint VMatrixLocation;
-	GLint normalMatrixLocation; //  inverse transposed VMatrix
+	GLint normalMatrixLocation; // inverse transposed VMatrix
 	// material 
 	GLint diffuseLocation;
 	GLint ambientLocation;
@@ -23,6 +23,8 @@ struct TCommonShaderProgram {
 	GLint shininessLocation;
 
 	GLint texSamplerLocation;
+	
+	GLint colorMultiplierLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

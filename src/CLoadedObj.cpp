@@ -12,33 +12,22 @@
 using namespace std;
 
 CLoadedObj::CLoadedObj(const char * filename,
-					   const glm::vec3 position,
-					   const glm::vec3 scale,
-					   TCommonShaderProgram * shaderProgram)
-	: CDrawable (position, scale, shaderProgram),
-	  containsData(true),
-	  dataObj(this) {
-
-	if (!this->loadObj(filename)) {
-		cerr << "Error: Cannot load " << filename << "!" << endl;
-		enableDraw = false;
-		return;
-	}
-	cout << "loaded file: " << filename << endl;
-	enableDraw = true;
-
-	this->setMaterials(filename);
-}
-
-CLoadedObj::CLoadedObj(const char * filename,
-					   const glm::vec3 position,
-					   const glm::vec3 scale,
+					   const glm::vec3 & position,
+					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram,
 					   const CLoadedObj * dataObj)
 	: CDrawable(position, scale, shaderProgram),
-	  containsData(false),
 	  dataObj(dataObj) {
-
+	if (dataObj == NULL) {
+		if (!this->loadObj(filename)) {
+			cerr << "Error: Cannot load " << filename << "!" << endl;
+			enableDraw = false;
+			return;
+		}
+		containsData = true;
+		cout << "loaded file: " << filename << endl;
+	}
+	else containsData = false;
 	enableDraw = true;
 
 	this->setMaterials(filename);
@@ -140,14 +129,14 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform1f(shaderProgram->shininessLocation, material.shininess);
 }
 
-void CLoadedObj::draw(const glm::mat4 & Pmatrix, const glm::mat4 & VMatrix) {
+void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (!enableDraw) return;
 
 	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
 	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
 	tempMats.MMatrix = tempMats.MMatrix * pastRotMatrix * rotMatrix;
 	tempMats.VMatrix = VMatrix;
-	tempMats.PVMMatrix = Pmatrix * VMatrix * tempMats.MMatrix;
+	tempMats.PVMMatrix = PMatrix * VMatrix * tempMats.MMatrix;
 	tempMats.normalMatrix = glm::transpose(glm::inverse(tempMats.MMatrix));
 
 	//glActiveTexture(GL_TEXTURE0);

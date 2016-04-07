@@ -167,7 +167,7 @@ void rejfpankInit(GLFWwindow * window) {
 	controller.modelsInit();
 	callbacksInit(window);
 
-	glClearColor(0.3f, 0.0f, 0.1f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
