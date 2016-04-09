@@ -31,7 +31,8 @@
 #define MOUSE_SENSITIVITY 0.01f
 #define VIEW_ANGLE_DELTA 0.01f ///< in degrees
 #define STEP_LENGTH 0.1f
-#define ROTATION_SPEED 1.5f
+#define ROTATION_SPEED 2.0f
+#define ROTATION_TIME 0.2f
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
