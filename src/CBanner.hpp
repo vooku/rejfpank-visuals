@@ -10,7 +10,7 @@
 
 class CBanner : public CDrawable {
 public:
-	CBanner(const glm::vec3 & position, TCommonShaderProgram * shaderProgram);
+	CBanner(const glm::vec3 position, TCommonShaderProgram * shaderProgram);
 	//~CBanner();
 	
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);

@@ -1,11 +1,12 @@
 #include "CBanner.hpp"
 #include "data.hpp"
 
+#include "pgr\Shader.hpp"
+
 using namespace std;
 
-CBanner::CBanner(const glm::vec3 & position, TCommonShaderProgram * shaderProgram)
+CBanner::CBanner(const glm::vec3 position, TCommonShaderProgram * shaderProgram)
 	: CDrawable(position, glm::vec3(BANNER_SIZE), shaderProgram) {
-	geometry.numTriangles = nBannerTriangles;
 
 	//geometry.texture = pgr::createTexture(GLITCH_TEXTURE_NAME, false);
 
@@ -27,11 +28,9 @@ CBanner::CBanner(const glm::vec3 & position, TCommonShaderProgram * shaderProgra
 void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_ONE, GL_ONE);
-	//
+	
 	//glDisable(GL_DEPTH_TEST);
-
-	glUseProgram(shaderProgram->program);
-
+	
 	// just take rotation part of the view transform
 	glm::mat4 billboardRotationMatrix = glm::mat4(
 		VMatrix[0],
@@ -51,8 +50,9 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 	glBindVertexArray(geometry.vertexArrayObject);
 	//glBindTexture(GL_TEXTURE_2D, geometry.texture);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, geometry.numTriangles);
-
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, nBannerVertices);
+	
+	CHECK_GL_ERROR();
 	glBindVertexArray(0);
 	glUseProgram(0);
 	//glDisable(GL_BLEND);

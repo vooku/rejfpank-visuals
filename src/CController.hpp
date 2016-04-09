@@ -43,10 +43,10 @@ public:
 		}
 	} state;
 protected:
-	CLoadedObj ** legoData;
-	CLoadedObj ** lego;
-	CSkybox * skybox;
-	CBanner * banner;
+	CDrawable ** legoData;
+	CDrawable ** lego;
+	CDrawable * skybox;
+	CDrawable * banner;
 
 	TCommonShaderProgram * shaderPrograms;
 };

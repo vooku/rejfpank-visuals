@@ -106,7 +106,6 @@ const unsigned short cubeTriangles[nCubeTriangles] = {
 
 const unsigned int nBannerVertices = 4;
 const unsigned int nBannerAttribsPerVertex = 5;
-const unsigned int nBannerTriangles = 2;
 const float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
 	// x      y     z     u     v
 	-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
