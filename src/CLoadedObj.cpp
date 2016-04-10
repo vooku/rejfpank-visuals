@@ -4,7 +4,7 @@
 #include <cstring>
 #include <sstream>
 
-#include "pgr\Shader.hpp" // CHECK_GL_ERROR
+#include "pgr\pgr.hpp" // CHECK_GL_ERROR
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>

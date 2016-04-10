@@ -5,14 +5,15 @@
  * \date 2011-2012
  */
 
-#ifndef _PGR_SHADER
-#define _PGR_SHADER
+#ifndef _PGR
+#define _PGR
 
 #include <vector>
 #include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <IL/il.h>
 
 namespace pgr {
 
@@ -79,6 +80,34 @@ GLuint createProgram(const GLuint * shaders);
  */
 void deleteProgramAndShaders( GLuint theProgram );
 
+/** Simple texture loading helper
+*
+* The function creates 1 2D texture (calling glGenTextures), loads its image using pgr::loadTexImage2D,
+* sets filtering (calling glTexParameteri) and also creates mipmaps if required (using glGenerateMipmap).
+*
+* The texture will be created with linear filtering and mip-mapping enabled by default.
+* You can disable mip-mapping and mipmap generation setting the mipmap parameter to false.
+*
+* \param fileName the texture file name
+* \param mipmap Enable and generate mipmaps for this texture
+* \return texture usable in OpenGL or 0 on failure
+*/
+GLuint createTexture(const std::string &fileName, bool mipmap = true);
+
+/** Load texture from file and uplad texels to opengl using glTexImage2D
+*
+* The functions will load texels from fileName and call glTexImage2D,
+* so the data will replace image of the currently texture, currently bound to target.
+*
+* \note The DevIL library is used internally. Make sure ilInit() is called before this function (for example in pgr::initialize()).
+* \note The function has to be called after successful creation of the OpenGL context.
+* \warning Make sure ilInit() was called prior to this function (for example in pgr::initialize())
+* \param fileName file to open and load as a texture
+* \param target which texture target will be used as a parameter of glTexImage2D (GL_TEXTURE_2D for example)
+* \return true if texture was successfully loaded from fileName
+*/
+bool loadTexImage2D(const std::string & fileName, GLenum target);
+
 } // end namespace pgr
 
-#endif // !_PGR_SHADER
+#endif // !_PGR

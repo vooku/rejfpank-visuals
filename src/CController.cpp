@@ -1,6 +1,6 @@
 #include "CController.hpp"
 #include "midicodes.hpp"
-#include "pgr/Shader.hpp"
+#include "pgr/pgr.hpp"
 
 #include <vector>
 
@@ -108,6 +108,7 @@ void CController::shadersInit(void) {
 
 		// Get uniform locations
 		shaderPrograms[2].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[2].program, "PVMMatrix");
+		shaderPrograms[2].texSamplerLocation = glGetUniformLocation(shaderPrograms[2].program, "texSampler");
 		// Get input locations
 		shaderPrograms[2].posLocation = glGetAttribLocation(shaderPrograms[2].program, "position");
 		shaderPrograms[2].texCoordsLocation = glGetAttribLocation(shaderPrograms[2].program, "texCoords");

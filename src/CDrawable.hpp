@@ -33,6 +33,7 @@ protected:
 		GLuint elementBufferObject;
 		GLuint vertexArrayObject;
 		unsigned int numTriangles;
+		GLuint texture;
 	} geometry;
 
 	struct TTempMatrices {

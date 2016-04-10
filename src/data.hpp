@@ -9,6 +9,8 @@
 
 #include <glm/glm.hpp>
 
+#define TEX_TEST "../res/test.png"
+
 #define MIDI_LONG_BUFFER_SIZE 1024
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
