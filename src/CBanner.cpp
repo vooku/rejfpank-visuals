@@ -1,12 +1,14 @@
 #include "CBanner.hpp"
+//#include ""
 #include "data.hpp"
 
 #include "pgr\pgr.hpp"
 
 using namespace std;
 
-CBanner::CBanner(const glm::vec3 position, TCommonShaderProgram * shaderProgram)
-	: CDrawable(position, glm::vec3(BANNER_SIZE), shaderProgram) {
+CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram)
+	: CDrawable(camera->position + glm::normalize(camera->direction), glm::vec3(BANNER_SIZE), shaderProgram),
+	  camera (camera) {
 	alpha = 0.3f;
 
 	geometry.texture = pgr::createTexture(TEX_TEST, false);
@@ -40,6 +42,8 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	// inverse view rotation
 	billboardRotationMatrix = glm::transpose(billboardRotationMatrix);
+
+	position = camera->position + glm::normalize(camera->direction);
 
 	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
 	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);

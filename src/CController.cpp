@@ -150,13 +150,13 @@ void CController::modelsInit(void) {
 	}
 
 	// banner
-	banner = new CBanner(glm::vec3(0.0f), &shaderPrograms[2]);
+	banner = new CBanner(&camera, &shaderPrograms[2]);
 }
 
 void CController::update(void) {
-	if (state.keyMap[KEY_UP] || controller.state.keyMap[KEY_W]) camera.move(STEP_LENGTH);
-	if (state.keyMap[KEY_DOWN] || controller.state.keyMap[KEY_S]) camera.move(-STEP_LENGTH);
-	if (state.keyMap[KEY_LEFT] || controller.state.keyMap[KEY_A]) camera.sideStep(-STEP_LENGTH);
+	if (state.keyMap[KEY_UP]    || controller.state.keyMap[KEY_W]) camera.move(STEP_LENGTH);
+	if (state.keyMap[KEY_DOWN]  || controller.state.keyMap[KEY_S]) camera.move(-STEP_LENGTH);
+	if (state.keyMap[KEY_LEFT]  || controller.state.keyMap[KEY_A]) camera.sideStep(-STEP_LENGTH);
 	if (state.keyMap[KEY_RIGHT] || controller.state.keyMap[KEY_D]) camera.sideStep(STEP_LENGTH);
 	if (state.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
 	if (state.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
@@ -165,7 +165,61 @@ void CController::update(void) {
 }
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
-	if (status == MIDI_NOTE_ON_CH02) {
+	//-------------------------------------------------------------------> AKAI MPX16
+	if (status == MIDI_NOTE_ON_CH10) {
+		switch (note) {
+			case MPX16_PAD01:
+				state.keyMap[KEY_UP] = true;
+				state.keyMap[KEY_DOWN] = false;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = false;
+				break;
+			case MPX16_PAD02:
+				state.keyMap[KEY_UP] = false;
+				state.keyMap[KEY_DOWN] = true;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = false;
+				break;
+			case MPX16_PAD03:
+				state.keyMap[KEY_UP] = true;
+				state.keyMap[KEY_DOWN] = false;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = false;
+				break;
+			case MPX16_PAD04: // switch sample off
+				state.keyMap[KEY_UP] = false;
+				state.keyMap[KEY_DOWN] = false;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = false;
+				break;
+			case MPX16_PAD05:
+				state.keyMap[KEY_UP] = true;
+				state.keyMap[KEY_DOWN] = false;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = true;
+				break;
+			case MPX16_PAD06:
+				state.keyMap[KEY_UP] = false;
+				state.keyMap[KEY_DOWN] = true;
+				state.keyMap[KEY_Q] = true;
+				state.keyMap[KEY_E] = false;
+				break;
+			case MPX16_PAD07:
+				state.keyMap[KEY_UP] = true;
+				state.keyMap[KEY_DOWN] = false;
+				state.keyMap[KEY_Q] = false;
+				state.keyMap[KEY_E] = true;
+				break;
+			case MPX16_PAD08:
+				
+				break;
+			default:
+				cout << "Unresolved midi note:" << status << " " << note << " " << velocity << endl;
+				break;
+		}
+	}
+	//-------------------------------------------------------------------> ALESIS SR16
+	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 			case MIDI_DRUM_KICK1:
 				state.drumMap[DRUM_KICK1] = true;

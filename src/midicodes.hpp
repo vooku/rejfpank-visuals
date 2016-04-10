@@ -16,7 +16,25 @@
 	RIDE		51	MIDI_DRUM_CYMBAL_RIDE1
 	CRASH		49	MIDI_DRUM_CYMBAL_CRASH1
 	PERC 1		55	MIDI_DRUM_CYMBAL_SPLASH
- -----------------------------------*/
+-----------------------------------*/
+
+// AKAI MPX16
+#define MPX16_PAD01 36	
+#define MPX16_PAD02 37	
+#define MPX16_PAD03 38	
+#define MPX16_PAD04 39	
+#define MPX16_PAD05 40	
+#define MPX16_PAD06 41	
+#define MPX16_PAD07 42	
+#define MPX16_PAD08 43	
+#define MPX16_PAD09 44	
+#define MPX16_PAD10 45	
+#define MPX16_PAD11 46	
+#define MPX16_PAD12 47	
+#define MPX16_PAD13 48	
+#define MPX16_PAD14 49	
+#define MPX16_PAD15 50	
+#define MPX16_PAD16 51	
 
 #define MIDI_NOTE_ON_CH01	144
 #define MIDI_NOTE_ON_CH02	145

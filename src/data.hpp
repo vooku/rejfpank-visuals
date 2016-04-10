@@ -25,7 +25,7 @@
 #define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
 #define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
-#define CAMERA_INIT_FREE false
+#define CAMERA_INIT_FREE true
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 350.0f
@@ -35,12 +35,14 @@
 #define STEP_LENGTH 0.1f
 #define ROTATION_SPEED 2.0f
 #define ROTATION_TIME 0.2f
+#define MOVE_MAX_TIME 2.6f
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
 
-#define BANNER_SIZE 10.0f
+#define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
+#define CURVE_SIZE 8 // >= 4 !!!
 
 #define LEGO_BRICKS_LOOPS 5
 #define LEGO_BRICKS_DIST 5

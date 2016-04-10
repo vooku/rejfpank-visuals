@@ -55,3 +55,45 @@ void CCamera::reset(void) {
 	up = CAMERA_INIT_UP;
 	right = glm::normalize(glm::cross(direction, up));
 }
+
+void CCamera::flow(const GLfloat t) {
+	cout << "cam::flow" << endl;
+/*	int i = (int)floor(t);
+	this->setFlowPts(i);
+
+	glm::vec3 relPos = this->evaluateCurveSegment(t - i);
+
+	position = initPos + relPos;
+	direction = glm::normalize(this->evaluateCurveSegment1stDer(t - i));
+	//up = CAMERA_INIT_UP;
+	right = glm::normalize(glm::cross(direction, up));
+	*/
+}
+
+void CCamera::setFlowPts(const int i) {
+	flowPoints.p0 = curveData[(i - 1) % CURVE_SIZE];
+	flowPoints.p1 = curveData[(i + 0) % CURVE_SIZE];
+	flowPoints.p2 = curveData[(i + 1) % CURVE_SIZE];
+	flowPoints.p3 = curveData[(i + 2) % CURVE_SIZE];
+}
+
+glm::vec3 CCamera::evaluateCurveSegment(const GLfloat t) {
+	const float t1 = t;
+	const float t2 = t1 * t1;
+	const float t3 = t1 * t2;
+
+	return 0.5f * (flowPoints.p0 * (-t3 + 2.0f * t2 - t1)
+				 + flowPoints.p1 * (3.0f * t3 - 5.0f * t2 + 2.0f)
+				 + flowPoints.p2 * (-3.0f * t3 + 4.0f * t2 + t1)
+				 + flowPoints.p3 * (t3 - t2));
+}
+
+glm::vec3 CCamera::evaluateCurveSegment1stDer(const GLfloat t) {
+	const float t1 = t;
+	const float t2 = t1 * t1;
+
+	return 0.5f * (flowPoints.p0 * (-3.0f * t2 + 4.0f * t1 - 1.0f)
+				 + flowPoints.p1 * (9.0f * t2 - 10.0f * t1)
+				 + flowPoints.p2 * (-9.0f * t2 + 8.0f * t1 + 1.0f)
+				 + flowPoints.p3 * (3.0f * t2 - 2.0f * t1));
+}

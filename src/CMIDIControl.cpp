@@ -68,7 +68,7 @@ void CMIDIControl::selectPort(void) {
 			selectedPort = (unsigned int)atoi(data.c_str());
 		} while (selectedPort < 1 || selectedPort > nPorts);
 	}
-	else if (nPorts > 10) selectedPort = 11;
+	//else if (nPorts > 10) selectedPort = 11;
 	else selectedPort = SELECT_MIDI_PORT_DEFAULT;
 	cout << "Selected port " << selectedPort << "." << endl;
 	selectedPort--; // the ports display as starting from 1 instead of 0 
