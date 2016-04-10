@@ -109,6 +109,7 @@ void CController::shadersInit(void) {
 		// Get uniform locations
 		shaderPrograms[2].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[2].program, "PVMMatrix");
 		shaderPrograms[2].texSamplerLocation = glGetUniformLocation(shaderPrograms[2].program, "texSampler");
+		shaderPrograms[2].alphaLocation = glGetUniformLocation(shaderPrograms[2].program, "alpha");
 		// Get input locations
 		shaderPrograms[2].posLocation = glGetAttribLocation(shaderPrograms[2].program, "position");
 		shaderPrograms[2].texCoordsLocation = glGetAttribLocation(shaderPrograms[2].program, "texCoords");

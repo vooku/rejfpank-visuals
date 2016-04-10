@@ -7,6 +7,7 @@ using namespace std;
 
 CBanner::CBanner(const glm::vec3 position, TCommonShaderProgram * shaderProgram)
 	: CDrawable(position, glm::vec3(BANNER_SIZE), shaderProgram) {
+	alpha = 0.3f;
 
 	geometry.texture = pgr::createTexture(TEX_TEST, false);
 
@@ -26,8 +27,8 @@ CBanner::CBanner(const glm::vec3 position, TCommonShaderProgram * shaderProgram)
 	glBindVertexArray(0);
 }
 void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_ONE, GL_ONE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	glDisable(GL_DEPTH_TEST);
 	
@@ -55,7 +56,8 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	CHECK_GL_ERROR();
 	glBindVertexArray(0);
 	glUseProgram(0);
-	//glDisable(GL_BLEND);
+
+	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -64,4 +66,5 @@ void CBanner::sendUniforms(void) {
 
 	glUniformMatrix4fv(shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMMatrix));
 	glUniform1i(shaderProgram->texSamplerLocation, 0);
+	glUniform1f(shaderProgram->alphaLocation, alpha);
 }

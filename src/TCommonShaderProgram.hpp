@@ -21,6 +21,7 @@ struct TCommonShaderProgram {
 	GLint ambientLocation;
 	GLint specularLocation;
 	GLint shininessLocation;
+	GLint alphaLocation;
 
 	GLint texSamplerLocation;
 	

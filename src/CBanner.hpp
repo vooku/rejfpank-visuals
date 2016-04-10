@@ -17,6 +17,7 @@ public:
 
 protected:
 	void sendUniforms(void);
+	float alpha;
 };
 
 #endif // !_REJFPANK_CBANNER
