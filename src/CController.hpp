@@ -28,9 +28,6 @@ public:
 	void update(void);
 	void midiIn(const unsigned int midiStatus, const unsigned int midiParam1, const unsigned int midiParam2);
 
-	/// Helper function for midiIn()
-	void setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger);
-
 	CCamera camera;
 
 	struct TControlState {
@@ -40,16 +37,19 @@ public:
 		bool keyMap[KEY_COUNT];
 		bool ctrlMap[CTRL_COUNT];
 		bool drumMap[DRUM_COUNT];
-
-		void switchState(const int ctrl) {
-			ctrlMap[ctrl] = !ctrlMap[ctrl];
-		}
 	} state;
 protected:
+	/// Helper function for midiIn()
+	void setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger);
+	/// Helper function for update()
+	void replaceLoop(const int dir);
+
 	CDrawable ** legoData;
 	CDrawable ** lego;
 	CDrawable * skybox;
 	CDrawable * banner;
+
+	int loopCtr;
 
 	TCommonShaderProgram * shaderPrograms;
 };

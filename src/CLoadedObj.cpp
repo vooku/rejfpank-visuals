@@ -15,9 +15,12 @@ CLoadedObj::CLoadedObj(const char * filename,
 					   const glm::vec3 & position,
 					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram,
-					   const CLoadedObj * dataObj)
+					   const CLoadedObj * dataObj,
+					   const int materialIdx)
 	: CDrawable(position, scale, shaderProgram),
 	  dataObj(dataObj) {
+	material.index = materialIdx;
+
 	if (dataObj == NULL) {
 		if (!this->loadObj(filename)) {
 			cerr << "Error: Cannot load " << filename << "!" << endl;
@@ -107,7 +110,7 @@ bool CLoadedObj::loadObj(const char * filename) {
 
 void CLoadedObj::setMaterials(const char * filename) {
 	if (strstr(filename, "lego") != NULL) {
-		glm::vec3 color = legoBrickColors[rand() % 4];
+		glm::vec3 color = material.index == -1 || material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[material.index];
 
 		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
 		material.diffuse = color;

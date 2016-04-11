@@ -49,7 +49,7 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 				glfwSetWindowShouldClose(window, GL_TRUE);
 				break;
 			case GLFW_KEY_F11:
-				controller.state.switchState(CTRL_FULLSCREEN);
+				//controller.state.switchState(CTRL_FULLSCREEN);
 				//TODO waiting for GLFW 3.2
 				break;
 			case GLFW_KEY_F:

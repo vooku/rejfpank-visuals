@@ -23,8 +23,7 @@
 #define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
 #define WIN_TITLE "rejfpank visuals"
 
-//#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
-#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, 5.0f)
+#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
 #define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
 #define CAMERA_INIT_FREE true
@@ -39,7 +38,7 @@
 #define STEP_LENGTH 0.1f
 #define ROTATION_SPEED 2.0f
 #define ROTATION_TIME 0.2f
-#define FLOW_MAX_TIME 2.6f
+#define FLOW_MAX_TIME 2.3f
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)

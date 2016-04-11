@@ -15,7 +15,8 @@ public:
 			   const glm::vec3 & position,
 			   const glm::vec3 & scale,
 			   TCommonShaderProgram * shaderProgram,
-			   const CLoadedObj * dataObj = NULL);
+			   const CLoadedObj * dataObj = NULL,
+			   const int materialIdx = -1);
 
 	bool loadObj(const char * filename);
 	void setMaterials(const char * filename);
@@ -25,11 +26,13 @@ public:
 protected:
 	void sendUniforms(void);
 
-	bool enableDraw; // whether the object was properly initialized (loaded)
+	bool enableDraw; ///< whether the object was properly initialized (loaded)
 	bool containsData;
 	const CLoadedObj * dataObj;
 
 	struct TMaterial {
+		int index; ///< Material hinted from outside
+
 		glm::vec3 ambient;
 		glm::vec3 diffuse;
 		glm::vec3 specular;
