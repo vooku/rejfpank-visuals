@@ -12,6 +12,38 @@ CCamera::CCamera (void)
 
 	direction = glm::normalize(CAMERA_INIT_DIR);
 	right = glm::normalize (glm::cross (direction, up));
+
+	curveData = new glm::vec3[CURVE_SIZE];
+/*	for (int i = 0; i < CURVE_SIZE; i++) {
+		float angle = rand();
+		glm::vec3 pos;
+		pos.x = LEGO_BRICKS_DIST * 0.9f * (float)rand() / RAND_MAX * cos(angle);
+		pos.y = LEGO_BRICKS_DIST * 0.9f * (float)rand() / RAND_MAX * cos(angle);
+		pos.z = (float)rand() / RAND_MAX * LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
+		curveData[i] = pos;
+	}
+*/
+	curveData[0] = glm::vec3( 0.0f, 0.0f, 5.0f);
+	curveData[1] = glm::vec3( 0.0f, 0.0f, 10.0f);
+	curveData[2] = glm::vec3( 0.0f, 0.0f, 15.0f);
+	curveData[3] = glm::vec3( 3.0f, 0.0f, 20.0f);
+	curveData[4] = glm::vec3(-3.0f, 0.0f, 15.0f);
+	curveData[5] = glm::vec3(-3.0f, 0.0f, 10.0f);
+	curveData[6] = glm::vec3(-3.0f, 0.0f,  5.0f);
+	curveData[7] = glm::vec3( 3.0f, 0.0f,  0.0f);
+
+	flowPoints.p0 = curveData[0];
+	flowPoints.p1 = curveData[1];
+	flowPoints.p2 = curveData[2];
+	flowPoints.p3 = curveData[3];
+
+	position = this->evaluateCurveSegment(0.0001f);
+	direction = this->evaluateCurveSegment1stDer(0.0001f);
+}
+
+
+CCamera::~CCamera(void) {
+	delete curveData;
 }
 
 void CCamera::rotate (const GLfloat offsetX, const GLfloat offsetY) {
@@ -27,7 +59,6 @@ void CCamera::rotate (const GLfloat offsetX, const GLfloat offsetY) {
 }
 
 void CCamera::roll (const GLfloat angle) {
-	if (!freedom) return;
 	glm::quat rollQuat = glm::angleAxis (angle, direction);
 	up = glm::normalize (glm::rotate (rollQuat, up));
 	right = glm::normalize (glm::cross (direction, up));
@@ -56,18 +87,19 @@ void CCamera::reset(void) {
 	right = glm::normalize(glm::cross(direction, up));
 }
 
-void CCamera::flow(const GLfloat t) {
-	cout << "cam::flow" << endl;
-/*	int i = (int)floor(t);
+void CCamera::flow(const double t, const int dir) {
+	const double elapsedTime = t - triggerTime;
+	//if (elapsedTime > FLOW_MAX_TIME) return;
+	cout << "cam::flow " << dir << endl;
+	int i = (int)floor(t);
 	this->setFlowPts(i);
 
-	glm::vec3 relPos = this->evaluateCurveSegment(t - i);
+	position = this->evaluateCurveSegment(t - i);
 
-	position = initPos + relPos;
 	direction = glm::normalize(this->evaluateCurveSegment1stDer(t - i));
 	//up = CAMERA_INIT_UP;
-	right = glm::normalize(glm::cross(direction, up));
-	*/
+	//right = glm::normalize(glm::cross(direction, up));
+	
 }
 
 void CCamera::setFlowPts(const int i) {

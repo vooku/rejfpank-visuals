@@ -4,11 +4,10 @@ using namespace std;
 
 CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram)
 	: CObject (position),
-	scale (scale),
-	shaderProgram (shaderProgram),
-	triggerTime(0),
-	rotMatrix(glm::mat4(1.0f)),
-	pastRotMatrix(glm::mat4(1.0f)) {
+	  scale (scale),
+	  shaderProgram (shaderProgram),
+	  rotMatrix(glm::mat4(1.0f)),
+	  pastRotMatrix(glm::mat4(1.0f)) {
 	axis = glm::vec3(0.0f);
 	axis[rand() % 3] = 1.0f; // those two lines make it one of the base axes x, y or z
 }

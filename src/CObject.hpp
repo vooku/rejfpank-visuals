@@ -27,8 +27,9 @@ public:
 	glm::vec3 position;
 	glm::vec3 direction;
 
+	double triggerTime;
 protected:
-
+	
 };
 
 #endif // !_REJFPANK_COBJECT

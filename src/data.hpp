@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 
 #define TEX_TEST "../res/test.png"
+#define TEX_NOISE "../res/noise.jpg"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
@@ -22,20 +23,23 @@
 #define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
 #define WIN_TITLE "rejfpank visuals"
 
-#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
+//#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
+#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, 5.0f)
 #define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
 #define CAMERA_INIT_FREE true
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 350.0f
+#define CAMERA_DIR_FORWARD 1
+#define CAMERA_DIR_BACKWARD -1
 
 #define MOUSE_SENSITIVITY 0.01f
-#define VIEW_ANGLE_DELTA 0.01f ///< in degrees
+#define ROTATION_ANGLE_DELTA 0.02f ///< in degrees
 #define STEP_LENGTH 0.1f
 #define ROTATION_SPEED 2.0f
 #define ROTATION_TIME 0.2f
-#define MOVE_MAX_TIME 2.6f
+#define FLOW_MAX_TIME 2.6f
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
@@ -68,6 +72,7 @@ const glm::vec3 legoBrickColors[4] = {
 /// controls in controlState
 enum {
 	CTRL_FULLSCREEN, CTRL_INIT,
+	CTRL_CAM_FLOW_FORWARD, CTRL_CAM_FLOW_BACKWARD,
 	CTRL_COUNT
 };
 

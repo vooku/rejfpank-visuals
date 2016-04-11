@@ -13,6 +13,7 @@
 class CCamera : public CObject {
 public:
 	CCamera(void);
+	~CCamera(void);
 
 	void rotate(const GLfloat offsetX, const GLfloat offsetY);
 	void roll(const GLfloat angle);
@@ -20,7 +21,7 @@ public:
 	void sideStep(const GLfloat stepLen); ///< Move left or right, the direction is resolved by the + or - sign.
 	void reset(void);
 
-	void flow(const GLfloat t); ///< Move on spline.
+	void flow(const double t, const int dir); ///< Move on spline.
 	void setFlowPts(const int i);
 	glm::vec3 evaluateCurveSegment(const GLfloat t);
 	glm::vec3 evaluateCurveSegment1stDer(const GLfloat t);

@@ -216,8 +216,6 @@ GLFWwindow * createWindow(void) {
 }
 
 int main (void) {
-	controller.state.ctrlMap[CTRL_INIT] = false; // for synchro
-
 	// MIDI init
 	if (!cMIDIControl.init()) {
 		cerr << "Error: Cannot initiate MIDI!" << endl;

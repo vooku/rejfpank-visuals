@@ -8,7 +8,6 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 The rest of the readme is mostly for myself. 
 
 ## Don't forget
-- setup mpx16 midi
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - create a GLFW_ICON when illustrations are ready
 - try exporting smooth shaded obj from blender
@@ -24,8 +23,7 @@ The rest of the readme is mostly for myself.
 - Create light emiting objects via fog
 - Generate random points and draw tham as triangle strip 
 - change directional light on beat
-- King Midas: White (yellow) over everything, aplha slowly fading
-- trailing lego bricks in fifo
+- trailing objects in fifo
 
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.

@@ -21,7 +21,6 @@ public:
 protected:
 	virtual void sendUniforms(void) = 0;
 
-	double triggerTime;
 	glm::mat4 rotMatrix;
 	glm::mat4 pastRotMatrix; // remembers previous rotations around different axes
 	glm::vec3 axis;

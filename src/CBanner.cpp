@@ -1,5 +1,4 @@
 #include "CBanner.hpp"
-//#include ""
 #include "data.hpp"
 
 #include "pgr\pgr.hpp"
@@ -9,9 +8,9 @@ using namespace std;
 CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram)
 	: CDrawable(camera->position + glm::normalize(camera->direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  camera (camera) {
-	alpha = 0.3f;
+	alpha = 0.2f;
 
-	geometry.texture = pgr::createTexture(TEX_TEST, false);
+	geometry.texture = pgr::createTexture(TEX_NOISE, false);
 
 	glGenVertexArrays(1, &geometry.vertexArrayObject);
 	glBindVertexArray(geometry.vertexArrayObject);

@@ -11,6 +11,11 @@ CController controller;
 CController::CController() {
 	state.winWidth = INIT_WIN_WIDTH;
 	state.winHeight = INIT_WIN_HEIGHT;
+
+	for (int i = 0; i < CTRL_COUNT; i++) state.ctrlMap[i] = false;
+	for (int i = 0; i < DRUM_COUNT; i++) state.drumMap[i] = false;
+	for (int i = 0; i < KEY_COUNT; i++) state.keyMap[i] = false;
+	
 }
 
 CController::~CController(void) {
@@ -154,14 +159,27 @@ void CController::modelsInit(void) {
 }
 
 void CController::update(void) {
+	const double t = glfwGetTime();
 	if (state.keyMap[KEY_UP]    || controller.state.keyMap[KEY_W]) camera.move(STEP_LENGTH);
 	if (state.keyMap[KEY_DOWN]  || controller.state.keyMap[KEY_S]) camera.move(-STEP_LENGTH);
 	if (state.keyMap[KEY_LEFT]  || controller.state.keyMap[KEY_A]) camera.sideStep(-STEP_LENGTH);
 	if (state.keyMap[KEY_RIGHT] || controller.state.keyMap[KEY_D]) camera.sideStep(STEP_LENGTH);
-	if (state.keyMap[KEY_Q]) camera.roll(VIEW_ANGLE_DELTA);
-	if (state.keyMap[KEY_E]) camera.roll(-VIEW_ANGLE_DELTA);
+	if (state.keyMap[KEY_Q]) camera.roll(ROTATION_ANGLE_DELTA);
+	if (state.keyMap[KEY_E]) camera.roll(-ROTATION_ANGLE_DELTA);
 
-	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) lego[i]->rotate(glfwGetTime());
+	if (state.ctrlMap[CTRL_CAM_FLOW_FORWARD]) camera.flow(t, CAMERA_DIR_FORWARD);
+	if (state.ctrlMap[CTRL_CAM_FLOW_BACKWARD]) camera.flow(t, CAMERA_DIR_BACKWARD);
+
+	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) lego[i]->rotate(t);
+}
+
+void CController::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
+	state.ctrlMap[CTRL_CAM_FLOW_FORWARD] = flowForward;
+	state.ctrlMap[CTRL_CAM_FLOW_BACKWARD] = flowBackward;
+	state.keyMap[KEY_Q] = rollQ;
+	state.keyMap[KEY_E] = rollE;
+
+	if (trigger) camera.triggerTime = glfwGetTime();
 }
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -169,49 +187,36 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
 			case MPX16_PAD01:
-				state.keyMap[KEY_UP] = true;
-				state.keyMap[KEY_DOWN] = false;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = false;
+				this->setCamFlow(true, false, false, false, true);
 				break;
 			case MPX16_PAD02:
-				state.keyMap[KEY_UP] = false;
-				state.keyMap[KEY_DOWN] = true;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = false;
+				this->setCamFlow(false, true, false, false, true);
 				break;
 			case MPX16_PAD03:
-				state.keyMap[KEY_UP] = true;
-				state.keyMap[KEY_DOWN] = false;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = false;
+				this->setCamFlow(true, false, false, false, true);
 				break;
 			case MPX16_PAD04: // switch sample off
-				state.keyMap[KEY_UP] = false;
-				state.keyMap[KEY_DOWN] = false;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = false;
+				this->setCamFlow(false, false, false, false, false);
 				break;
 			case MPX16_PAD05:
-				state.keyMap[KEY_UP] = true;
-				state.keyMap[KEY_DOWN] = false;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = true;
+				this->setCamFlow(true, false, false, true, true);
 				break;
 			case MPX16_PAD06:
-				state.keyMap[KEY_UP] = false;
-				state.keyMap[KEY_DOWN] = true;
-				state.keyMap[KEY_Q] = true;
-				state.keyMap[KEY_E] = false;
+				this->setCamFlow(false, true, true, false, true);
 				break;
 			case MPX16_PAD07:
-				state.keyMap[KEY_UP] = true;
-				state.keyMap[KEY_DOWN] = false;
-				state.keyMap[KEY_Q] = false;
-				state.keyMap[KEY_E] = true;
+				this->setCamFlow(true, false, false, true, true);
 				break;
 			case MPX16_PAD08:
-				
+				state.ctrlMap[CTRL_CAM_FLOW_FORWARD] = false;
+				state.ctrlMap[CTRL_CAM_FLOW_BACKWARD] = false;
+				if (!state.keyMap[KEY_Q] && !state.keyMap[KEY_E])
+					rand() % 2 == 0 ? state.keyMap[KEY_Q] = true : state.keyMap[KEY_E] = true;
+				else {
+					state.keyMap[KEY_Q] = !state.keyMap[KEY_Q];
+					state.keyMap[KEY_E] = !state.keyMap[KEY_E];
+				}
+				camera.triggerTime = glfwGetTime();
 				break;
 			default:
 				cout << "Unresolved midi note:" << status << " " << note << " " << velocity << endl;
