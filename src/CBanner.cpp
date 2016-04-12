@@ -6,26 +6,26 @@
 using namespace std;
 
 CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const bool useTex, const char * tex)
-	: CDrawable(camera->position + glm::normalize(camera->direction), glm::vec3(BANNER_SIZE), shaderProgram),
+	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),
 	  m_useTex(useTex)  {
 	m_alpha = 1.0f;
 
-	if (m_useTex) geometry.texture = pgr::createTexture(tex, false);
+	if (m_useTex) m_geometry.texture = pgr::createTexture(tex, false);
 	if (strcmp(tex, TEX_NOISE) == 0) m_alpha = 0.2f;
 
-	glGenVertexArrays(1, &geometry.vertexArrayObject);
-	glBindVertexArray(geometry.vertexArrayObject);
+	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
+	glBindVertexArray(m_geometry.vertexArrayObject);
 
-	glGenBuffers(1, &geometry.vertexBufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.vertexBufferObject);
+	glGenBuffers(1, &m_geometry.vertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, m_geometry.vertexBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, nBannerVertices * nBannerAttribsPerVertex * sizeof(float), bannerVertices, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(shaderProgram->posLocation);
-	glVertexAttribPointer(shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, nBannerAttribsPerVertex * sizeof(float), (void *) 0);
+	glEnableVertexAttribArray(m_shaderProgram->posLocation);
+	glVertexAttribPointer(m_shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, nBannerAttribsPerVertex * sizeof(float), (void *) 0);
 
-	glEnableVertexAttribArray(shaderProgram->texCoordsLocation);
-	glVertexAttribPointer(shaderProgram->texCoordsLocation, 2, GL_FLOAT, GL_FALSE, nBannerAttribsPerVertex * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(m_shaderProgram->texCoordsLocation);
+	glVertexAttribPointer(m_shaderProgram->texCoordsLocation, 2, GL_FLOAT, GL_FALSE, nBannerAttribsPerVertex * sizeof(float), (void*)(3 * sizeof(float)));
 	
 	glBindVertexArray(0);
 }
@@ -37,7 +37,7 @@ bool CBanner::setColor(const glm::vec3 & color) {
 }
 
 void CBanner::updateAlpha(const double & time) {
-	const double elapsedTime = time - triggerTime;
+	const double elapsedTime = time - m_triggerTime;
 	m_alpha = (-1.0f / 3.0f) * elapsedTime + 1.0f;
 }
 
@@ -56,18 +56,18 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// inverse view rotation
 	billboardRotationMatrix = glm::transpose(billboardRotationMatrix);
 
-	position = m_camera->position + glm::normalize(m_camera->direction);
+	m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 
-	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
-	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
-	tempMats.MMatrix = tempMats.MMatrix * billboardRotationMatrix; // make billboard face the camera
+	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
+	m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, m_scale);
+	m_tempMats.MMatrix = m_tempMats.MMatrix * billboardRotationMatrix; // make billboard face the camera
 
-	tempMats.PVMMatrix = PMatrix * VMatrix * tempMats.MMatrix;
+	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 	
 	this->sendUniforms();
 	
-	glBindVertexArray(geometry.vertexArrayObject);
-	if (m_useTex) glBindTexture(GL_TEXTURE_2D, geometry.texture);
+	glBindVertexArray(m_geometry.vertexArrayObject);
+	if (m_useTex) glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, nBannerVertices);
 	
 	CHECK_GL_ERROR();
@@ -79,14 +79,14 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 }
 
 void CBanner::sendUniforms(void) {
-	glUseProgram(shaderProgram->program);
+	glUseProgram(m_shaderProgram->program);
 
-	glUniformMatrix4fv(shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMMatrix));
-	glUniform1i(shaderProgram->texSamplerLocation, 0);
-	glUniform3fv(shaderProgram->ambientLocation, 1, glm::value_ptr(m_color));
-	glUniform1f(shaderProgram->alphaLocation, m_alpha);
+	glUniformMatrix4fv(m_shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.PVMMatrix));
+	glUniform1i(m_shaderProgram->texSamplerLocation, 0);
+	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_color));
+	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
 	CHECK_GL_ERROR();
-	if (m_useTex) glUniform1i(shaderProgram->booleanFlagLocation, 1);
-	else glUniform1i(shaderProgram->booleanFlagLocation, 0);
+	if (m_useTex) glUniform1i(m_shaderProgram->booleanFlagLocation, 1);
+	else glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
 
 }

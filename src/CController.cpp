@@ -37,9 +37,9 @@ void CController::redraw(GLFWwindow * window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 VMatrix = glm::lookAt(
-		camera.position,
-		camera.position + camera.direction,
-		camera.up);
+		camera.m_position,
+		camera.m_position + camera.m_direction,
+		camera.m_up);
 
 	glm::mat4 PMatrix = glm::perspective(
 		glm::radians(CAMERA_VIEW_ANGLE),
@@ -104,6 +104,7 @@ void CController::shadersInit(void) {
 		shaderPrograms[1].ambientLocation = glGetUniformLocation(shaderPrograms[1].program, "material.ambient");
 		shaderPrograms[1].specularLocation = glGetUniformLocation(shaderPrograms[1].program, "material.specular");
 		shaderPrograms[1].shininessLocation = glGetUniformLocation(shaderPrograms[1].program, "material.shininess");
+		shaderPrograms[1].booleanFlagLocation = glGetUniformLocation(shaderPrograms[1].program, "fadeToBlack");
 		// Get input locations
 		shaderPrograms[1].posLocation = glGetAttribLocation(shaderPrograms[1].program, "position");
 		shaderPrograms[1].normalLocation = glGetAttribLocation(shaderPrograms[1].program, "normal");
@@ -173,13 +174,13 @@ void CController::replaceLoop(const int dir) {
 	if (dir == CAMERA_DIR_FORWARD) {
 		int index = loopCtr * 10;
 		for (int i = 0; i < 10; i++)
-			lego[index + i]->position.z += LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
+			lego[index + i]->m_position.z += LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
 		loopCtr = (loopCtr + 1) % LEGO_BRICKS_LOOPS;
 	}
 	else { // CAMERA_DIR_BACKWARD
 		int index = loopCtr == 0 ? 4 * 10 : (loopCtr - 1) * 10;
 		for (int i = 0; i < 10; i++)
-			lego[index + i]->position.z -= LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
+			lego[index + i]->m_position.z -= LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
 		loopCtr = loopCtr == 0 ? 4 : loopCtr - 1;
 	}
 }
@@ -196,20 +197,20 @@ void CController::update(void) {
 	if (state.ctrlMap[CTRL_CAM_FLOW_FORWARD]) camera.flow(t, CAMERA_DIR_FORWARD);
 	if (state.ctrlMap[CTRL_CAM_FLOW_BACKWARD]) camera.flow(t, CAMERA_DIR_BACKWARD);
 
-	skybox->position = camera.position;
+	skybox->m_position = camera.m_position;
 
-	if (camera.position.z >= lego[loopCtr * 10]->position.z - 1) this->replaceLoop(CAMERA_DIR_FORWARD);
-	if (camera.position.z <  lego[loopCtr * 10]->position.z - 7) this->replaceLoop(CAMERA_DIR_BACKWARD);
+	if (camera.m_position.z >= lego[loopCtr * 10]->m_position.z - 1) this->replaceLoop(CAMERA_DIR_FORWARD);
+	if (camera.m_position.z <  lego[loopCtr * 10]->m_position.z - 7) this->replaceLoop(CAMERA_DIR_BACKWARD);
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) lego[i]->rotate(t);
 
 	if (state.ctrlMap[CTRL_BANNER0]) {
 		((CBanner *)banners[0])->updateAlpha(t);
-		if (t - banners[0]->triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER0] = false;
+		if (t - banners[0]->m_triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER0] = false;
 	}
 	if (state.ctrlMap[CTRL_BANNER1]) {
 		((CBanner *)banners[1])->updateAlpha(t);
-		if (t - banners[1]->triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER1] = false;
+		if (t - banners[1]->m_triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER1] = false;
 	}
 }
 
@@ -219,7 +220,7 @@ void CController::setCamFlow(const bool flowForward, const bool flowBackward, co
 	state.keyMap[KEY_Q] = rollQ;
 	state.keyMap[KEY_E] = rollE;
 
-	if (trigger) camera.triggerTime = glfwGetTime();
+	if (trigger) camera.m_triggerTime = glfwGetTime();
 }
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -256,7 +257,7 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 					state.keyMap[KEY_Q] = !state.keyMap[KEY_Q];
 					state.keyMap[KEY_E] = !state.keyMap[KEY_E];
 				}
-				camera.triggerTime = glfwGetTime();
+				camera.m_triggerTime = glfwGetTime();
 				break;
 			case MPX16_PAD09:
 				this->setCamFlow(false, true, false, false, true);
@@ -270,7 +271,12 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 				break;
 			case MPX16_PAD12:
 				state.ctrlMap[CTRL_BANNER0] = true;
-				banners[0]->triggerTime = glfwGetTime();
+				banners[0]->m_triggerTime = glfwGetTime();
+				if (!state.ctrlMap[CTRL_BLACK]) {
+					state.ctrlMap[CTRL_BLACK] = true;
+					for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) ((CLoadedObj *)lego[i])->fadeToBlack();
+					((CSkybox *)skybox)->m_colorMultiplier = 0.1f;
+				}
 				break;
 			case MPX16_PAD13:
 				this->setCamFlow(false, true, false, false, true);
@@ -284,7 +290,7 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 				break;
 			case MPX16_PAD16:
 				state.ctrlMap[CTRL_BANNER1] = true;
-				banners[1]->triggerTime = glfwGetTime();
+				banners[1]->m_triggerTime = glfwGetTime();
 				break;
 			default:
 				cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << endl;

@@ -1,8 +1,8 @@
 /**
- * \file Shader.h
- * \author Tomas Barak, Petr Felkel
- * \brief Helper functions for shader loading, compiling and deleting
- * \date 2011-2012
+ * @file	pgr.hpp
+ * @autho	Tomas Barak, Petr Felkel
+ * @brief	Helper functions for shader loading, compiling, deleting and texture loading
+ * @date	2011-2012
  */
 
 #ifndef _PGR

@@ -21,11 +21,11 @@ public:
 protected:
 	virtual void sendUniforms(void) = 0;
 
-	glm::mat4 rotMatrix;
-	glm::mat4 pastRotMatrix; // remembers previous rotations around different axes
-	glm::vec3 axis;
-	glm::vec3 scale;
-	TCommonShaderProgram * shaderProgram;
+	glm::mat4 m_rotMatrix;
+	glm::mat4 m_pastRotMatrix; // remembers previous rotations around different axes
+	glm::vec3 m_axis;
+	glm::vec3 m_scale;
+	TCommonShaderProgram * m_shaderProgram;
 
 	struct TMeshGeometry {
 		GLuint vertexBufferObject;
@@ -33,14 +33,14 @@ protected:
 		GLuint vertexArrayObject;
 		unsigned int numTriangles;
 		GLuint texture;
-	} geometry;
+	} m_geometry;
 
 	struct TTempMatrices {
 		glm::mat4 PVMMatrix;
 		glm::mat4 VMatrix;
 		glm::mat4 MMatrix;
 		glm::mat4 normalMatrix;
-	} tempMats;
+	} m_tempMats;
 };
 
 #endif // !_REJFPANK_CDRAWABLE

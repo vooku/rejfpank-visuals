@@ -1,3 +1,9 @@
+/**
+ * @author	Vadim Petrov
+ * @date	2015
+ * General and application specific midi values
+*/
+
 #ifndef _REJFPANK_MIDICODES
 #define _REJFPANK_MIDICODES
 /*-----------------------------------

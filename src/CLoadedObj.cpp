@@ -18,20 +18,20 @@ CLoadedObj::CLoadedObj(const char * filename,
 					   const CLoadedObj * dataObj,
 					   const int materialIdx)
 	: CDrawable(position, scale, shaderProgram),
-	  dataObj(dataObj) {
-	material.index = materialIdx;
+	  m_dataObj(dataObj) {
+	m_material.index = materialIdx;
 
 	if (dataObj == NULL) {
 		if (!this->loadObj(filename)) {
 			cerr << "Error: Cannot load " << filename << "!" << endl;
-			enableDraw = false;
+			m_enableDraw = false;
 			return;
 		}
-		containsData = true;
+		m_containsData = true;
 		cout << "loaded file: " << filename << endl;
 	}
-	else containsData = false;
-	enableDraw = true;
+	else m_containsData = false;
+	m_enableDraw = true;
 
 	this->setMaterials(filename);
 }
@@ -82,26 +82,26 @@ bool CLoadedObj::loadObj(const char * filename) {
 		indices[3 * i + 2] = loadedMesh->mFaces[i].mIndices[2];
 	}
 
-	glGenVertexArrays(1, &geometry.vertexArrayObject);
-	glBindVertexArray(geometry.vertexArrayObject);
+	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
+	glBindVertexArray(m_geometry.vertexArrayObject);
 
-	glGenBuffers(1, &geometry.vertexBufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.vertexBufferObject);
+	glGenBuffers(1, &m_geometry.vertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, m_geometry.vertexBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, loadedMesh->mNumVertices * 8 * sizeof(float), vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, &geometry.elementBufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.elementBufferObject);
+	glGenBuffers(1, &m_geometry.elementBufferObject);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_geometry.elementBufferObject);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->mNumFaces * 3 * sizeof (unsigned int), indices, GL_STATIC_DRAW);
 	
-	glEnableVertexAttribArray(shaderProgram->posLocation);
-	glVertexAttribPointer(shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
-	glEnableVertexAttribArray(shaderProgram->normalLocation);
-	glVertexAttribPointer(shaderProgram->normalLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
+	glEnableVertexAttribArray(m_shaderProgram->posLocation);
+	glVertexAttribPointer(m_shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+	glEnableVertexAttribArray(m_shaderProgram->normalLocation);
+	glVertexAttribPointer(m_shaderProgram->normalLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
 
 	delete[] vertices;
 	delete[] indices;
 
-	geometry.numTriangles = loadedMesh->mNumFaces;
+	m_geometry.numTriangles = loadedMesh->mNumFaces;
 
 	CHECK_GL_ERROR();
 	glBindVertexArray(0);
@@ -110,45 +110,54 @@ bool CLoadedObj::loadObj(const char * filename) {
 
 void CLoadedObj::setMaterials(const char * filename) {
 	if (strstr(filename, "lego") != NULL) {
-		glm::vec3 color = material.index == -1 || material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[material.index];
+		glm::vec3 color = m_material.index == -1 || m_material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[m_material.index];
 
-		material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
-		material.diffuse = color;
-		material.specular = MATERIAL_LEGO_SPECULAR;
-		material.shininess = MATERIAL_LEGO_SHININES;
+		m_material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
+		m_material.diffuse = color;
+		m_material.specular = MATERIAL_LEGO_SPECULAR;
+		m_material.shininess = MATERIAL_LEGO_SHININES;
 	}
 }
 
-void CLoadedObj::sendUniforms(void) {
-	glUseProgram(shaderProgram->program);
+void CLoadedObj::fadeToBlack(void) {
+	//float mean = (m_material.diffuse.x + m_material.diffuse.y + m_material.diffuse.z) / 3.0f;
+	glm::vec3 black = glm::vec3(0.0f);//glm::vec3(mean);
+	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
+	m_material.diffuse = black;
+}
 
-	glUniformMatrix4fv(shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.PVMMatrix));
-	glUniformMatrix4fv(shaderProgram->VMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.VMatrix));
-	glUniformMatrix4fv(shaderProgram->MMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.MMatrix));
-	glUniformMatrix4fv(shaderProgram->normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(tempMats.normalMatrix));
-	glUniform3fv(shaderProgram->ambientLocation, 1, glm::value_ptr(material.ambient));
-	glUniform3fv(shaderProgram->diffuseLocation, 1, glm::value_ptr(material.diffuse));
-	glUniform3fv(shaderProgram->specularLocation, 1, glm::value_ptr(material.specular));
-	glUniform1f(shaderProgram->shininessLocation, material.shininess);
+void CLoadedObj::sendUniforms(void) {
+	glUseProgram(m_shaderProgram->program);
+
+	glUniformMatrix4fv(m_shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.PVMMatrix));
+	glUniformMatrix4fv(m_shaderProgram->VMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.VMatrix));
+	glUniformMatrix4fv(m_shaderProgram->MMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.MMatrix));
+	glUniformMatrix4fv(m_shaderProgram->normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.normalMatrix));
+	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_material.ambient));
+	glUniform3fv(m_shaderProgram->diffuseLocation, 1, glm::value_ptr(m_material.diffuse));
+	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.specular));
+	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
+	if (m_material.diffuse == glm::vec3(0.0f)) glUniform1i(m_shaderProgram->booleanFlagLocation, 1);
+	else glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
 }
 
 void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	if (!enableDraw) return;
+	if (!m_enableDraw) return;
 
-	tempMats.MMatrix = glm::translate(glm::mat4(1.0f), position);
-	tempMats.MMatrix = glm::scale(tempMats.MMatrix, scale);
-	tempMats.MMatrix = tempMats.MMatrix * pastRotMatrix * rotMatrix;
-	tempMats.VMatrix = VMatrix;
-	tempMats.PVMMatrix = PMatrix * VMatrix * tempMats.MMatrix;
-	tempMats.normalMatrix = glm::transpose(glm::inverse(tempMats.MMatrix));
+	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
+	m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, m_scale);
+	m_tempMats.MMatrix = m_tempMats.MMatrix * m_pastRotMatrix * m_rotMatrix;
+	m_tempMats.VMatrix = VMatrix;
+	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
+	m_tempMats.normalMatrix = glm::transpose(glm::inverse(m_tempMats.MMatrix));
 
 	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, geometry.texture);
+	//glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
 
 	this->sendUniforms();
 
-	glBindVertexArray(dataObj->geometry.vertexArrayObject);
-	glDrawElements(GL_TRIANGLES, dataObj->geometry.numTriangles * 3, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(m_dataObj->m_geometry.vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, m_dataObj->m_geometry.numTriangles * 3, GL_UNSIGNED_INT, 0);
 
 	CHECK_GL_ERROR();
 	

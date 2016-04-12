@@ -7,7 +7,6 @@
 #define _REJFPANK_CMIDICONTROL
 #include <windows.h>
 
-void transMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2, const DWORD_PTR dwParam1, const DWORD_PTR dwParam2);
 void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
 /**
@@ -18,8 +17,8 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
  */
 class CMIDIControl {
 public:
-	CMIDIControl();
-	~CMIDIControl();
+	CMIDIControl(void);
+	~CMIDIControl(void);
 	
 	bool init(void);
 
@@ -29,12 +28,12 @@ private:
 	bool openPort(void);
 	void manageMMError(const char * comment);
 
-	unsigned int nPorts;
-	unsigned int selectedPort;
-	HMIDIIN inHandle;
-	MIDIHDR midiHdr;
-	char * midiLongBuffer;
-	MMRESULT res;
+	unsigned int m_nPorts;
+	unsigned int m_selectedPort;
+	HMIDIIN m_inHandle;
+	MIDIHDR m_midiHdr;
+	char * m_midiLongBuffer;
+	MMRESULT m_res;
 };
 extern CMIDIControl cMIDIControl;
 

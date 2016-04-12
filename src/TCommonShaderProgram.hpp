@@ -1,9 +1,10 @@
+/**
+* @author	Vadim Petrov
+* @date	2015
+*/
+
 #ifndef _REJFPANK_TCOMMONSHADERPROGRAM
 #define _REJFPANK_TCOMMONSHADERPROGRAM
-
-//#include "data.hpp"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 struct TCommonShaderProgram {
 	GLuint program;

@@ -21,14 +21,16 @@ public:
 	bool loadObj(const char * filename);
 	void setMaterials(const char * filename);
 
+	void fadeToBlack(void);
+
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 
 protected:
 	void sendUniforms(void);
 
-	bool enableDraw; ///< whether the object was properly initialized (loaded)
-	bool containsData;
-	const CLoadedObj * dataObj;
+	bool m_enableDraw; ///< whether the object was properly initialized (loaded)
+	bool m_containsData;
+	const CLoadedObj * m_dataObj;
 
 	struct TMaterial {
 		int index; ///< Material hinted from outside
@@ -39,7 +41,7 @@ protected:
 		float shininess;
 
 		GLuint texture;
-	} material;
+	} m_material;
 };
 
 #endif // !_REJFPANK_CLOADEDOBJ

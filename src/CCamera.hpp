@@ -22,15 +22,15 @@ public:
 	
 	void reset(void);
 
-	glm::vec3 up;
-	glm::vec3 right;
-	bool freedom;
+	glm::vec3 m_up;
+	glm::vec3 m_right;
+	bool m_freedom;
 
 	friend void cursorPosCallback(GLFWwindow * window, double x, double y);
 protected:
-	GLdouble lastX;
-	GLdouble lastY;
-	bool firstMouse;
+	GLdouble m_lastX;
+	GLdouble m_lastY;
+	bool m_firstMouse;
 };
 
 #endif // !_REJFPAK_CCAMERA

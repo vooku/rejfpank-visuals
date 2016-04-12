@@ -53,7 +53,7 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 				//TODO waiting for GLFW 3.2
 				break;
 			case GLFW_KEY_F:
-				controller.camera.freedom = !controller.camera.freedom;
+				controller.camera.m_freedom = !controller.camera.m_freedom;
 				break;
 			case GLFW_KEY_UP:
 				controller.state.keyMap[KEY_UP] = true;
@@ -131,16 +131,16 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 }
 
 void cursorPosCallback(GLFWwindow * window, double x, double y) {
-	if (controller.camera.firstMouse) {
-		controller.camera.lastX = x;
-		controller.camera.lastY = y;
-		controller.camera.firstMouse = false;
+	if (controller.camera.m_firstMouse) {
+		controller.camera.m_lastX = x;
+		controller.camera.m_lastY = y;
+		controller.camera.m_firstMouse = false;
 	}
 
-	GLdouble offsetX = controller.camera.lastX - x;
-	GLdouble offsetY = controller.camera.lastY - y;
-	controller.camera.lastX = x;
-	controller.camera.lastY = y;
+	GLdouble offsetX = controller.camera.m_lastX - x;
+	GLdouble offsetY = controller.camera.m_lastY - y;
+	controller.camera.m_lastX = x;
+	controller.camera.m_lastY = y;
 
 	// Ignore movement induced by glfwSetCursorPos
 	if (x == controller.state.winWidth / 2 && y == controller.state.winHeight / 2) return;

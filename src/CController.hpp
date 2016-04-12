@@ -44,6 +44,7 @@ protected:
 	/// Helper function for update()
 	void replaceLoop(const int dir);
 
+
 	CDrawable ** legoData;
 	CDrawable ** lego;
 	CDrawable * skybox;

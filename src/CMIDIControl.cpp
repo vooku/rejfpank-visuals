@@ -16,16 +16,16 @@ using namespace std;
 CMIDIControl cMIDIControl;
 
 CMIDIControl::CMIDIControl(void) 
-	: nPorts (midiInGetNumDevs()),
-	  selectedPort (0) {
-	midiLongBuffer = new char[MIDI_LONG_BUFFER_SIZE];
+	: m_nPorts (midiInGetNumDevs()),
+	  m_selectedPort (0) {
+	m_midiLongBuffer = new char[MIDI_LONG_BUFFER_SIZE];
 }
 
 CMIDIControl::~CMIDIControl() {
-	midiInUnprepareHeader(inHandle, &midiHdr, sizeof(midiHdr));
-	midiInReset(inHandle);
-	midiInClose(inHandle);
-	delete[] midiLongBuffer;
+	midiInUnprepareHeader(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
+	midiInReset(m_inHandle);
+	midiInClose(m_inHandle);
+	delete[] m_midiLongBuffer;
 }
 
 bool CMIDIControl::init(void) {
@@ -36,14 +36,14 @@ bool CMIDIControl::init(void) {
 
 bool CMIDIControl::listPorts(void) {
 	cout << "\nAvailable MIDI ports:" << endl;
-	if (nPorts == 0) {
+	if (m_nPorts == 0) {
 		cerr << "Error: No MIDI ports available!" << endl;
 		return false;
 	}
 
 	MIDIINCAPS deviceCaps;
 	string portName;
-	for (unsigned int i = 0; i < nPorts; i++) {
+	for (unsigned int i = 0; i < m_nPorts; i++) {
 		midiInGetDevCaps(i, &deviceCaps, sizeof(MIDIINCAPS));
 
 		#if defined (UNICODE) || defined (_UNICODE)
@@ -65,13 +65,13 @@ void CMIDIControl::selectPort(void) {
 			cout << "\nPlease select a MIDI port:" << endl;
 			getline(cin, data);
 			if (data.length() > 3) continue;
-			selectedPort = (unsigned int)atoi(data.c_str());
-		} while (selectedPort < 1 || selectedPort > nPorts);
+			m_selectedPort = (unsigned int)atoi(data.c_str());
+		} while (m_selectedPort < 1 || m_selectedPort > m_nPorts);
 	}
 	//else if (nPorts > 10) selectedPort = 11;
-	else selectedPort = SELECT_MIDI_PORT_DEFAULT;
-	cout << "Selected port " << selectedPort << "." << endl;
-	selectedPort--; // the ports display as starting from 1 instead of 0 
+	else m_selectedPort = SELECT_MIDI_PORT_DEFAULT;
+	cout << "Selected port " << m_selectedPort << "." << endl;
+	m_selectedPort--; // the ports display as starting from 1 instead of 0 
 }
 
 void evalMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned int &midiParam2,
@@ -120,7 +120,7 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 
 void CMIDIControl::manageMMError(const char * comment) {
 	TCHAR errorText[256];
-	midiInGetErrorText(res, errorText, 255);
+	midiInGetErrorText(m_res, errorText, 255);
 	#if defined (UNICODE) || defined (_UNICODE)
 		wcerr << "Error: " << comment << " " << errorText << endl;
 	#else
@@ -129,38 +129,38 @@ void CMIDIControl::manageMMError(const char * comment) {
 }
 
 bool CMIDIControl::openPort(void) {
-	res = midiInOpen(&inHandle, selectedPort, (DWORD_PTR) &midiInCallback, NULL, CALLBACK_FUNCTION);
-	if (res != MMSYSERR_NOERROR) {
+	m_res = midiInOpen(&m_inHandle, m_selectedPort, (DWORD_PTR) &midiInCallback, NULL, CALLBACK_FUNCTION);
+	if (m_res != MMSYSERR_NOERROR) {
 		manageMMError("Cannot open port!");
 		return false;
 	}
 	
-	midiHdr.lpData = midiLongBuffer;
-	midiHdr.dwBufferLength = MIDI_LONG_BUFFER_SIZE;
-	midiHdr.dwFlags = 0;
+	m_midiHdr.lpData = m_midiLongBuffer;
+	m_midiHdr.dwBufferLength = MIDI_LONG_BUFFER_SIZE;
+	m_midiHdr.dwFlags = 0;
 
-	res = midiInPrepareHeader(inHandle, &midiHdr, sizeof(midiHdr));
-	if (MMSYSERR_NOERROR != res) {
-		midiInReset(inHandle);
-		midiInClose(inHandle);
+	m_res = midiInPrepareHeader(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
+	if (MMSYSERR_NOERROR != m_res) {
+		midiInReset(m_inHandle);
+		midiInClose(m_inHandle);
 		manageMMError("Failed to prepare MIDI header!");
 		return false;
 	}
 	
-	res = midiInAddBuffer(inHandle, &midiHdr, sizeof(midiHdr));
-	if (MMSYSERR_NOERROR != res) {
-		midiInUnprepareHeader(inHandle, &midiHdr, sizeof(midiHdr));
-		midiInReset(inHandle);
-		midiInClose(inHandle);
+	m_res = midiInAddBuffer(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
+	if (MMSYSERR_NOERROR != m_res) {
+		midiInUnprepareHeader(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
+		midiInReset(m_inHandle);
+		midiInClose(m_inHandle);
 		manageMMError ("Failed to add MIDI buffer!");
 		return false;
 	}
 	
-	res = midiInStart(inHandle);
-	if (MMSYSERR_NOERROR != res) {
-		midiInUnprepareHeader(inHandle, &midiHdr, sizeof(midiHdr));
-		midiInReset(inHandle);
-		midiInClose(inHandle);
+	m_res = midiInStart(m_inHandle);
+	if (MMSYSERR_NOERROR != m_res) {
+		midiInUnprepareHeader(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
+		midiInReset(m_inHandle);
+		midiInClose(m_inHandle);
 		manageMMError ("Failed to start MIDI input device!");
 		return false;
 	}

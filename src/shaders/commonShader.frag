@@ -25,6 +25,7 @@ uniform mat4 MMatrix;
 uniform mat4 VMatrix;
 uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
+uniform int fadeToBlack;
 //uniform sampler2D texSampler;
 
 TLight whiteLight, redLight, blueLight;
@@ -41,12 +42,12 @@ void lightsInit(void) {
 	redLight.position = (VMatrix * vec4 (-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
 	redLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	redLight.diffuse = vec3 (0.5f, 0.0f, 0.0f);
-	redLight.specular = vec3 (3.0f, 0.0f, 0.0f);
+	redLight.specular = vec3 (1.5f, 0.0f, 0.0f);
 
 	blueLight.position = (VMatrix * vec4 (-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
 	blueLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
-	blueLight.diffuse = vec3 (0.0f, 0.0f, 0.5f);
-	blueLight.specular = vec3 (3.0f, 0.0f, 0.0f);
+	blueLight.diffuse = vec3 (0.5f, 0.0f, 0.5f);
+	blueLight.specular = vec3 (1.0f, 0.0f, 1.0f);
 }
 /*
 vec3 objectColor (void) {
@@ -79,7 +80,7 @@ vec4 lightItUp (const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
 	vec4 result = vec4 (0.0f);
 	//result += vec4 (0.1f) * objectColor (); // Global ambient
 	result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
-	//result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
+	if (fadeToBlack == 1) result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
 	//result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));
 	return result;
 }
