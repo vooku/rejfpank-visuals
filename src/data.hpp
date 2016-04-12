@@ -26,7 +26,7 @@
 #define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
 #define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
-#define CAMERA_INIT_FREE true
+#define CAMERA_INIT_FREE false
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 350.0f
@@ -49,6 +49,7 @@
 
 #define LEGO_BRICKS_LOOPS 5
 #define LEGO_BRICKS_DIST 5
+#define MIDAS_TIME 3.0f
 
 // lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
 #define MODEL_LEGO_0 "../res/lego-brick-1x1.obj"
@@ -72,6 +73,7 @@ const glm::vec3 legoBrickColors[4] = {
 enum {
 	CTRL_FULLSCREEN, CTRL_INIT,
 	CTRL_CAM_FLOW_FORWARD, CTRL_CAM_FLOW_BACKWARD,
+	CTRL_BANNER0, CTRL_BANNER1, CTRL_BANNER2, CTRL_BANNER3,
 	CTRL_COUNT
 };
 

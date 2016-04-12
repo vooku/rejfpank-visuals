@@ -47,7 +47,7 @@ protected:
 	CDrawable ** legoData;
 	CDrawable ** lego;
 	CDrawable * skybox;
-	CDrawable * banner;
+	CDrawable ** banners;
 
 	int loopCtr;
 

@@ -33,23 +33,16 @@ void CCamera::roll (const GLfloat angle) {
 }
 
 void CCamera::move (const GLfloat stepLen) {
-	if (!freedom) return;
-	
 	position += stepLen * direction;
 }
 
 void CCamera::sideStep (const GLfloat stepLen) {
-	if (!freedom) return;
-	
 	position += stepLen * right;
 }
 
-void CCamera::flow(const int time, const int dir) {
+void CCamera::flow(const double time, const int dir) {
 	const double elapsedTime = time - triggerTime;
-	if (elapsedTime > FLOW_MAX_TIME) {
-		
-		return;
-	}
+	if (elapsedTime > FLOW_MAX_TIME) return;
 
 	this->move(dir * STEP_LENGTH);
 }

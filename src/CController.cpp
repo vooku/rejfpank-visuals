@@ -29,7 +29,8 @@ CController::~CController(void) {
 	for (int i = 0; i < 3; i++) delete legoData[i];
 	delete legoData;
 
-	delete banner;
+	for (int i = 0; i < 3; i++) delete banners[i];
+	delete banners;
 }
 
 void CController::redraw(GLFWwindow * window) {
@@ -64,8 +65,10 @@ void CController::redraw(GLFWwindow * window) {
 				lego[i + j]->draw(PMatrix, VMatrix);
 	}
 
-	// banner
-	banner->draw(PMatrix, VMatrix);
+	// banners
+	if (state.ctrlMap[CTRL_BANNER0]) banners[0]->draw(PMatrix, VMatrix);
+	if (state.ctrlMap[CTRL_BANNER1]) banners[1]->draw(PMatrix, VMatrix);
+	banners[2]->draw(PMatrix, VMatrix);
 
 	glfwSwapBuffers(window);
 }
@@ -115,7 +118,9 @@ void CController::shadersInit(void) {
 		// Get uniform locations
 		shaderPrograms[2].PVMMatrixLocation = glGetUniformLocation(shaderPrograms[2].program, "PVMMatrix");
 		shaderPrograms[2].texSamplerLocation = glGetUniformLocation(shaderPrograms[2].program, "texSampler");
+		shaderPrograms[2].ambientLocation = glGetUniformLocation(shaderPrograms[2].program, "color");
 		shaderPrograms[2].alphaLocation = glGetUniformLocation(shaderPrograms[2].program, "alpha");
+		shaderPrograms[2].booleanFlagLocation = glGetUniformLocation(shaderPrograms[2].program, "useTex");
 		// Get input locations
 		shaderPrograms[2].posLocation = glGetAttribLocation(shaderPrograms[2].program, "position");
 		shaderPrograms[2].texCoordsLocation = glGetAttribLocation(shaderPrograms[2].program, "texCoords");
@@ -156,7 +161,12 @@ void CController::modelsInit(void) {
 	}
 
 	// banner
-	banner = new CBanner(&camera, &shaderPrograms[2]);
+	banners = new CDrawable * [3];
+	banners[0] = new CBanner(&camera, &shaderPrograms[2], false);
+	banners[1] = new CBanner(&camera, &shaderPrograms[2], false);
+	banners[2] = new CBanner(&camera, &shaderPrograms[2], true, TEX_NOISE);
+	((CBanner *)banners[0])->setColor(glm::vec3(1.0f));
+	((CBanner *)banners[1])->setColor(glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 void CController::replaceLoop(const int dir) {
@@ -192,6 +202,15 @@ void CController::update(void) {
 	if (camera.position.z <  lego[loopCtr * 10]->position.z - 7) this->replaceLoop(CAMERA_DIR_BACKWARD);
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * 10; i++) lego[i]->rotate(t);
+
+	if (state.ctrlMap[CTRL_BANNER0]) {
+		((CBanner *)banners[0])->updateAlpha(t);
+		if (t - banners[0]->triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER0] = false;
+	}
+	if (state.ctrlMap[CTRL_BANNER1]) {
+		((CBanner *)banners[1])->updateAlpha(t);
+		if (t - banners[1]->triggerTime >= MIDAS_TIME) state.ctrlMap[CTRL_BANNER1] = false;
+	}
 }
 
 void CController::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
@@ -216,7 +235,7 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 			case MPX16_PAD03:
 				this->setCamFlow(true, false, false, false, true);
 				break;
-			case MPX16_PAD04: // switch sample off
+			case MPX16_PAD04: // block bass
 				this->setCamFlow(false, false, false, false, false);
 				break;
 			case MPX16_PAD05:
@@ -239,8 +258,36 @@ void CController::midiIn(const unsigned int status, const unsigned int note, con
 				}
 				camera.triggerTime = glfwGetTime();
 				break;
+			case MPX16_PAD09:
+				this->setCamFlow(false, true, false, false, true);
+				break;
+			case MPX16_PAD10: // block bass
+				this->setCamFlow(false, false, false, false, false);
+				break;
+			case MPX16_PAD11: // block midas
+				state.ctrlMap[CTRL_BANNER0] = false;
+				state.ctrlMap[CTRL_BANNER1] = false;
+				break;
+			case MPX16_PAD12:
+				state.ctrlMap[CTRL_BANNER0] = true;
+				banners[0]->triggerTime = glfwGetTime();
+				break;
+			case MPX16_PAD13:
+				this->setCamFlow(false, true, false, false, true);
+				break;
+			case MPX16_PAD14: // block bass
+				this->setCamFlow(false, false, false, false, false);
+				break;
+			case MPX16_PAD15:  // block midas
+				state.ctrlMap[CTRL_BANNER0] = false;
+				state.ctrlMap[CTRL_BANNER1] = false;
+				break;
+			case MPX16_PAD16:
+				state.ctrlMap[CTRL_BANNER1] = true;
+				banners[1]->triggerTime = glfwGetTime();
+				break;
 			default:
-				cout << "Unresolved midi note:" << status << " " << note << " " << velocity << endl;
+				cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << endl;
 				break;
 		}
 	}

@@ -18,7 +18,7 @@ public:
 	void roll(const GLfloat angle);
 	void move(const GLfloat stepLen); ///< Move forwards or backwards, the direction is resolved by the + or - sign.
 	void sideStep(const GLfloat stepLen); ///< Move left or right, the direction is resolved by the + or - sign.
-	void flow(const int time, const int dir);
+	void flow(const double time, const int dir);
 	
 	void reset(void);
 

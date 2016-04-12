@@ -12,6 +12,7 @@ The rest of the readme is mostly for myself.
 - create a GLFW_ICON when illustrations are ready
 - try exporting smooth shaded obj from blender
 - when releasing, add DevIL release dlls
+- add licenses for models
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
