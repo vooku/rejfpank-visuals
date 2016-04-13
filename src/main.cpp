@@ -49,44 +49,47 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 				glfwSetWindowShouldClose(window, GL_TRUE);
 				break;
 			case GLFW_KEY_F11:
-				//controller.state.switchState(CTRL_FULLSCREEN);
+				//controller.m_state.switchState(CTRL_FULLSCREEN);
 				//TODO waiting for GLFW 3.2
 				break;
 			case GLFW_KEY_F:
-				controller.camera.m_freedom = !controller.camera.m_freedom;
+				controller.m_camera.m_freedom = !controller.m_camera.m_freedom;
 				break;
 			case GLFW_KEY_UP:
-				controller.state.keyMap[KEY_UP] = true;
+				controller.m_state.keyMap[KEY_UP] = true;
 				break;
 			case GLFW_KEY_DOWN:
-				controller.state.keyMap[KEY_DOWN] = true;
+				controller.m_state.keyMap[KEY_DOWN] = true;
 				break;
 			case GLFW_KEY_LEFT:
-				controller.state.keyMap[KEY_LEFT] = true;
+				controller.m_state.keyMap[KEY_LEFT] = true;
 				break;
 			case GLFW_KEY_RIGHT:
-				controller.state.keyMap[KEY_RIGHT] = true;
+				controller.m_state.keyMap[KEY_RIGHT] = true;
 				break;
 			case GLFW_KEY_W:
-				controller.state.keyMap[KEY_W] = true;
+				controller.m_state.keyMap[KEY_W] = true;
 				break;
 			case GLFW_KEY_S:
-				controller.state.keyMap[KEY_S] = true;
+				controller.m_state.keyMap[KEY_S] = true;
 				break;
 			case GLFW_KEY_A:
-				controller.state.keyMap[KEY_A] = true;
+				controller.m_state.keyMap[KEY_A] = true;
 				break;
 			case GLFW_KEY_D:
-				controller.state.keyMap[KEY_D] = true;
+				controller.m_state.keyMap[KEY_D] = true;
 				break;
 			case GLFW_KEY_Q:
-				controller.state.keyMap[KEY_Q] = true;
+				controller.m_state.keyMap[KEY_Q] = true;
 				break;
 			case GLFW_KEY_E:
-				controller.state.keyMap[KEY_E] = true;
+				controller.m_state.keyMap[KEY_E] = true;
 				break;
 			case GLFW_KEY_1:
-				controller.camera.reset();
+				controller.m_camera.reset();
+				break;
+			case GLFW_KEY_P:
+				if (mods == GLFW_MOD_CONTROL) controller.nextSong();
 				break;
 			default: // do nothing;
 				break;
@@ -95,34 +98,34 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 	else if (action == GLFW_RELEASE) {
 		switch (key) {
 			case GLFW_KEY_UP:
-				controller.state.keyMap[KEY_UP] = false;
+				controller.m_state.keyMap[KEY_UP] = false;
 				break;
 			case GLFW_KEY_DOWN:
-				controller.state.keyMap[KEY_DOWN] = false;
+				controller.m_state.keyMap[KEY_DOWN] = false;
 				break;
 			case GLFW_KEY_LEFT:
-				controller.state.keyMap[KEY_LEFT] = false;
+				controller.m_state.keyMap[KEY_LEFT] = false;
 				break;
 			case GLFW_KEY_RIGHT:
-				controller.state.keyMap[KEY_RIGHT] = false;
+				controller.m_state.keyMap[KEY_RIGHT] = false;
 				break;
 			case GLFW_KEY_W:
-				controller.state.keyMap[KEY_W] = false;
+				controller.m_state.keyMap[KEY_W] = false;
 				break;
 			case GLFW_KEY_S:
-				controller.state.keyMap[KEY_S] = false;
+				controller.m_state.keyMap[KEY_S] = false;
 				break;
 			case GLFW_KEY_A:
-				controller.state.keyMap[KEY_A] = false;
+				controller.m_state.keyMap[KEY_A] = false;
 				break;
 			case GLFW_KEY_D:
-				controller.state.keyMap[KEY_D] = false;
+				controller.m_state.keyMap[KEY_D] = false;
 				break;
 			case GLFW_KEY_Q:
-				controller.state.keyMap[KEY_Q] = false;
+				controller.m_state.keyMap[KEY_Q] = false;
 				break;
 			case GLFW_KEY_E:
-				controller.state.keyMap[KEY_E] = false;
+				controller.m_state.keyMap[KEY_E] = false;
 				break;
 			default: // do nothing;
 				break;
@@ -131,30 +134,30 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 }
 
 void cursorPosCallback(GLFWwindow * window, double x, double y) {
-	if (controller.camera.m_firstMouse) {
-		controller.camera.m_lastX = x;
-		controller.camera.m_lastY = y;
-		controller.camera.m_firstMouse = false;
+	if (controller.m_camera.m_firstMouse) {
+		controller.m_camera.m_lastX = x;
+		controller.m_camera.m_lastY = y;
+		controller.m_camera.m_firstMouse = false;
 	}
 
-	GLdouble offsetX = controller.camera.m_lastX - x;
-	GLdouble offsetY = controller.camera.m_lastY - y;
-	controller.camera.m_lastX = x;
-	controller.camera.m_lastY = y;
+	GLdouble offsetX = controller.m_camera.m_lastX - x;
+	GLdouble offsetY = controller.m_camera.m_lastY - y;
+	controller.m_camera.m_lastX = x;
+	controller.m_camera.m_lastY = y;
 
 	// Ignore movement induced by glfwSetCursorPos
-	if (x == controller.state.winWidth / 2 && y == controller.state.winHeight / 2) return;
+	if (x == controller.m_state.winWidth / 2 && y == controller.m_state.winHeight / 2) return;
 	// If the movement was 'real,' warp the cursor back
-	glfwSetCursorPos(window, controller.state.winWidth / 2, controller.state.winHeight / 2);
+	glfwSetCursorPos(window, controller.m_state.winWidth / 2, controller.m_state.winHeight / 2);
 
 	offsetX *= MOUSE_SENSITIVITY;
 	offsetY *= MOUSE_SENSITIVITY;
-	controller.camera.rotate(offsetX, offsetY);
+	controller.m_camera.rotate(offsetX, offsetY);
 }
 
 static void winRefreshCallback(GLFWwindow * window) {
-	glfwGetFramebufferSize(window, &controller.state.winWidth, &controller.state.winHeight);
-	glViewport(0, 0, controller.state.winWidth, controller.state.winHeight);
+	glfwGetFramebufferSize(window, &controller.m_state.winWidth, &controller.m_state.winHeight);
+	glViewport(0, 0, controller.m_state.winWidth, controller.m_state.winHeight);
 
 	controller.redraw(window);
 }
@@ -168,15 +171,13 @@ void callbacksInit(GLFWwindow * window) {
 void rejfpankInit(GLFWwindow * window) {
 	srand((unsigned int) time(NULL));
 
-	controller.shadersInit();
-	controller.modelsInit();
 	callbacksInit(window);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
-	glViewport(0, 0, (GLsizei) controller.state.winWidth, (GLsizei) controller.state.winHeight);
+	glViewport(0, 0, (GLsizei) controller.m_state.winWidth, (GLsizei) controller.m_state.winHeight);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_FILL/GL_LINE
 
 	glfwSwapInterval(1);
@@ -207,12 +208,12 @@ GLFWwindow * createWindow(void) {
 	selectedMonitor--; // the monitors display as starting from 1 instead of 0
 
 	const GLFWvidmode * mode = glfwGetVideoMode(monitors[selectedMonitor]);
-	controller.state.winWidth = mode->width;
-	controller.state.winHeight = mode->height;
+	controller.m_state.winWidth = mode->width;
+	controller.m_state.winHeight = mode->height;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	return glfwCreateWindow(controller.state.winWidth, controller.state.winHeight = mode->height, WIN_TITLE, monitors[selectedMonitor], NULL);
+	return glfwCreateWindow(controller.m_state.winWidth, controller.m_state.winHeight = mode->height, WIN_TITLE, monitors[selectedMonitor], NULL);
 }
 
 int main (void) {
@@ -258,9 +259,9 @@ int main (void) {
 	//ilutRenderer(ILUT_OPENGL);
 	//ilutInit();
 
-	// Leftover inits -- controller.state, models, shaders, callbacks
+	// Leftover inits -- controller.m_state, models, shaders, callbacks
 	rejfpankInit(window);
-	controller.state.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
+	controller.m_state.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
 
 	// main loop
 	while (!glfwWindowShouldClose(window)) {

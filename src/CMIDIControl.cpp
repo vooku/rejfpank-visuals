@@ -68,7 +68,7 @@ void CMIDIControl::selectPort(void) {
 			m_selectedPort = (unsigned int)atoi(data.c_str());
 		} while (m_selectedPort < 1 || m_selectedPort > m_nPorts);
 	}
-	//else if (nPorts > 10) selectedPort = 11;
+	else if (m_nPorts > 10) m_selectedPort = 11;
 	else m_selectedPort = SELECT_MIDI_PORT_DEFAULT;
 	cout << "Selected port " << m_selectedPort << "." << endl;
 	m_selectedPort--; // the ports display as starting from 1 instead of 0 
@@ -80,7 +80,7 @@ void evalMidiMsg(unsigned int &midiStatus, unsigned int &midiParam1, unsigned in
 	midiParam1 = (unsigned int)((dwParam1 & 0x0000ff00) >> 8);
 	midiParam2 = (unsigned int)((dwParam1 & 0x00ff0000) >> 16);
 
-	if (!controller.state.ctrlMap[CTRL_INIT]) return; // MIDI received before everything's initialized
+	if (!controller.m_state.ctrlMap[CTRL_INIT]) return; // MIDI received before everything's initialized
 	controller.midiIn(midiStatus, midiParam1, midiParam2);
 }
 

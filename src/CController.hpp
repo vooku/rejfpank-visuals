@@ -3,16 +3,17 @@
 * @date		2016
 */
 
-#ifndef _REJFPANK_CCONTAINER
-#define _REJFPANK_CCONTAINER
+#ifndef _REJFPANK_CCONTROLLER
+#define _REJFPANK_CCONTROLLER
 
 #include "data.hpp"
+#include "TControlState.hpp"
 #include "CCamera.hpp"
-#include "CSkybox.hpp"
-#include "CLoadedObj.hpp"
-#include "CBanner.hpp"
+#include "CSkala.hpp"
+//#include "CVeverka.hpp"
+//#include "CDefinice.hpp"
 
-/** A class serving as both a container and a controller for all objects.
+/** A class managing the creation and control of songs.
  *
  */
 
@@ -21,40 +22,19 @@ public:
 	CController(void);
 	~CController(void);
 
-	void shadersInit(void);
-	void modelsInit(void);
-
 	void redraw(GLFWwindow * window);
 	void update(void);
-	void midiIn(const unsigned int midiStatus, const unsigned int midiParam1, const unsigned int midiParam2);
+	
+	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
+	void nextSong(void);
 
-	CCamera camera;
+	CCamera m_camera;
 
-	struct TControlState {
-		GLsizei winWidth;
-		GLsizei winHeight;
-
-		bool keyMap[KEY_COUNT];
-		bool ctrlMap[CTRL_COUNT];
-		bool drumMap[DRUM_COUNT];
-	} state;
+	TControlState m_state;
 protected:
-	/// Helper function for midiIn()
-	void setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger);
-	/// Helper function for update()
-	void replaceLoop(const int dir);
-
-
-	CDrawable ** legoData;
-	CDrawable ** lego;
-	CDrawable * skybox;
-	CDrawable ** banners;
-
-	int loopCtr;
-
-	TCommonShaderProgram * shaderPrograms;
+	CSong * song;
 };
 
 extern CController controller;
 
-#endif // !_REJFPANK_CCONTAINER
+#endif // !_REJFPANK_CCONTROLLER

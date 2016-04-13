@@ -9,10 +9,9 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const b
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),
 	  m_useTex(useTex)  {
-	m_alpha = 1.0f;
 
 	if (m_useTex) m_geometry.texture = pgr::createTexture(tex, false);
-	if (strcmp(tex, TEX_NOISE) == 0) m_alpha = 0.2f;
+	/*if (strcmp(tex, TEX_NOISE) == 0)*/ m_alpha = 0.2f;
 
 	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
 	glBindVertexArray(m_geometry.vertexArrayObject);

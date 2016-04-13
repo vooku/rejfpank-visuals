@@ -8,6 +8,7 @@
 #define _REJFPANK_DATA_HPP
 
 #include <glm/glm.hpp>
+#include <string>
 
 #define TEX_TEST "../res/test.png"
 #define TEX_NOISE "../res/noise.jpg"
@@ -45,7 +46,13 @@
 #define MATERIAL_LEGO_SHININES 3.0f
 
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
-#define CURVE_SIZE 8 // >= 4 !!!
+
+#define SONG_COUNT 3
+const std::string songNames [SONG_COUNT] = {
+	"Veverka",
+	"Skala",
+	"Definice"
+};
 
 #define LEGO_BRICKS_LOOPS 5
 #define LEGO_BRICKS_DIST 5
@@ -67,7 +74,8 @@ const glm::vec3 legoBrickColors[4] = {
 	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
-	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)};
+	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)
+};
 
 /// controls in controlState
 enum {
@@ -75,6 +83,7 @@ enum {
 	CTRL_CAM_FLOW_FORWARD, CTRL_CAM_FLOW_BACKWARD,
 	CTRL_BANNER0, CTRL_BANNER1, CTRL_BANNER2, CTRL_BANNER3,
 	CTRL_BLACK,
+	CTRL_SONG_SET,
 	CTRL_COUNT
 };
 
