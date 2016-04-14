@@ -9,14 +9,12 @@
 #include "data.hpp"
 #include "TControlState.hpp"
 #include "CCamera.hpp"
-#include "CSkybox.hpp"
 #include "CLoadedObj.hpp"
-#include "CBanner.hpp"
 
 /** Parent class for song structure
  */
 
-struct CSong {
+class CSong {
 public:
 	CSong(CCamera * camera, TControlState * state);
 	~CSong(void);
@@ -32,9 +30,12 @@ protected:
 	/// Helper funtion for the constructor
 	virtual void modelsInit(void) = 0;
 
+	// own objects
+	TCommonShaderProgram * m_shaderPrograms;
+
+	// ptrs to objects from the controller
 	CCamera * m_camera;
 	TControlState * m_state;
-	TCommonShaderProgram * m_shaderPrograms;
 };
 
 #endif // !_REJFPANK_CSONG

@@ -182,6 +182,9 @@ void rejfpankInit(GLFWwindow * window) {
 
 	glfwSwapInterval(1);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+	controller.init();
+	controller.m_state.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
 }
 
 GLFWwindow * createWindow(void) {
@@ -259,9 +262,8 @@ int main (void) {
 	//ilutRenderer(ILUT_OPENGL);
 	//ilutInit();
 
-	// Leftover inits -- controller.m_state, models, shaders, callbacks
+	// Leftover inits -- controller, models, shaders, callbacks
 	rejfpankInit(window);
-	controller.m_state.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
 
 	// main loop
 	while (!glfwWindowShouldClose(window)) {

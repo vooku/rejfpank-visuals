@@ -11,7 +11,7 @@
 /** The class name is chosen according to the song it represents, which is in Czech, sorry.
 */
 
-struct CVeverka : public CSong {
+class CVeverka : public CSong {
 public:
 	CVeverka(CCamera * camera, TControlState * state);
 	~CVeverka(void);
@@ -28,8 +28,6 @@ protected:
 	void modelsInit(void);
 
 	//CDrawable * data;
-	CDrawable *  m_skybox;
-	CDrawable ** m_banners;
 };
 
 #endif // !_REJFPANK_CVEVERKA

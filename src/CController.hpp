@@ -1,7 +1,7 @@
 /**
-* @author	Vadim Petrov
-* @date		2016
-*/
+ * @author	Vadim Petrov
+ * @date		2016
+ */
 
 #ifndef _REJFPANK_CCONTROLLER
 #define _REJFPANK_CCONTROLLER
@@ -17,10 +17,18 @@
  *
  */
 
-struct CController {
+class CController {
 public:
 	CController(void);
 	~CController(void);
+
+	/**
+	 * Called as the last init.
+	 *
+	 * Initializes common shaders and models and the first song.
+	 * For that, everything else has to be initialized already.
+	 */
+	void init(void);
 
 	void redraw(GLFWwindow * window);
 	void update(void);
@@ -32,7 +40,15 @@ public:
 
 	TControlState m_state;
 protected:
-	CSong * song;
+	void shadersInit(void);
+	void modelsInit(void);
+
+	CSong * m_song;
+
+	CSkybox * m_skybox;
+	TCommonShaderProgram m_skyboxShaderProgram;
+	CBanner * m_grainBanner;
+	TCommonShaderProgram m_bannerShaderProgram;
 };
 
 extern CController controller;

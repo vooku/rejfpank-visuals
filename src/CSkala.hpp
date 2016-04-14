@@ -7,13 +7,15 @@
 #define _REJFPANK_CSKALA
 
 #include "CSong.hpp"
+#include "CSkybox.hpp"
+#include "CBanner.hpp"
 
 /** The class name is chosen according to the song it represents, which is in Czech, sorry.
  */
 
-struct CSkala : public CSong {
+class CSkala : public CSong {
 public:
-	CSkala(CCamera * camera, TControlState * state);
+	CSkala(CCamera * camera, TControlState * state, TCommonShaderProgram * bannerShaderProgram, CSkybox * skybox);
 	~CSkala(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
@@ -32,10 +34,14 @@ protected:
 	/// Helper function for update()
 	void replaceLoop(const int dir);
 
-	CDrawable ** m_legoData;
-	CDrawable ** m_lego;
-	CDrawable *  m_skybox;
-	CDrawable ** m_banners;
+	// own objects
+	CLoadedObj ** m_legoData;
+	CLoadedObj ** m_lego;
+	CBanner ** m_banners;
+
+	// ptrs to objects from the controller
+	CSkybox * m_skybox;
+	TCommonShaderProgram * m_bannerShaderProgram;
 
 	int m_loopCtr;
 };

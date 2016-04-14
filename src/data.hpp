@@ -10,8 +10,10 @@
 #include <glm/glm.hpp>
 #include <string>
 
-#define TEX_TEST "../res/test.png"
+#define TEX_TEST "../res/test-tex.png"
 #define TEX_NOISE "../res/noise.jpg"
+
+#define IMG_TEST "../res/test-img.png"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 

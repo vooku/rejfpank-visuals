@@ -17,75 +17,25 @@ void CVeverka::shadersInit(void) {
 	vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[3];
 
-	// Init skybox shaders
-	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
-	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/skyboxShader.frag"));
-	m_shaderPrograms[0].program = pgr::createProgram(shaders);
-
-		// Get uniform locations
-		m_shaderPrograms[0].PVMMatrixLocation = glGetUniformLocation(m_shaderPrograms[0].program, "PVMMatrix");
-		m_shaderPrograms[0].colorMultiplierLocation = glGetUniformLocation(m_shaderPrograms[0].program, "colorMultiplier");
-		// Get input locations
-		m_shaderPrograms[0].posLocation = glGetAttribLocation(m_shaderPrograms[0].program, "position");
-
-	shaders.clear();
 
 	// Init cubePix shaders
 
-	// Init banner shaders
-	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/bannerShader.vert"));
-	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/bannerShader.frag"));
-	m_shaderPrograms[2].program = pgr::createProgram(shaders);
 
-	// Get uniform locations
-	m_shaderPrograms[2].PVMMatrixLocation = glGetUniformLocation(m_shaderPrograms[2].program, "PVMMatrix");
-	m_shaderPrograms[2].texSamplerLocation = glGetUniformLocation(m_shaderPrograms[2].program, "texSampler");
-	m_shaderPrograms[2].ambientLocation = glGetUniformLocation(m_shaderPrograms[2].program, "color");
-	m_shaderPrograms[2].alphaLocation = glGetUniformLocation(m_shaderPrograms[2].program, "alpha");
-	m_shaderPrograms[2].booleanFlagLocation = glGetUniformLocation(m_shaderPrograms[2].program, "useTex");
-	// Get input locations
-	m_shaderPrograms[2].posLocation = glGetAttribLocation(m_shaderPrograms[2].program, "position");
-	m_shaderPrograms[2].texCoordsLocation = glGetAttribLocation(m_shaderPrograms[2].program, "texCoords");
-
-	shaders.clear();
 }
 
 void CVeverka::modelsInit(void) {
-	// skybox
-	m_skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &m_shaderPrograms[0]);
-
 	// TODO cubePix
-
-	// banners
-	m_banners = new CDrawable *[3];
-	m_banners[0] = new CBanner(m_camera, &m_shaderPrograms[2], false);
-	m_banners[1] = new CBanner(m_camera, &m_shaderPrograms[2], false);
-	m_banners[2] = new CBanner(m_camera, &m_shaderPrograms[2], true, TEX_NOISE);
-	((CBanner *)m_banners[0])->setColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	((CBanner *)m_banners[1])->setColor(glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 CVeverka::~CVeverka(void) {
 	delete m_shaderPrograms;
 
-	delete m_skybox;
-
 	// TODO cubePix
-
-	for (int i = 0; i < 3; i++) delete m_banners[i];
-	delete[] m_banners;
 }
 
 void CVeverka::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	// skybox
-	m_skybox->draw(PMatrix, VMatrix);
 
 	// TODO cubePix
-
-	// banners
-	if (m_state->ctrlMap[CTRL_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
-	if (m_state->ctrlMap[CTRL_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
-	m_banners[2]->draw(PMatrix, VMatrix);
 }
 
 
