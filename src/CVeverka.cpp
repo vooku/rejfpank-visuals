@@ -5,17 +5,24 @@
 
 using namespace std;
 
-CVeverka::CVeverka(CCamera * camera, TControlState * state)
-	: CSong(camera, state) {
+CVeverka::CVeverka(CCamera * camera, TControlState * state, TCommonShaderProgram * bannerShaderProgram)
+	: CSong(camera, state),
+	m_bannerShaderProgram(bannerShaderProgram) {
 
 	this->shadersInit();
 	this->modelsInit();
-	cout << "loaded song Veverka!" << endl;
+	cout << "loaded song: Veverka" << endl;
+}
+
+CVeverka::~CVeverka(void) {
+	delete[] m_shaderPrograms;
+
+	delete m_squirrel;
 }
 
 void CVeverka::shadersInit(void) {
 	vector<GLuint> shaders;
-	m_shaderPrograms = new TCommonShaderProgram[3];
+	m_shaderPrograms = new TCommonShaderProgram[1];
 
 
 	// Init cubePix shaders
@@ -24,18 +31,11 @@ void CVeverka::shadersInit(void) {
 }
 
 void CVeverka::modelsInit(void) {
-	// TODO cubePix
-}
-
-CVeverka::~CVeverka(void) {
-	delete m_shaderPrograms;
-
-	// TODO cubePix
+	m_squirrel = new CObjectPix(IMG_TEST, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
 }
 
 void CVeverka::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-
-	// TODO cubePix
+	m_squirrel->draw(PMatrix, VMatrix);
 }
 
 

@@ -1,7 +1,7 @@
 /**
-* @author	Vadim Petrov
-* @date	2015
-*/
+ * @author	Vadim Petrov
+ * @date	2016
+ */
 
 #ifndef _REJFPANK_CLOADEDOBJ
 #define _REJFPANK_CLOADEDOBJ

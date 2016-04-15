@@ -13,7 +13,7 @@ CSkala::CSkala(CCamera * camera, TControlState * state, TCommonShaderProgram * b
 
 	this->shadersInit();
 	this->modelsInit();
-	cout << "loaded song Skala!" << endl;
+	cout << "loaded song: Skala" << endl;
 }
 
 CSkala::~CSkala(void) {
@@ -127,15 +127,6 @@ void CSkala::replaceLoop(const int dir) {
 	}
 }
 
-void CSkala::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
-	m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD] = flowForward;
-	m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD] = flowBackward;
-	m_state->keyMap[KEY_Q] = rollQ;
-	m_state->keyMap[KEY_E] = rollE;
-
-	if (trigger) m_camera->m_triggerTime = glfwGetTime();
-}
-
 void CSkala::update(double time) {
 	if (m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD]) m_camera->flow(time, CAMERA_DIR_FORWARD);
 	if (m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD]) m_camera->flow(time, CAMERA_DIR_BACKWARD);
@@ -155,6 +146,15 @@ void CSkala::update(double time) {
 	}
 }
 
+void CSkala::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
+	m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD] = flowForward;
+	m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD] = flowBackward;
+	m_state->keyMap[KEY_Q] = rollQ;
+	m_state->keyMap[KEY_E] = rollE;
+
+	if (trigger) m_camera->m_triggerTime = glfwGetTime();
+}
+
 void CSkala::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
@@ -163,7 +163,8 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(true, false, false, false, true);
 			break;
 		case MPX16_PAD02:
-			this->setCamFlow(false, true, false, false, true);
+			if (m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD]) this->setCamFlow(true, false, false, false, true);
+			else  this->setCamFlow(false, true, false, false, true);
 			break;
 		case MPX16_PAD03:
 			this->setCamFlow(true, false, false, false, true);
@@ -181,15 +182,8 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(true, false, false, true, true);
 			break;
 		case MPX16_PAD08:
-			m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD] = false;
-			m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD] = false;
-			if (!m_state->keyMap[KEY_Q] && !m_state->keyMap[KEY_E])
-				rand() % 2 == 0 ? m_state->keyMap[KEY_Q] = true : m_state->keyMap[KEY_E] = true;
-			else {
-				m_state->keyMap[KEY_Q] = !m_state->keyMap[KEY_Q];
-				m_state->keyMap[KEY_E] = !m_state->keyMap[KEY_E];
-			}
-			m_camera->m_triggerTime = glfwGetTime();
+			if (m_state->keyMap[KEY_Q]) this->setCamFlow(false, false, false, true, true);
+			else this->setCamFlow(false, false, true, false, true);
 			break;
 		case MPX16_PAD09:
 			this->setCamFlow(false, true, false, false, true);

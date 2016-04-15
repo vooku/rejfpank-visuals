@@ -97,7 +97,13 @@ void CController::redraw(GLFWwindow * window) {
 
 void CController::nextSong(void) {
 	if (!m_state.ctrlMap[CTRL_SONG_SET]) {
-		m_song = new CSkala(&m_camera, &m_state, &m_bannerShaderProgram, m_skybox);
+		if (ACTIVE_SONG == "Skala") m_song = new CSkala(&m_camera, &m_state, &m_bannerShaderProgram, m_skybox);
+		else if (ACTIVE_SONG == "Veverka") m_song = new CVeverka(&m_camera, &m_state, &m_bannerShaderProgram);
+		//else if (ACTIVE_SONG == "Definice") m_song = new CVeverka(&m_camera, &m_state, &m_bannerShaderProgram);
+		else {
+			std::cerr << "No song selected!" << std::endl;
+			return;
+		}
 		m_state.ctrlMap[CTRL_SONG_SET] = true;
 	}
 	// TODO destroy

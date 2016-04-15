@@ -166,7 +166,7 @@ bool loadTexImage2D(const std::string & fileName, GLenum target) {
 	ilGenImages(1, &img_id); // generate one image ID (name)
 	ilBindImage(img_id); // bind that generated id
 
-						 // set origin to LOWER LEFT corner (the orientation which OpenGL uses)
+	// set origin to LOWER LEFT corner (the orientation which OpenGL uses)
 	ilEnable(IL_ORIGIN_SET);
 	ilSetInteger(IL_ORIGIN_MODE, IL_ORIGIN_LOWER_LEFT);
 

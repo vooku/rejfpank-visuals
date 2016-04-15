@@ -14,6 +14,10 @@
 #define TEX_NOISE "../res/noise.jpg"
 
 #define IMG_TEST "../res/test-img.png"
+#define IMG_SQUIRREL1 "../res/sq-hairy.png"
+#define IMG_SQUIRREL2 "../res/sq-hairy-mutant.png"
+#define IMG_SQUIRREL3 "../res/sq-hairless.png"
+#define IMG_SQUIRREL4 "../res/sq-hairless-mutant.png"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
@@ -55,10 +59,13 @@ const std::string songNames [SONG_COUNT] = {
 	"Skala",
 	"Definice"
 };
+#define ACTIVE_SONG songNames[0] // for testing
 
 #define LEGO_BRICKS_LOOPS 5
 #define LEGO_BRICKS_DIST 5
 #define MIDAS_TIME 3.0f
+
+#define MODEL_HONEY "../res/honey-comb.obj"
 
 // lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
 #define MODEL_LEGO_0 "../res/lego-brick-1x1.obj"
@@ -73,7 +80,7 @@ const std::string songNames [SONG_COUNT] = {
 #define MODEL_LEGO_9 "../res/lego-brick-4x2-low.obj"
 
 const glm::vec3 legoBrickColors[4] = {
-	(1/255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
+	(1 / 255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
 	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)

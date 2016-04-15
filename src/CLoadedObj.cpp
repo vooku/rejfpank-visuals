@@ -22,16 +22,19 @@ CLoadedObj::CLoadedObj(const char * filename,
 	m_material.index = materialIdx;
 
 	if (dataObj == NULL) {
-		if (!this->loadObj(filename)) {
-			cerr << "Error: Cannot load " << filename << "!" << endl;
-			m_enableDraw = false;
+		m_enableDraw = this->loadObj(filename);
+		if (!m_enableDraw) {
+			cerr << "Error: Cannot load .obj file: " << filename << endl;
 			return;
 		}
+		m_dataObj = this;
 		m_containsData = true;
-		cout << "loaded file: " << filename << endl;
+		cout << "loaded .obj file: " << filename << endl;
 	}
-	else m_containsData = false;
-	m_enableDraw = true;
+	else {
+		m_containsData = false;
+		m_enableDraw = true;
+	}
 
 	this->setMaterials(filename);
 }
@@ -109,19 +112,20 @@ bool CLoadedObj::loadObj(const char * filename) {
 }
 
 void CLoadedObj::setMaterials(const char * filename) {
-	if (strstr(filename, "lego") != NULL) {
-		glm::vec3 color = m_material.index == -1 || m_material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[m_material.index];
+	glm::vec3 color;
+	if (strstr(filename, "lego") != NULL)
+		color = m_material.index == -1 || m_material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[m_material.index];
+	else
+		color = glm::vec3(0.7f);
 
-		m_material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
-		m_material.diffuse = color;
-		m_material.specular = MATERIAL_LEGO_SPECULAR;
-		m_material.shininess = MATERIAL_LEGO_SHININES;
-	}
+	m_material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
+	m_material.diffuse = color;
+	m_material.specular = MATERIAL_LEGO_SPECULAR;
+	m_material.shininess = MATERIAL_LEGO_SHININES;
 }
 
 void CLoadedObj::fadeToBlack(void) {
-	//float mean = (m_material.diffuse.x + m_material.diffuse.y + m_material.diffuse.z) / 3.0f;
-	glm::vec3 black = glm::vec3(0.0f);//glm::vec3(mean);
+	glm::vec3 black = glm::vec3(0.0f);
 	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
 	m_material.diffuse = black;
 }

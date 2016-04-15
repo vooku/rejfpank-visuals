@@ -22,10 +22,9 @@
 //#include <glm/gtx/quaternion.hpp>
 //#include <glm/gtx/rotate_vector.hpp>
 
-//#define ILUT_USE_OPENGL	// This MUST be defined before calling the DevIL headers or we don't get OpenGL functionality
 #include <IL/il.h>
-#include <IL/ilu.h>
-#include <IL/ilut.h>
+//#include <IL/ilu.h>
+//#include <IL/ilut.h>
 
 #include "data.hpp"
 #include "CController.hpp"

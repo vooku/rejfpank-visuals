@@ -87,5 +87,4 @@ void CBanner::sendUniforms(void) {
 	CHECK_GL_ERROR();
 	if (m_useTex) glUniform1i(m_shaderProgram->booleanFlagLocation, 1);
 	else glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
-
 }

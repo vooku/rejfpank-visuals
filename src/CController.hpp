@@ -10,7 +10,7 @@
 #include "TControlState.hpp"
 #include "CCamera.hpp"
 #include "CSkala.hpp"
-//#include "CVeverka.hpp"
+#include "CVeverka.hpp"
 //#include "CDefinice.hpp"
 
 /** A class managing the creation and control of songs.

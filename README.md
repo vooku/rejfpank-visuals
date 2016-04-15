@@ -13,6 +13,8 @@ The rest of the readme is mostly for myself.
 - try exporting smooth shaded obj from blender
 - when releasing, add DevIL release dlls
 - add licenses for models
+- move visual studio folder
+- remove "using namespace std"
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -25,6 +27,7 @@ The rest of the readme is mostly for myself.
 - Generate random points and draw tham as triangle strip 
 - change directional light on beat
 - trailing objects in fifo
+- implement screan tearing in (all?) (vertex?) shaders?
 
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.
