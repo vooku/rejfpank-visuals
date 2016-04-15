@@ -55,19 +55,29 @@ bool CObjectPix::loadImg(const char * filename) {
 
 	// move the blocks so the center is in the middle (the - 0.5f is just magic)
 	glm::vec3 offset = glm::vec3(-width / 2.0f - 0.5f, -height / 2.0f - 0.5f, 0.0f);
+
+	std::vector<TPixel> pixels;
+	for (int i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel) {
+		TPixel newPixel;
+		newPixel.r = data[i + 0];
+		newPixel.g = data[i + 1];
+		newPixel.b = data[i + 2];
+		if (bytesPerPixel == 4) newPixel.a = data[i + 3];
+		pixels.push_back(newPixel);
+	}
+
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			// if alpha == 0
-			if (bytesPerPixel == 4 && data[i * bytesPerPixel * bytesPerPixel + j * bytesPerPixel + 3] == 0) continue;
-			
+			if (bytesPerPixel == 4 && pixels[i * width + j].a == 0) continue;
+
 			TBlock newBlock;
-			newBlock.color = glm::vec3((1 / 255.0f) * data[i * bytesPerPixel * bytesPerPixel + j * bytesPerPixel + 0],
-									   (1 / 255.0f) * data[i * bytesPerPixel * bytesPerPixel + j * bytesPerPixel + 1],
-									   (1 / 255.0f) * data[i * bytesPerPixel * bytesPerPixel + j * bytesPerPixel + 2]);
+			newBlock.color = (1 / 255.0f) * glm::vec3(pixels[i * width + j].r, pixels[i * width + j].g, pixels[i * width + j].b);
 			newBlock.position = glm::vec3(width - j, height - i, 0.0f) + offset;
 			newBlock.scale = glm::vec3(0.25f);
-			blocks.push_back(newBlock);	
+			m_blocks.push_back(newBlock);
 		}
+
 	}
 
 	delete[] data;
@@ -79,7 +89,7 @@ void CObjectPix::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (!m_enableDraw) return;
 
 	glBindVertexArray(m_geometry.vertexArrayObject);
-	for (auto it : blocks) {
+	for (auto it : m_blocks) {
 		m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
 		m_tempMats.MMatrix = glm::translate(m_tempMats.MMatrix, it.position);
 		m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, it.scale);

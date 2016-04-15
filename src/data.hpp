@@ -13,7 +13,7 @@
 #define TEX_TEST "../res/test-tex.png"
 #define TEX_NOISE "../res/noise.jpg"
 
-#define IMG_TEST "../res/test-img.png"
+#define IMG_TEST "../res/test-img2.png"
 #define IMG_SQUIRREL1 "../res/sq-hairy.png"
 #define IMG_SQUIRREL2 "../res/sq-hairy-mutant.png"
 #define IMG_SQUIRREL3 "../res/sq-hairless.png"

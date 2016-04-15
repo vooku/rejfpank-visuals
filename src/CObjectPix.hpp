@@ -29,12 +29,16 @@ protected:
 	ILint width;
 	ILint height;
 
+	struct TPixel {
+		unsigned char r, g, b, a;
+	};
+
 	struct TBlock {
 		glm::vec3 color;
 		glm::vec3 position;
 		glm::vec3 scale;
 	};
-	std::vector<TBlock> blocks;
+	std::vector<TBlock> m_blocks;
 };
 
 #endif // !_REJFPANK_COBJECTPIX

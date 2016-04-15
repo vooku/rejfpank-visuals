@@ -23,8 +23,6 @@
 //#include <glm/gtx/rotate_vector.hpp>
 
 #include <IL/il.h>
-//#include <IL/ilu.h>
-//#include <IL/ilut.h>
 
 #include "data.hpp"
 #include "CController.hpp"

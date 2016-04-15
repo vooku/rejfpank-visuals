@@ -31,7 +31,7 @@ void CVeverka::shadersInit(void) {
 }
 
 void CVeverka::modelsInit(void) {
-	m_squirrel = new CObjectPix(IMG_TEST, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
+	m_squirrel = new CObjectPix(IMG_SQUIRREL1, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
 }
 
 void CVeverka::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
