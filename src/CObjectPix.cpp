@@ -45,8 +45,8 @@ bool CObjectPix::loadImg(const char * filename) {
 	ilEnable(IL_ORIGIN_SET);
 	ilSetInteger(IL_ORIGIN_MODE, IL_ORIGIN_UPPER_LEFT);
 
-	width = ilGetInteger(IL_IMAGE_WIDTH);
-	height = ilGetInteger(IL_IMAGE_HEIGHT);
+	ILint width = ilGetInteger(IL_IMAGE_WIDTH);
+	ILint height = ilGetInteger(IL_IMAGE_HEIGHT);
 	ILenum format = ilGetInteger(IL_IMAGE_FORMAT);
 
 	unsigned int bytesPerPixel = ((format == IL_RGBA || format == IL_BGRA) ? 4 : 3);
@@ -54,7 +54,7 @@ bool CObjectPix::loadImg(const char * filename) {
 	ilCopyPixels(0, 0, 0, width, height, 1, bytesPerPixel == 4 ? IL_RGBA : IL_RGB, IL_UNSIGNED_BYTE, data);
 
 	// move the blocks so the center is in the middle (the - 0.5f is just magic)
-	glm::vec3 offset = glm::vec3(-width / 2.0f - 0.5f, -height / 2.0f - 0.5f, 0.0f);
+	glm::vec3 offset = glm::vec3((-width / 2.0f - 0.5f) / (float)width, (-height / 2.0f - 0.5f) / (float)height, 0.0f);
 
 	std::vector<TPixel> pixels;
 	for (int i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel) {
@@ -73,11 +73,10 @@ bool CObjectPix::loadImg(const char * filename) {
 
 			TBlock newBlock;
 			newBlock.color = (1 / 255.0f) * glm::vec3(pixels[i * width + j].r, pixels[i * width + j].g, pixels[i * width + j].b);
-			newBlock.position = glm::vec3(width - j, height - i, 0.0f) + offset;
-			newBlock.scale = glm::vec3(0.25f);
+			newBlock.position = glm::vec3((width - j) / (float)width, (height - i) / (float)height, 0.0f) + offset;
+			newBlock.scale = glm::vec3(0.5f / (float) width);
 			m_blocks.push_back(newBlock);
 		}
-
 	}
 
 	delete[] data;

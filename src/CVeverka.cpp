@@ -11,13 +11,17 @@ CVeverka::CVeverka(CCamera * camera, TControlState * state, TCommonShaderProgram
 
 	this->shadersInit();
 	this->modelsInit();
+
+	for (int i = 0; i < INNER_COUNT; i++) innerMap[i] = false;
+
 	cout << "loaded song: Veverka" << endl;
 }
 
 CVeverka::~CVeverka(void) {
 	delete[] m_shaderPrograms;
 
-	delete m_squirrel;
+	delete m_squirrel1;
+	delete m_squirrel2;
 }
 
 void CVeverka::shadersInit(void) {
@@ -31,11 +35,13 @@ void CVeverka::shadersInit(void) {
 }
 
 void CVeverka::modelsInit(void) {
-	m_squirrel = new CObjectPix(IMG_SQUIRREL1, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
+	m_squirrel1 = new CObjectPix(IMG_SQUIRREL5, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
+	m_squirrel2 = new CObjectPix(IMG_SQUIRREL6, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
 }
 
 void CVeverka::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	m_squirrel->draw(PMatrix, VMatrix);
+	if (innerMap[INNER_SQUIRREL1]) m_squirrel1->draw(PMatrix, VMatrix);
+	if (innerMap[INNER_SQUIRREL2]) m_squirrel2->draw(PMatrix, VMatrix);
 }
 
 
@@ -104,7 +110,12 @@ void CVeverka::midiIn(const unsigned int status, const unsigned int note, const 
 	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 		case MIDI_DRUM_KICK1:
-
+			innerMap[INNER_SQUIRREL1] = true;
+			innerMap[INNER_SQUIRREL2] = false;
+			break;
+		case MIDI_DRUM_SNARE1:
+			innerMap[INNER_SQUIRREL1] = false;
+			innerMap[INNER_SQUIRREL2] = true;
 			break;
 		case MIDI_DRUM_HIHAT_CLOSED:
 

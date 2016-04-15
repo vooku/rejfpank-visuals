@@ -255,9 +255,6 @@ int main (void) {
 
 	//DevIL
 	ilInit();
-	//iluInit();
-	//ilutRenderer(ILUT_OPENGL);
-	//ilutInit();
 
 	// Leftover inits -- controller, models, shaders, callbacks
 	rejfpankInit(window);

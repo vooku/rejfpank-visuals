@@ -18,6 +18,8 @@
 #define IMG_SQUIRREL2 "../res/sq-hairy-mutant.png"
 #define IMG_SQUIRREL3 "../res/sq-hairless.png"
 #define IMG_SQUIRREL4 "../res/sq-hairless-mutant.png"
+#define IMG_SQUIRREL5 "../res/sq-head.png"
+#define IMG_SQUIRREL6 "../res/sq-head-mutant.png"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
@@ -59,10 +61,11 @@ const std::string songNames [SONG_COUNT] = {
 	"Skala",
 	"Definice"
 };
-#define ACTIVE_SONG songNames[0] // for testing
+#define ACTIVE_SONG songNames[1] // for testing
 
-#define LEGO_BRICKS_LOOPS 5
+#define LEGO_BRICKS_LOOPS 10
 #define LEGO_BRICKS_DIST 5
+#define LEGO_BRICKS_COUNT 8
 #define MIDAS_TIME 3.0f
 
 #define MODEL_HONEY "../res/honey-comb.obj"

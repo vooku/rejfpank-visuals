@@ -28,7 +28,15 @@ protected:
 	/// Helper funtion for the constructor
 	void modelsInit(void);
 
-	CObjectPix * m_squirrel;
+	enum {
+		INNER_SQUIRREL1, INNER_SQUIRREL2,
+		INNER_COUNT
+	};
+
+	bool innerMap[INNER_COUNT];
+
+	CObjectPix * m_squirrel1;
+	CObjectPix * m_squirrel2;
 
 	TCommonShaderProgram * m_bannerShaderProgram;
 };

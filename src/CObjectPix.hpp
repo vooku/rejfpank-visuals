@@ -26,9 +26,6 @@ protected:
 
 	bool m_enableDraw;
 
-	ILint width;
-	ILint height;
-
 	struct TPixel {
 		unsigned char r, g, b, a;
 	};
