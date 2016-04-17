@@ -9,9 +9,6 @@ The rest of the readme is mostly for myself.
 
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
-- create a GLFW_ICON when illustrations are ready
-- try exporting smooth shaded obj from blender
-- add licenses for models
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -42,6 +39,7 @@ The rest of the readme is mostly for myself.
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI
 - [midi2opengl](http://chancesend.com/2004/12/midi-2-opengl-visualization/) — Similar concept developed for the Oxygen8 keyboard controller. The site is cluttered with dead links and the project seems to be dead since it's publication in 2004.
 - [MIDI.live](http://www.zaposerver.net/projects/midilive/files/midilive.pdf) — abandoned in 2009 pre-beta
+- [Chrome Visuals](https://github.com/zeroerrequattro/chrome-visuals) — very similar project done in chrome
 
 ## Thanks
 - Thanks to [Floris 'floriuszzz' Smit](www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using
