@@ -16,7 +16,7 @@
 
 class CSong {
 public:
-	CSong(CCamera * camera, TControlState * state);
+	CSong(CCamera * camera);
 	~CSong(void);
 
 	virtual void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
@@ -30,12 +30,14 @@ protected:
 	/// Helper funtion for the constructor
 	virtual void modelsInit(void) = 0;
 
+	/// map of inner controls
+	bool * m_innerMap;
+
 	// own objects
 	TCommonShaderProgram * m_shaderPrograms;
 
 	// ptrs to objects from the controller
 	CCamera * m_camera;
-	TControlState * m_state;
 };
 
 #endif // !_REJFPANK_CSONG

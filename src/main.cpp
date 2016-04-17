@@ -18,9 +18,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/quaternion.hpp>
-//#include <glm/gtx/quaternion.hpp>
-//#include <glm/gtx/rotate_vector.hpp>
 
 #include <IL/il.h>
 
@@ -33,10 +30,8 @@
 #include <stdio.h>
 #include <time.h>
 
-using namespace std;
-
 static void errorCallback(int error, const char* description) {
-	cerr << "Error " << error << ": " << description << endl;
+	std::cerr << "Error " << error << ": " << description << std::endl;
 }
 
 static void keyCallback(GLFWwindow * window, int key, int scancode, int action, int mods) {
@@ -190,21 +185,21 @@ GLFWwindow * createWindow(void) {
 
 	if (count == 1) return glfwCreateWindow(INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
 
-	cout << "Available monitors:" << endl;
-	for (int i = 0; i < count; i++) cout << "\t" << i + 1 << ":\t" << glfwGetMonitorName(monitors[i]) << endl;
+	std::cout << "Available monitors:" << std::endl;
+	for (int i = 0; i < count; i++) std::cout << "\t" << i + 1 << ":\t" << glfwGetMonitorName(monitors[i]) << std::endl;
 
 	int selectedMonitor = -1;
 	if (SELECT_MONITOR_MAN) {
-		string data;
+		std::string data;
 		do {
-			cout << "\nPlease select a monitor:" << endl;
-			getline(cin, data);
+			std::cout << "\nPlease select a monitor:" << std::endl;
+			std::getline(std::cin, data);
 			if (data.length() > 3) continue;
 			selectedMonitor = (unsigned int)atoi(data.c_str());
 		} while (selectedMonitor < 1 || selectedMonitor > count);
 	}
 	else selectedMonitor = SELECT_MONITOR_DEFAULT;
-	cout << "Selected monitor " << selectedMonitor << "." << endl;
+	std::cout << "Selected monitor " << selectedMonitor << "." << std::endl;
 	selectedMonitor--; // the monitors display as starting from 1 instead of 0
 
 	const GLFWvidmode * mode = glfwGetVideoMode(monitors[selectedMonitor]);
@@ -219,7 +214,7 @@ GLFWwindow * createWindow(void) {
 int main (void) {
 	// MIDI init
 	if (!cMIDIControl.init()) {
-		cerr << "Error: Cannot initiate MIDI!" << endl;
+		std::cerr << "Error: Cannot initiate MIDI!" << std::endl;
 		return -1;
 	}
 
@@ -228,13 +223,13 @@ int main (void) {
 	glfwSetErrorCallback (errorCallback);
 
 	if (!glfwInit()) {
-		cerr << "Error: Cannot initiate GLFW!" << endl;
+		std::cerr << "Error: Cannot initiate GLFW!" << std::endl;
 		return -2;
 	}
 	// print glfw version
 	int glfwMaj, glfwMin, glfwRev;
 	glfwGetVersion(&glfwMaj, &glfwMin, &glfwRev);
-	cout << "Initialized GLFW " << glfwMaj << "." << glfwMin << "." << glfwRev << endl;
+	std::cout << "Initialized GLFW " << glfwMaj << "." << glfwMin << "." << glfwRev << std::endl;
 
 	window = createWindow();
 	if (!window) {
@@ -246,12 +241,12 @@ int main (void) {
 	// GLEW init
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
-		cerr << "Error: " << glewGetErrorString(err) << endl;
+		std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		return -4;
 	}
-	cout << "Initialized GLEW " << glewGetString(GLEW_VERSION) << endl;
+	std::cout << "Initialized GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 
 	//DevIL
 	ilInit();

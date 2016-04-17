@@ -16,7 +16,7 @@ public:
 			   const glm::vec3 & scale,
 			   TCommonShaderProgram * shaderProgram,
 			   const CLoadedObj * dataObj = NULL,
-			   const int materialIdx = -1);
+			   const unsigned int materialIdx = 0);
 
 	bool loadObj(const char * filename);
 	void setMaterials(const char * filename);
@@ -33,7 +33,7 @@ protected:
 	const CLoadedObj * m_dataObj;
 
 	struct TMaterial {
-		int index; ///< Material hinted from outside
+		unsigned int index; ///< Material hinted from outside
 
 		glm::vec3 ambient;
 		glm::vec3 diffuse;

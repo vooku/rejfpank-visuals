@@ -10,21 +10,21 @@
 #include <glm/glm.hpp>
 #include <string>
 
-#define TEX_TEST "../res/test-tex.png"
-#define TEX_NOISE "../res/noise.jpg"
+#define TEX_TEST "res/test-tex.png"
+#define TEX_NOISE "res/noise.jpg"
 
-#define IMG_TEST "../res/test-img2.png"
-#define IMG_SQUIRREL1 "../res/sq-hairy.png"
-#define IMG_SQUIRREL2 "../res/sq-hairy-mutant.png"
-#define IMG_SQUIRREL3 "../res/sq-hairless.png"
-#define IMG_SQUIRREL4 "../res/sq-hairless-mutant.png"
-#define IMG_SQUIRREL5 "../res/sq-head.png"
-#define IMG_SQUIRREL6 "../res/sq-head-mutant.png"
+#define IMG_TEST "res/test-img2.png"
+#define IMG_SQUIRREL1 "res/sq-hairy.png"
+#define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
+#define IMG_SQUIRREL3 "res/sq-hairless.png"
+#define IMG_SQUIRREL4 "res/sq-hairless-mutant.png"
+#define IMG_SQUIRREL5 "res/sq-head.png"
+#define IMG_SQUIRREL6 "res/sq-head-mutant.png"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
-#define SELECT_MIDI_PORT_DEFAULT 9
+#define SELECT_MIDI_PORT_DEFAULT 11
 #define SELECT_MONITOR_MAN false // for testing purposes
 #define SELECT_MONITOR_DEFAULT 2
 
@@ -61,9 +61,9 @@ const std::string songNames [SONG_COUNT] = {
 	"Skala",
 	"Definice"
 };
-#define ACTIVE_SONG songNames[1] // for testing
+#define ACTIVE_SONG songNames[0] // for testing
 
-#define LEGO_BRICKS_LOOPS 10
+#define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
 #define LEGO_BRICKS_COUNT 8
 #define MIDAS_TIME 3.0f
@@ -71,18 +71,19 @@ const std::string songNames [SONG_COUNT] = {
 #define MODEL_HONEY "../res/honey-comb.obj"
 
 // lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
-#define MODEL_LEGO_0 "../res/lego-brick-1x1.obj"
-#define MODEL_LEGO_1 "../res/lego-brick-1x1-low.obj"
-#define MODEL_LEGO_2 "../res/lego-brick-2x1.obj"
-#define MODEL_LEGO_3 "../res/lego-brick-2x1-low.obj"
-#define MODEL_LEGO_4 "../res/lego-brick-2x2.obj"
-#define MODEL_LEGO_5 "../res/lego-brick-2x2-low.obj"
-#define MODEL_LEGO_6 "../res/lego-brick-4x1.obj"
-#define MODEL_LEGO_7 "../res/lego-brick-4x1-low.obj"
-#define MODEL_LEGO_8 "../res/lego-brick-4x2.obj"
-#define MODEL_LEGO_9 "../res/lego-brick-4x2-low.obj"
+#define MODEL_LEGO_0 "res/lego-brick-1x1.obj"
+#define MODEL_LEGO_1 "res/lego-brick-1x1-low.obj"
+#define MODEL_LEGO_2 "res/lego-brick-2x1.obj"
+#define MODEL_LEGO_3 "res/lego-brick-2x1-low.obj"
+#define MODEL_LEGO_4 "res/lego-brick-2x2.obj"
+#define MODEL_LEGO_5 "res/lego-brick-2x2-low.obj"
+#define MODEL_LEGO_6 "res/lego-brick-4x1.obj"
+#define MODEL_LEGO_7 "res/lego-brick-4x1-low.obj"
+#define MODEL_LEGO_8 "res/lego-brick-4x2.obj"
+#define MODEL_LEGO_9 "res/lego-brick-4x2-low.obj"
 
-const glm::vec3 legoBrickColors[4] = {
+#define LEGO_BRICK_COLORS_COUNT 4
+const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {
 	(1 / 255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
 	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
@@ -92,17 +93,8 @@ const glm::vec3 legoBrickColors[4] = {
 /// controls in controlState
 enum {
 	CTRL_FULLSCREEN, CTRL_INIT,
-	CTRL_CAM_FLOW_FORWARD, CTRL_CAM_FLOW_BACKWARD,
-	CTRL_BANNER0, CTRL_BANNER1, CTRL_BANNER2, CTRL_BANNER3,
-	CTRL_BLACK,
 	CTRL_SONG_SET,
 	CTRL_COUNT
-};
-
-/// active drums
-enum {
-	DRUM_KICK1, DRUM_HIHAT_CLOSED, DRUM_PLUCK, // skala
-	DRUM_COUNT
 };
 
 /// keys in controlState

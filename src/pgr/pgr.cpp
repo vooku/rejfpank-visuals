@@ -71,7 +71,7 @@ GLuint createShaderFromSource(GLenum eShaderType, const std::string &strShaderTe
 }
 
 GLuint createShaderFromFile(GLenum eShaderType, const std::string &filename) {
-  FILE *f = fopen(("../" + filename).c_str(), "rb");
+  FILE *f = fopen((filename).c_str(), "rb");
   if (!f) {
     std::cerr << "Unable to open file " << filename << " for reading" << std::endl;
     return 0;

@@ -1,3 +1,2 @@
-src/visualstudio2015/
-*.exe
+visualstudio2015/
 src/res/sq*

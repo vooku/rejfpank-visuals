@@ -1,22 +1,24 @@
-#include "CSkala.hpp"
+#include "CRock.hpp"
 #include "midicodes.hpp"
 #include "pgr/pgr.hpp"
 #include <vector>
 
-using namespace std;
-
-CSkala::CSkala(CCamera * camera, TControlState * state, TCommonShaderProgram * bannerShaderProgram, CSkybox * skybox)
-	: CSong(camera, state),
+CRock::CRock(CCamera * camera, TCommonShaderProgram * bannerShaderProgram, CSkybox * skybox)
+	: CSong(camera),
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_skybox(skybox),
 	  m_loopCtr(0) {
 
+	m_innerMap = new bool[ROCK_COUNT];
+	for (int i = 0; i < ROCK_COUNT; i++) m_innerMap[i] = false;
+
 	this->shadersInit();
 	this->modelsInit();
-	cout << "loaded song: Skala" << endl;
+
+	std::cout << "loaded song: Skala" << std::endl;
 }
 
-CSkala::~CSkala(void) {
+CRock::~CRock(void) {
 	delete[] m_shaderPrograms;
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) delete m_lego[i];
@@ -26,10 +28,12 @@ CSkala::~CSkala(void) {
 
 	for (int i = 0; i < 2; i++) delete m_banners[i];
 	delete[] m_banners;
+
+	delete[] m_innerMap;
 }
 
-void CSkala::shadersInit(void) {
-	vector<GLuint> shaders;
+void CRock::shadersInit(void) {
+	std::vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[1];
 
 	// Init lego shaders
@@ -54,7 +58,7 @@ void CSkala::shadersInit(void) {
 	shaders.clear();
 }
 
-void CSkala::modelsInit(void) {
+void CRock::modelsInit(void) {
 	// lego
 	m_legoData = new CLoadedObj * [3];
 	m_legoData[0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0]); // kick
@@ -89,28 +93,28 @@ void CSkala::modelsInit(void) {
 	m_banners[1]->setColor(glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
-void CSkala::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// lego
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT) {
-		if (m_state->drumMap[DRUM_KICK1])
+		if (m_innerMap[ROCK_KICK1])
 			for (int j = 0; j < 4; j++)
 				m_lego[i + j]->draw(PMatrix, VMatrix);
 
-		if (m_state->drumMap[DRUM_HIHAT_CLOSED])
+		if (m_innerMap[ROCK_HIHAT_CLOSED])
 			for (int j = 4; j < 6; j++)
 				m_lego[i + j]->draw(PMatrix, VMatrix);
 
-		if (m_state->drumMap[DRUM_PLUCK])
+		if (m_innerMap[ROCK_PLUCK])
 			for (int j = 6; j < LEGO_BRICKS_COUNT; j++)
 				m_lego[i + j]->draw(PMatrix, VMatrix);
 	}
 
 	// banners
-	if (m_state->ctrlMap[CTRL_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
-	if (m_state->ctrlMap[CTRL_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
+	if (m_innerMap[ROCK_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
+	if (m_innerMap[ROCK_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 }
 
-void CSkala::replaceLoop(const int dir) {
+void CRock::replaceLoop(const int dir) {
 	if (dir == CAMERA_DIR_FORWARD) {
 		int index = m_loopCtr * LEGO_BRICKS_COUNT;
 		for (int i = 0; i < LEGO_BRICKS_COUNT; i++)
@@ -118,42 +122,44 @@ void CSkala::replaceLoop(const int dir) {
 		m_loopCtr = (m_loopCtr + 1) % LEGO_BRICKS_LOOPS;
 	}
 	else { // CAMERA_DIR_BACKWARD
-		int index = m_loopCtr == 0 ? (LEGO_BRICKS_LOOPS - 1) * LEGO_BRICKS_COUNT : (m_loopCtr - 1) * LEGO_BRICKS_COUNT;
+		m_loopCtr = m_loopCtr == 0 ? LEGO_BRICKS_LOOPS - 1 : m_loopCtr - 1;
+		int index = m_loopCtr * LEGO_BRICKS_COUNT;
 		for (int i = 0; i < LEGO_BRICKS_COUNT; i++)
 			m_lego[index + i]->m_position.z -= LEGO_BRICKS_DIST * LEGO_BRICKS_LOOPS;
-		m_loopCtr = m_loopCtr == 0 ? LEGO_BRICKS_LOOPS - 1 : m_loopCtr - 1;
 	}
 }
 
-void CSkala::update(double time) {
-	if (m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD]) m_camera->flow(time, CAMERA_DIR_FORWARD);
-	if (m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD]) m_camera->flow(time, CAMERA_DIR_BACKWARD);
+void CRock::update(double time) {
+	if (m_innerMap[ROCK_CAM_FORWARD]) m_camera->flow(time, CAMERA_DIR_FORWARD);
+	if (m_innerMap[ROCK_CAM_BACKWARD]) m_camera->flow(time, CAMERA_DIR_BACKWARD);
+	if (m_innerMap[ROCK_CAM_Q]) m_camera->roll(ROTATION_ANGLE_DELTA);
+	if (m_innerMap[ROCK_CAM_E]) m_camera->roll(-ROTATION_ANGLE_DELTA);
 
 	if (m_camera->m_position.z >= m_lego[m_loopCtr * LEGO_BRICKS_COUNT]->m_position.z - 1) this->replaceLoop(CAMERA_DIR_FORWARD);
 	if (m_camera->m_position.z <  m_lego[m_loopCtr * LEGO_BRICKS_COUNT]->m_position.z - 7) this->replaceLoop(CAMERA_DIR_BACKWARD);
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) m_lego[i]->rotate(time);
 
-	if (m_state->ctrlMap[CTRL_BANNER0]) {
+	if (m_innerMap[ROCK_BANNER0]) {
 		m_banners[0]->updateAlpha(time);
-		if (time - m_banners[0]->m_triggerTime >= MIDAS_TIME) m_state->ctrlMap[CTRL_BANNER0] = false;
+		if (time - m_banners[0]->m_triggerTime >= MIDAS_TIME) m_innerMap[ROCK_BANNER0] = false;
 	}
-	if (m_state->ctrlMap[CTRL_BANNER1]) {
+	if (m_innerMap[ROCK_BANNER1]) {
 		m_banners[1]->updateAlpha(time);
-		if (time - m_banners[1]->m_triggerTime >= MIDAS_TIME) m_state->ctrlMap[CTRL_BANNER1] = false;
+		if (time - m_banners[1]->m_triggerTime >= MIDAS_TIME) m_innerMap[ROCK_BANNER1] = false;
 	}
 }
 
-void CSkala::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
-	m_state->ctrlMap[CTRL_CAM_FLOW_FORWARD] = flowForward;
-	m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD] = flowBackward;
-	m_state->keyMap[KEY_Q] = rollQ;
-	m_state->keyMap[KEY_E] = rollE;
+void CRock::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
+	m_innerMap[ROCK_CAM_FORWARD] = flowForward;
+	m_innerMap[ROCK_CAM_BACKWARD] = flowBackward;
+	m_innerMap[ROCK_CAM_Q] = rollQ;
+	m_innerMap[ROCK_CAM_E] = rollE;
 
 	if (trigger) m_camera->m_triggerTime = glfwGetTime();
 }
 
-void CSkala::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+void CRock::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
@@ -161,7 +167,7 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(true, false, false, false, true);
 			break;
 		case MPX16_PAD02:
-			if (m_state->ctrlMap[CTRL_CAM_FLOW_BACKWARD]) this->setCamFlow(true, false, false, false, true);
+			if (m_innerMap[ROCK_CAM_BACKWARD]) this->setCamFlow(true, false, false, false, true);
 			else  this->setCamFlow(false, true, false, false, true);
 			break;
 		case MPX16_PAD03:
@@ -180,7 +186,7 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(true, false, false, true, true);
 			break;
 		case MPX16_PAD08:
-			if (m_state->keyMap[KEY_Q]) this->setCamFlow(false, false, false, true, true);
+			if (m_innerMap[ROCK_CAM_Q]) this->setCamFlow(false, false, false, true, true);
 			else this->setCamFlow(false, false, true, false, true);
 			break;
 		case MPX16_PAD09:
@@ -190,14 +196,14 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(false, false, false, false, false);
 			break;
 		case MPX16_PAD11: // block midas
-			m_state->ctrlMap[CTRL_BANNER0] = false;
-			m_state->ctrlMap[CTRL_BANNER1] = false;
+			m_innerMap[ROCK_BANNER0] = false;
+			m_innerMap[ROCK_BANNER1] = false;
 			break;
 		case MPX16_PAD12:
-			m_state->ctrlMap[CTRL_BANNER0] = true;
+			m_innerMap[ROCK_BANNER0] = true;
 			m_banners[0]->m_triggerTime = glfwGetTime();
-			if (!m_state->ctrlMap[CTRL_BLACK]) {
-				m_state->ctrlMap[CTRL_BLACK] = true;
+			if (!m_innerMap[ROCK_BLACK]) {
+				m_innerMap[ROCK_BLACK] = true;
 				for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) m_lego[i]->fadeToBlack();
 				m_skybox->m_colorMultiplier = 0.1f;
 			}
@@ -209,15 +215,15 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 			this->setCamFlow(false, false, false, false, false);
 			break;
 		case MPX16_PAD15:  // block midas
-			m_state->ctrlMap[CTRL_BANNER0] = false;
-			m_state->ctrlMap[CTRL_BANNER1] = false;
+			m_innerMap[ROCK_BANNER0] = false;
+			m_innerMap[ROCK_BANNER1] = false;
 			break;
 		case MPX16_PAD16:
-			m_state->ctrlMap[CTRL_BANNER1] = true;
+			m_innerMap[ROCK_BANNER1] = true;
 			m_banners[1]->m_triggerTime = glfwGetTime();
 			break;
 		default:
-			cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << endl;
+			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
 			break;
 		}
 	}
@@ -225,31 +231,31 @@ void CSkala::midiIn(const unsigned int status, const unsigned int note, const un
 	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 		case MIDI_DRUM_KICK1:
-			m_state->drumMap[DRUM_KICK1] = true;
+			m_innerMap[ROCK_KICK1] = true;
 			for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT)
 				for (int j = 0; j < 4; j++)
 					m_lego[i + j]->switchRotAxis(glfwGetTime());
 			break;
 		case MIDI_DRUM_HIHAT_CLOSED:
-			m_state->drumMap[DRUM_HIHAT_CLOSED] = true;
+			m_innerMap[ROCK_HIHAT_CLOSED] = true;
 			for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT)
 				for (int j = 4; j < 6; j++)
 					m_lego[i + j]->switchRotAxis(glfwGetTime());
 			break;
 		case MIDI_DRUM_SNARE1: // snare
-			m_state->drumMap[DRUM_PLUCK] = true;
+			m_innerMap[ROCK_PLUCK] = true;
 			for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT)
 				for (int j = 6; j < LEGO_BRICKS_COUNT; j++)
 					m_lego[i + j]->switchRotAxis(glfwGetTime());
 			break;
 		case MIDI_DRUM_SNARE2: // pluck
-			m_state->drumMap[DRUM_PLUCK] = true;
+			m_innerMap[ROCK_PLUCK] = true;
 			for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT)
 				for (int j = 6; j < LEGO_BRICKS_COUNT; j++)
 					m_lego[i + j]->switchRotAxis(glfwGetTime());
 			break;
 		default:
-			cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << endl;
+			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;
 			break;
 		}
 	}

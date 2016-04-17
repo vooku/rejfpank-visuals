@@ -11,8 +11,6 @@
 #include <string>
 #include <stdlib.h>
 
-using namespace std;
-
 CMIDIControl cMIDIControl;
 
 CMIDIControl::CMIDIControl(void) 
@@ -35,14 +33,14 @@ bool CMIDIControl::init(void) {
 }
 
 bool CMIDIControl::listPorts(void) {
-	cout << "\nAvailable MIDI ports:" << endl;
+	std::cout << "\nAvailable MIDI ports:" << std::endl;
 	if (m_nPorts == 0) {
-		cerr << "Error: No MIDI ports available!" << endl;
+		std::cerr << "Error: No MIDI ports available!" << std::endl;
 		return false;
 	}
 
 	MIDIINCAPS deviceCaps;
-	string portName;
+	std::string portName;
 	for (unsigned int i = 0; i < m_nPorts; i++) {
 		midiInGetDevCaps(i, &deviceCaps, sizeof(MIDIINCAPS));
 
@@ -51,25 +49,25 @@ bool CMIDIControl::listPorts(void) {
 			portName.assign(length, 0);
 			length = WideCharToMultiByte(CP_UTF8, 0, deviceCaps.szPname, static_cast<int>(wcslen(deviceCaps.szPname)), &portName[0], length, NULL, NULL);
 		#else
-			portName = string(deviceCaps.szPname);
+			portName = std::string(deviceCaps.szPname);
 		#endif
-		cout << "\t" << i + 1 << ":\t" << portName << endl;
+			std::cout << "\t" << i + 1 << ":\t" << portName << std::endl;
 	}
 	return true;
 }
 
 void CMIDIControl::selectPort(void) {
 	if (SELECT_MIDI_PORT_MAN) {
-		string data;
+		std::string data;
 		do {
-			cout << "\nPlease select a MIDI port:" << endl;
-			getline(cin, data);
+			std::cout << "\nPlease select a MIDI port:" << std::endl;
+			std::getline(std::cin, data);
 			if (data.length() > 3) continue;
 			m_selectedPort = (unsigned int)atoi(data.c_str());
 		} while (m_selectedPort < 1 || m_selectedPort > m_nPorts);
 	}
 	else m_selectedPort = SELECT_MIDI_PORT_DEFAULT;
-	cout << "Selected port " << m_selectedPort << "." << endl;
+	std::cout << "Selected port " << m_selectedPort << "." << std::endl;
 	m_selectedPort--; // the ports display as starting from 1 instead of 0 
 }
 
@@ -90,29 +88,29 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 		
 	switch (wMsg) {
 		case MIM_OPEN:
-			cout << "MIDI input ready!" << endl;
+			std::cout << "MIDI input ready!" << std::endl;
 			break;
 		case MIM_ERROR:
 			evalMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
-			cerr << "Error: Invalid MIDI message received! Message: " << midiStatus << " " << midiParam1 << " " << midiParam2 << endl;
+			std::cerr << "Error: Invalid MIDI message received! Message: " << midiStatus << " " << midiParam1 << " " << midiParam2 << std::endl;
 			break;
 		case MIM_DATA:
 			evalMidiMsg(midiStatus, midiParam1, midiParam2, dwParam1, dwParam2);
 			break;		
 		case MIM_LONGDATA:
-			cerr << "Received SysEx message!" << endl;
+			std::cout << "Received SysEx message!" << std::endl;
 			break;		
 		case MIM_LONGERROR:
-			cerr << "Received an invalid SysEx message!" << endl;
+			std::cerr << "Error: Received an invalid SysEx message!" << std::endl;
 			break;
 		case MIM_CLOSE:
-			cout << "MIDI input finished!" << endl;
+			std::cout << "MIDI input finished!" << std::endl;
 			break;
 		case MIM_MOREDATA:
-			cerr << "Error: Too much MIDI data incoming!" << endl;
+			std::cerr << "Error: Too much MIDI data incoming!" << std::endl;
 			break;
 		default:
-			cerr << "Received unknown MIDI message!" << endl;
+			std::cerr << "Error: Received unknown MIDI message!" << std::endl;
 			break;
 	}
 }
@@ -123,7 +121,7 @@ void CMIDIControl::manageMMError(const char * comment) {
 	#if defined (UNICODE) || defined (_UNICODE)
 		wcerr << "Error: " << comment << " " << errorText << endl;
 	#else
-		cerr << "Error: " << comment << " " << errorText << endl;
+	std::cerr << "Error: " << comment << " " << errorText << std::endl;
 	#endif
 }
 

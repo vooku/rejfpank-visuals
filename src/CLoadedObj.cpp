@@ -9,27 +9,26 @@
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 
-using namespace std;
-
 CLoadedObj::CLoadedObj(const char * filename,
 					   const glm::vec3 & position,
 					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram,
 					   const CLoadedObj * dataObj,
-					   const int materialIdx)
+					   const unsigned int materialIdx)
 	: CDrawable(position, scale, shaderProgram),
 	  m_dataObj(dataObj) {
+
 	m_material.index = materialIdx;
 
 	if (dataObj == NULL) {
 		m_enableDraw = this->loadObj(filename);
 		if (!m_enableDraw) {
-			cerr << "Error: Cannot load .obj file: " << filename << endl;
+			std::cerr << "Error: Cannot load .obj file: " << filename << std::endl;
 			return;
 		}
 		m_dataObj = this;
 		m_containsData = true;
-		cout << "loaded .obj file: " << filename << endl;
+		std::cout << "loaded .obj file: " << filename << std::endl;
 	}
 	else {
 		m_containsData = false;
@@ -53,12 +52,12 @@ bool CLoadedObj::loadObj(const char * filename) {
 		aiProcess_JoinIdenticalVertices | // obvious
 		aiProcess_PreTransformVertices); // simplifies scene graph
 	if (scene == NULL) {
-		cerr << "Error: assimp: " << importer.GetErrorString() << endl;
+		std::cerr << "Error: assimp: " << importer.GetErrorString() << std::endl;
 		return false;
 	}
 	
 	if (scene->mNumMeshes != 1) {
-		cerr << "Error: This simplified loader can only process files with only one mesh." << endl;
+		std::cerr << "Error: This simplified loader can only process files with only one mesh." << std::endl;
 		return false;
 	}
 
@@ -114,7 +113,7 @@ bool CLoadedObj::loadObj(const char * filename) {
 void CLoadedObj::setMaterials(const char * filename) {
 	glm::vec3 color;
 	if (strstr(filename, "lego") != NULL)
-		color = m_material.index == -1 || m_material.index > 3 ? legoBrickColors[rand() % 4] : legoBrickColors[m_material.index];
+		color = legoBrickColors[m_material.index % LEGO_BRICK_COLORS_COUNT];
 	else
 		color = glm::vec3(0.7f);
 

@@ -8,14 +8,12 @@
 
 #include "CSong.hpp"
 #include "CObjectPix.hpp"
+#include "CBanner.hpp"
 
-/** The class name is chosen according to the song it represents, which is in Czech, sorry.
-*/
-
-class CVeverka : public CSong {
+class CSquirrel : public CSong {
 public:
-	CVeverka(CCamera * camera, TControlState * state, TCommonShaderProgram * bannerShaderProgram);
-	~CVeverka(void);
+	CSquirrel(CCamera * camera, TCommonShaderProgram * bannerShaderProgram);
+	~CSquirrel(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 	void update(double time);
@@ -29,14 +27,14 @@ protected:
 	void modelsInit(void);
 
 	enum {
-		INNER_SQUIRREL1, INNER_SQUIRREL2,
-		INNER_COUNT
+		SQUIR_SQUIRREL1, SQUIR_SQUIRREL2,
+		SQUIR_BANNER0, SQUIR_BANNER1, SQUIR_BANNER2,
+		SQUIR_COUNT
 	};
-
-	bool innerMap[INNER_COUNT];
 
 	CObjectPix * m_squirrel1;
 	CObjectPix * m_squirrel2;
+	CBanner ** m_banners;
 
 	TCommonShaderProgram * m_bannerShaderProgram;
 };

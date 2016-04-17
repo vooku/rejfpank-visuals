@@ -3,8 +3,6 @@
 
 #include "pgr\pgr.hpp"
 
-using namespace std;
-
 CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const bool useTex, const char * tex)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),

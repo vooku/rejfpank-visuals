@@ -1,7 +1,5 @@
 #include "CSkybox.hpp"
 
-using namespace std;
-
 CSkybox::CSkybox(const glm::vec3 & position, const glm::vec3 & scale, TCommonShaderProgram * shaderProgram)
 	: CDrawable(position, scale, shaderProgram),
 	  m_colorMultiplier(0.7f) {

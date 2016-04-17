@@ -2,8 +2,6 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-using namespace std;
-
 CCamera::CCamera (void)
 	: CObject (CAMERA_INIT_POS),
 	  m_up (glm::normalize(CAMERA_INIT_UP)),

@@ -9,8 +9,8 @@
 #include "data.hpp"
 #include "TControlState.hpp"
 #include "CCamera.hpp"
-#include "CSkala.hpp"
-#include "CVeverka.hpp"
+#include "CRock.hpp"
+#include "CSquirrel.hpp"
 //#include "CDefinice.hpp"
 
 /** A class managing the creation and control of songs.

@@ -2,8 +2,6 @@
 #include <vector>
 #include "pgr/pgr.hpp"
 
-using namespace std;
-
 CController controller;
 
 CController::CController(void) {
@@ -11,7 +9,6 @@ CController::CController(void) {
 	m_state.winHeight = INIT_WIN_HEIGHT;
 
 	for (int i = 0; i < CTRL_COUNT; i++) m_state.ctrlMap[i] = false;
-	for (int i = 0; i < DRUM_COUNT; i++) m_state.drumMap[i] = false;
 	for (int i = 0; i < KEY_COUNT; i++) m_state.keyMap[i] = false;
 }
 
@@ -25,7 +22,7 @@ CController::~CController(void) {
 }
 
 void CController::shadersInit(void) {
-	vector<GLuint> shaders;
+	std::vector<GLuint> shaders;
 
 	// Init skybox shaders
 	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/skyboxShader.vert"));
@@ -97,9 +94,9 @@ void CController::redraw(GLFWwindow * window) {
 
 void CController::nextSong(void) {
 	if (!m_state.ctrlMap[CTRL_SONG_SET]) {
-		if (ACTIVE_SONG == "Skala") m_song = new CSkala(&m_camera, &m_state, &m_bannerShaderProgram, m_skybox);
-		else if (ACTIVE_SONG == "Veverka") m_song = new CVeverka(&m_camera, &m_state, &m_bannerShaderProgram);
-		//else if (ACTIVE_SONG == "Definice") m_song = new CVeverka(&m_camera, &m_state, &m_bannerShaderProgram);
+		if (ACTIVE_SONG == "Skala") m_song = new CRock(&m_camera, &m_bannerShaderProgram, m_skybox);
+		else if (ACTIVE_SONG == "Veverka") m_song = new CSquirrel(&m_camera, &m_bannerShaderProgram);
+		//else if (ACTIVE_SONG == "Definice") m_song = new CSquirrel(&m_camera,&m_bannerShaderProgram);
 		else {
 			std::cerr << "No song selected!" << std::endl;
 			return;
@@ -129,5 +126,5 @@ void CController::update(void) {
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->midiIn(status, note, velocity);
-	else cerr << "No song currently set, MIDI message discarded: " << status << " " << note << " " << velocity << endl;
+	else std::cerr << "No song currently set, MIDI message discarded: " << status << " " << note << " " << velocity << std::endl;
 }
