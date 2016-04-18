@@ -13,23 +13,35 @@ CObjectPix::CObjectPix(const char * filename,
 	}
 	std::cout << "loaded image: " << filename << std::endl;	
 
-	m_geometry.numTriangles = nCubeTriangles;
+	float * data = new float[m_blocks.size() * 9];
+	for (size_t i = 0; i < m_blocks.size(); i++) {
+		data[i * 9 + 0] = m_blocks[i].position.x;
+		data[i * 9 + 1] = m_blocks[i].position.y;
+		data[i * 9 + 2] = m_blocks[i].position.z;
+		data[i * 9 + 3] = m_blocks[i].color.x;
+		data[i * 9 + 4] = m_blocks[i].color.y;
+		data[i * 9 + 5] = m_blocks[i].color.z;
+		data[i * 9 + 6] = 0.0f;
+		data[i * 9 + 7] = 0.0f;
+		data[i * 9 + 8] = 0.0f;
+	}
 
 	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
 	glBindVertexArray(m_geometry.vertexArrayObject);
 
 	glGenBuffers(1, &m_geometry.vertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, m_geometry.vertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, nCubeVertices * nCubeAttribsPerVertex * sizeof(float), cubeVertices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &m_geometry.elementBufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_geometry.elementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, nCubeVertices * nCubeAttribsPerVertex * sizeof(float), cubeTriangles, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_blocks.size() * 9 * sizeof(float), data, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(shaderProgram->posLocation);
-	glVertexAttribPointer(shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, nCubeAttribsPerVertex * sizeof(float), (void *)0);
+	glVertexAttribPointer(shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)0);
+	glEnableVertexAttribArray(shaderProgram->ambientLocation);
+	glVertexAttribPointer(shaderProgram->ambientLocation, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)(3 * sizeof(float)));
+	glEnableVertexAttribArray(shaderProgram->offsetLocation);
+	glVertexAttribPointer(shaderProgram->offsetLocation, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)(6 * sizeof(float)));
 
 	glBindVertexArray(0);
+	delete[] data;
 }
 
 bool CObjectPix::loadImg(const char * filename) {
@@ -86,26 +98,19 @@ bool CObjectPix::loadImg(const char * filename) {
 
 void CObjectPix::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (!m_enableDraw) return;
-
+	glPointSize(7.0f);
 	glBindVertexArray(m_geometry.vertexArrayObject);
-	for (auto it : m_blocks) {
-		m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
-		m_tempMats.MMatrix = glm::translate(m_tempMats.MMatrix, it.position);
-		m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, it.scale);
-		//m_tempMats.MMatrix = glm::rotate(m_tempMats.MMatrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		//tempMats.VMatrix = VMatrix;
-		m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 
-		glUseProgram(m_shaderProgram->program);
+	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
+	//m_tempMats.MMatrix = glm::translate(m_tempMats.MMatrix, it.position);
+	//m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, it.scale);
+	//m_tempMats.MMatrix = glm::rotate(m_tempMats.MMatrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//tempMats.VMatrix = VMatrix;
+	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 
-		glUniformMatrix4fv(m_shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.PVMMatrix));
-		glUniform1i(m_shaderProgram->texSamplerLocation, 0);
-		glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(it.color));
-		glUniform1f(m_shaderProgram->alphaLocation, 1.0f);
-		glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
+	this->sendUniforms();
 
-		glDrawElements(GL_TRIANGLES, m_geometry.numTriangles, GL_UNSIGNED_SHORT, 0);
-	}
+	glDrawArrays(GL_POINTS, 0, m_blocks.size());
 
 	// reset
 	glBindVertexArray(0);
@@ -113,5 +118,7 @@ void CObjectPix::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 }
 
 void CObjectPix::sendUniforms(void) {
-	
+	glUseProgram(m_shaderProgram->program);
+
+	glUniformMatrix4fv(m_shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.PVMMatrix));
 }

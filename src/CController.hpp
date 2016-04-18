@@ -35,7 +35,7 @@ public:
 	
 	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
 	void nextSong(void);
-
+	
 	CCamera m_camera;
 
 	TControlState m_state;

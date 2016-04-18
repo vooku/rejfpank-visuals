@@ -32,15 +32,24 @@ void CSquirrel::shadersInit(void) {
 	std::vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[1];
 
+	// Init pix shaders
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/pixShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/pixShader.frag"));
+	m_shaderPrograms[0].program = pgr::createProgram(shaders);
 
-	// Init cubePix shaders
+		// Get uniform locations
+		m_shaderPrograms[0].PVMMatrixLocation = glGetUniformLocation(m_shaderPrograms[0].program, "PVMMatrix");
+		// Get input locations
+		m_shaderPrograms[0].posLocation = glGetAttribLocation(m_shaderPrograms[0].program, "position");
+		m_shaderPrograms[0].ambientLocation = glGetAttribLocation(m_shaderPrograms[0].program, "color");
+		m_shaderPrograms[0].offsetLocation = glGetAttribLocation(m_shaderPrograms[0].program, "offset");
 
-
+	shaders.clear();
 }
 
 void CSquirrel::modelsInit(void) {
-	m_squirrel1 = new CObjectPix(IMG_SQUIRREL5, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
-	m_squirrel2 = new CObjectPix(IMG_SQUIRREL6, glm::vec3(0.0f), glm::vec3(1.0f), m_bannerShaderProgram);
+	m_squirrel1 = new CObjectPix(IMG_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.0f), &m_shaderPrograms[0]);
+	m_squirrel2 = new CObjectPix(IMG_SQUIRREL2, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.0f), &m_shaderPrograms[0]);
 
 	m_banners = new CBanner * [3];
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, false);
@@ -62,7 +71,8 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 
 void CSquirrel::update(double time) {
-	
+	m_squirrel1->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
+	m_squirrel2->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 }
 
 void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -108,10 +118,10 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 		case MPX16_PAD13:
 
 			break;
-		case MPX16_PAD14: // block bass
+		case MPX16_PAD14:
 
 			break;
-		case MPX16_PAD15:  // block midas
+		case MPX16_PAD15:
 
 			break;
 		case MPX16_PAD16:
@@ -126,6 +136,10 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 		case MIDI_DRUM_KICK1:
+			m_innerMap[SQUIR_SQUIRREL1] = true;
+			m_innerMap[SQUIR_SQUIRREL2] = false;
+			break;
+		case MIDI_DRUM_KICK2:
 			m_innerMap[SQUIR_SQUIRREL1] = true;
 			m_innerMap[SQUIR_SQUIRREL2] = false;
 			break;
