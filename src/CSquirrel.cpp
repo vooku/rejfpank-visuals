@@ -9,6 +9,7 @@ CSquirrel::CSquirrel(CCamera * camera, TCommonShaderProgram * bannerShaderProgra
 
 	m_innerMap = new bool[SQUIR_COUNT];
 	for (int i = 0; i < SQUIR_COUNT; i++) m_innerMap[i] = false;
+	m_innerMap[SQUIR_SQUIRREL1] = true;
 
 	this->shadersInit();
 	this->modelsInit();
@@ -136,16 +137,15 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 		case MIDI_DRUM_KICK1:
-			m_innerMap[SQUIR_SQUIRREL1] = true;
-			m_innerMap[SQUIR_SQUIRREL2] = false;
+			m_squirrel1->offsetPix();
 			break;
 		case MIDI_DRUM_KICK2:
-			m_innerMap[SQUIR_SQUIRREL1] = true;
-			m_innerMap[SQUIR_SQUIRREL2] = false;
+			m_squirrel1->offsetPix();
 			break;
 		case MIDI_DRUM_SNARE1:
 			m_innerMap[SQUIR_SQUIRREL1] = false;
 			m_innerMap[SQUIR_SQUIRREL2] = true;
+			// tear screen
 			break;
 		case MIDI_DRUM_TOM_LOW1:
 			m_innerMap[SQUIR_BANNER0] = true;

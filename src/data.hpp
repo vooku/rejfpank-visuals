@@ -16,10 +16,6 @@
 #define IMG_TEST "res/test-img2.png"
 #define IMG_SQUIRREL1 "res/sq-hairy.png"
 #define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
-#define IMG_SQUIRREL3 "res/sq-hairless.png"
-#define IMG_SQUIRREL4 "res/sq-hairless-mutant.png"
-#define IMG_SQUIRREL5 "res/sq-head.png"
-#define IMG_SQUIRREL6 "res/sq-head-mutant.png"
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
@@ -38,7 +34,7 @@
 #define CAMERA_INIT_FREE false
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
-#define CAMERA_VIEW_DIST 350.0f
+#define CAMERA_VIEW_DIST 200.0f
 #define CAMERA_DIR_FORWARD 1
 #define CAMERA_DIR_BACKWARD -1
 

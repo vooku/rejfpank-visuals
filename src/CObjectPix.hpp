@@ -20,11 +20,17 @@ public:
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 
+	void offsetPix(void);
+	void deoffsetPix(void);
+
 protected:
 	bool loadImg(const char * filename);
 	void sendUniforms(void);
 
 	bool m_enableDraw;
+
+	std::vector<glm::vec3> m_offsets;
+	std::vector<int> m_offsetsIndices;
 
 	struct TPixel {
 		unsigned char r, g, b, a;
@@ -33,7 +39,6 @@ protected:
 	struct TBlock {
 		glm::vec3 color;
 		glm::vec3 position;
-		glm::vec3 scale;
 	};
 	std::vector<TBlock> m_blocks;
 };
