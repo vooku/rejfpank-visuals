@@ -4,7 +4,8 @@ CObjectPix::CObjectPix(const char * filename,
 					   const glm::vec3 & position,
 					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram)
-	: CDrawable(position, scale, shaderProgram) {
+	: CDrawable(position, scale, shaderProgram),
+	  m_ptSize(7.0) {
 
 	m_enableDraw = this->loadImg(filename);
 	if (!m_enableDraw) {
@@ -42,6 +43,12 @@ CObjectPix::CObjectPix(const char * filename,
 
 	glBindVertexArray(0);
 	delete[] pixelData;
+}
+
+void CObjectPix::updatePtSize(const double time) {
+	double elapsedTime = time - m_triggerTime;
+	float newSize = -(1.0 / BEAT_LENGTH(175)) * elapsedTime + 7.0;
+	m_ptSize = newSize > 0 ? newSize : 1.0f;
 }
 
 bool CObjectPix::loadImg(const char * filename) {
@@ -99,7 +106,7 @@ bool CObjectPix::loadImg(const char * filename) {
 void CObjectPix::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (!m_enableDraw) return;
 
-	glPointSize(7.0f);
+	glPointSize(m_ptSize);
 	glBindVertexArray(m_geometry.vertexArrayObject);
 
 	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
@@ -116,18 +123,18 @@ void CObjectPix::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glBindVertexArray(0);
 	glFinish();
 }
-
+/*
 void CObjectPix::offsetPix(void) {
-	if (!m_offsets.empty() && !m_offsetsIndices.empty()) this->deoffsetPix();
-
+	if (!m_offsets.empty() || !m_offsetsIndices.empty()) this->deoffsetPix();
+	
 	float newOffset [3];
-
+	
 	glBindVertexArray(m_geometry.vertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, m_geometry.vertexBufferObject);
-
+	
 	for (int i = 0; i < rand() % 100; i++) {
 		m_offsetsIndices.push_back(rand() % m_blocks.size());
-
+	
 		newOffset[0] = ((rand() - (RAND_MAX / 2)) % RAND_MAX);
 		newOffset[1] = ((rand() - (RAND_MAX / 2)) % RAND_MAX);
 		newOffset[2] = ((rand() - (RAND_MAX / 2)) % RAND_MAX);
@@ -135,7 +142,7 @@ void CObjectPix::offsetPix(void) {
 		glBufferSubData(GL_ARRAY_BUFFER, (m_offsetsIndices.back() * 9 + 6) * sizeof(float), 3 * sizeof(float), newOffset);
 		m_offsets.push_back(glm::vec3(newOffset[0], newOffset[1], newOffset[2]));
 	}
-
+	
 	glBindVertexArray(0);
 }
 
@@ -156,7 +163,7 @@ void CObjectPix::deoffsetPix(void) {
 	m_offsets.clear();
 	m_offsetsIndices.clear();
 }
-
+*/
 void CObjectPix::sendUniforms(void) {
 	glUseProgram(m_shaderProgram->program);
 

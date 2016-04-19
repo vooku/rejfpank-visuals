@@ -74,6 +74,8 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 void CSquirrel::update(double time) {
 	m_squirrel1->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 	m_squirrel2->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
+
+	m_squirrel1->updatePtSize(time);
 }
 
 void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -137,10 +139,10 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 	else if (status == MIDI_NOTE_ON_CH02) {
 		switch (note) {
 		case MIDI_DRUM_KICK1:
-			m_squirrel1->offsetPix();
+			m_squirrel1->m_triggerTime = glfwGetTime();
 			break;
 		case MIDI_DRUM_KICK2:
-			m_squirrel1->offsetPix();
+			m_squirrel1->m_triggerTime = glfwGetTime();
 			break;
 		case MIDI_DRUM_SNARE1:
 			m_innerMap[SQUIR_SQUIRREL1] = false;

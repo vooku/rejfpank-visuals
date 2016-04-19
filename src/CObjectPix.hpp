@@ -20,14 +20,17 @@ public:
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 
-	void offsetPix(void);
-	void deoffsetPix(void);
+	//void offsetPix(void);
+	//void deoffsetPix(void);
+
+	void updatePtSize(const double time);
 
 protected:
 	bool loadImg(const char * filename);
 	void sendUniforms(void);
 
 	bool m_enableDraw;
+	double m_ptSize;
 
 	std::vector<glm::vec3> m_offsets;
 	std::vector<int> m_offsetsIndices;
