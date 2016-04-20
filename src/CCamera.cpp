@@ -12,14 +12,14 @@ CCamera::CCamera (void)
 	m_right = glm::normalize (glm::cross (m_direction, m_up));
 }
 
-void CCamera::rotate (const GLfloat offsetX, const GLfloat offsetY) {
+void CCamera::rotate (const GLdouble offsetX, const GLdouble offsetY) {
 	if (!m_freedom) return;
 	
-	glm::quat pitchQuat = glm::angleAxis (offsetY, m_right);
+	glm::quat pitchQuat = glm::angleAxis ((float)offsetY, m_right);
 	m_direction = glm::normalize (glm::rotate (pitchQuat, m_direction));
 	m_up = glm::normalize (glm::cross (m_right, m_direction));
 
-	glm::quat yawQuat = glm::angleAxis (offsetX, m_up);
+	glm::quat yawQuat = glm::angleAxis ((float)offsetX, m_up);
 	m_direction = glm::normalize (glm::rotate (yawQuat, m_direction));
 	m_right = glm::normalize (glm::cross (m_direction, m_up));
 }

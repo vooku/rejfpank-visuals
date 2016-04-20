@@ -14,7 +14,7 @@ class CCamera : public CObject {
 public:
 	CCamera(void);
 
-	void rotate(const GLfloat offsetX, const GLfloat offsetY);
+	void rotate(const GLdouble offsetX, const GLdouble offsetY);
 	void roll(const GLfloat angle);
 	void move(const GLfloat stepLen); ///< Move forwards or backwards, the direction is resolved by the + or - sign.
 	void sideStep(const GLfloat stepLen); ///< Move left or right, the direction is resolved by the + or - sign.

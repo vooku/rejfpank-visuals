@@ -12,7 +12,7 @@
 
 class CSquirrel : public CSong {
 public:
-	CSquirrel(CCamera * camera, TCommonShaderProgram * bannerShaderProgram);
+	CSquirrel(CCamera * camera, TCommonShaderProgram * bannerShaderProgram, TControlState * state);
 	~CSquirrel(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
@@ -27,16 +27,25 @@ protected:
 	void modelsInit(void);
 
 	enum {
+		SQUIR_FBUFF,
 		SQUIR_SQUIRREL1, SQUIR_SQUIRREL2,
 		SQUIR_BANNER0, SQUIR_BANNER1, SQUIR_BANNER2,
 		SQUIR_COUNT
 	};
 
+	unsigned int m_kickCount;
+
 	CObjectPix * m_squirrel1;
 	CObjectPix * m_squirrel2;
 	CBanner ** m_banners;
+	unsigned int m_bannersCount;
 
 	TCommonShaderProgram * m_bannerShaderProgram;
+	TControlState * m_state;
+
+	GLuint m_frameBufferObject;
+	GLuint m_renderBufferObject;
+	GLuint m_renderedTex;
 };
 
 #endif // !_REJFPANK_CVEVERKA

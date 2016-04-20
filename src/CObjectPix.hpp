@@ -30,7 +30,7 @@ protected:
 	void sendUniforms(void);
 
 	bool m_enableDraw;
-	double m_ptSize;
+	float m_ptSize;
 
 	std::vector<glm::vec3> m_offsets;
 	std::vector<int> m_offsetsIndices;

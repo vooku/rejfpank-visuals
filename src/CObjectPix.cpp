@@ -47,7 +47,7 @@ CObjectPix::CObjectPix(const char * filename,
 
 void CObjectPix::updatePtSize(const double time) {
 	double elapsedTime = time - m_triggerTime;
-	float newSize = -(1.0 / BEAT_LENGTH(175)) * elapsedTime + 7.0;
+	float newSize = -(1.0f / (float)BEAT_LENGTH(175)) * (float)elapsedTime + 7.0f;
 	m_ptSize = newSize > 0 ? newSize : 1.0f;
 }
 
@@ -67,7 +67,7 @@ bool CObjectPix::loadImg(const char * filename) {
 	ILint width = ilGetInteger(IL_IMAGE_WIDTH);
 	ILint height = ilGetInteger(IL_IMAGE_HEIGHT);
 	ILenum format = ilGetInteger(IL_IMAGE_FORMAT);
-	float larger = width >= height ? width : height; // float bc of precise division
+	float larger = (float)(width >= height ? width : height); // float bc of precise division
 
 	unsigned int bytesPerPixel = ((format == IL_RGBA || format == IL_BGRA) ? 4 : 3);
 	unsigned char * data = new unsigned char[width * height * bytesPerPixel];

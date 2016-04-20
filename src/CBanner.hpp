@@ -11,8 +11,9 @@
 
 class CBanner : public CDrawable {
 public:
-	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const bool useTex = true, const char * = TEX_TEST);
-	//~CBanner();
+	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName = "NO_TEX", GLint texLoc = 0);
+	~CBanner(void);
+
 	bool setColor(const glm::vec3 & color);
 	void updateAlpha(const double & time);
 	
@@ -21,7 +22,7 @@ public:
 protected:
 	void sendUniforms(void);
 
-	const bool m_useTex;
+	bool m_useTex;
 	glm::vec3 m_color;
 	float m_alpha;
 	const CCamera * m_camera;

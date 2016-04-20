@@ -3,13 +3,24 @@
 
 #include "pgr\pgr.hpp"
 
-CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const bool useTex, const char * tex)
+CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName, GLint texLoc)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
-	  m_camera(camera),
-	  m_useTex(useTex)  {
+	  m_camera(camera) {
 
-	if (m_useTex) m_geometry.texture = pgr::createTexture(tex, false);
-	/*if (strcmp(tex, TEX_NOISE) == 0)*/ m_alpha = 0.2f;
+	if (strcmp(texName, "NO_TEX") == 0) {
+		m_useTex = false;
+		m_alpha = 0.2f;
+	}
+	else if (strcmp(texName, "MULTIPASS") == 0) {
+		m_useTex = true;
+		m_geometry.texture = texLoc;
+		m_alpha = 1.0f;
+	}
+	else {
+		m_useTex = true;
+		m_geometry.texture = pgr::createTexture(texName, false);
+		m_alpha = 0.2f;
+	}
 
 	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
 	glBindVertexArray(m_geometry.vertexArrayObject);
@@ -27,6 +38,10 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const b
 	glBindVertexArray(0);
 }
 
+CBanner::~CBanner(void) {
+	glDeleteTextures(1, &m_geometry.texture);
+}
+
 bool CBanner::setColor(const glm::vec3 & color) {
 	if (m_useTex) return false;
 	m_color = color;
@@ -35,7 +50,7 @@ bool CBanner::setColor(const glm::vec3 & color) {
 
 void CBanner::updateAlpha(const double & time) {
 	const double elapsedTime = time - m_triggerTime;
-	m_alpha = (-1.0f / 3.0f) * elapsedTime + 1.0f;
+	m_alpha = (-1.0f / 3.0f) * (float)elapsedTime + 1.0f;
 }
 
 void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {

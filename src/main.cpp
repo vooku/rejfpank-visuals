@@ -165,10 +165,11 @@ void rejfpankInit(GLFWwindow * window) {
 
 	callbacksInit(window);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_POINT_SMOOTH);
 	glViewport(0, 0, (GLsizei) controller.m_state.winWidth, (GLsizei) controller.m_state.winHeight);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_FILL/GL_LINE
 
@@ -238,6 +239,8 @@ int main (void) {
 	}
 	glfwMakeContextCurrent(window);
 	
+	std::cout << "Using OpenGL " << glGetString(GL_VERSION) << std::endl;
+
 	// GLEW init
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
@@ -247,7 +250,7 @@ int main (void) {
 		return -4;
 	}
 	std::cout << "Initialized GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-
+	
 	//DevIL
 	ilInit();
 

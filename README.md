@@ -9,6 +9,7 @@ The rest of the readme is mostly for myself.
 
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
+- m_innerMap[SQUIR_FBUFF]
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

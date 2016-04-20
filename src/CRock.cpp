@@ -87,9 +87,11 @@ void CRock::modelsInit(void) {
 
 	// banners
 	m_banners = new CBanner * [2];
-	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, false);
-	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram, false);
+
+	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram);
 	m_banners[0]->setColor(glm::vec3(1.0f));
+
+	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram);
 	m_banners[1]->setColor(glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
@@ -229,7 +231,7 @@ void CRock::midiIn(const unsigned int status, const unsigned int note, const uns
 	}
 	//-------------------------------------------------------------------> ALESIS SR16
 	else if (status == MIDI_NOTE_ON_CH02) {
-		switch (note) {
+		if (velocity != 0) switch (note) {
 		case MIDI_DRUM_KICK1:
 			m_innerMap[ROCK_KICK1] = true;
 			for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT)
