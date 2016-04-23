@@ -31,7 +31,7 @@
 #define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
 #define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
 #define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
-#define CAMERA_INIT_FREE false
+#define CAMERA_INIT_FREE true
 #define CAMERA_VIEW_ANGLE 65.0f
 #define CAMERA_VIEW_START 0.01f
 #define CAMERA_VIEW_DIST 200.0f
@@ -128,11 +128,11 @@ const unsigned short cubeTriangles[nCubeTriangles] = {
 const unsigned int nBannerVertices = 4;
 const unsigned int nBannerAttribsPerVertex = 5;
 const float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
-	// x      y     z     u     v
-	-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-	 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-	-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-	 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	// x      y           z     u     v
+	-1.0f, -9.0f/16.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f, -9.0f/16.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f,  9.0f/16.0f, 0.0f, 0.0f, 1.0f,
+	 1.0f,  9.0f/16.0f, 0.0f, 1.0f, 1.0f,
 };
 
 #endif // !_REJFPANK_DATA_HPP

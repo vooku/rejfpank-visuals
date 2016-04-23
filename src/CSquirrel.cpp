@@ -3,44 +3,19 @@
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CSquirrel::CSquirrel(CCamera * camera, TCommonShaderProgram * bannerShaderProgram, TControlState * state)
-	: CSong(camera),
+CSquirrel::CSquirrel(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram, TControlState * state)
+	: CSong(camera, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_state(state),
-	  m_kickCount(0) {
+	  m_kickCount(0),
+	  m_camOffset(0.01f, 0.01f) {
 
 	m_innerMap = new bool[SQUIR_COUNT];
 	for (int i = 0; i < SQUIR_COUNT; i++) m_innerMap[i] = false;
-	m_innerMap[SQUIR_SQUIRREL1] = true;
 
-	glGenFramebuffers(1, &m_frameBufferObject);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
-
-	glGenTextures(1, &m_renderedTex);
-	glBindTexture(GL_TEXTURE_2D, m_renderedTex);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_state->winWidth, m_state->winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // empty image
-	
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderedTex, 0);
-
-	glGenRenderbuffers(1, &m_renderBufferObject);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferObject);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_state->winWidth, m_state->winHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cerr << "Error: Cannot init frame buffer." << std::endl;
-	else m_innerMap[SQUIR_FBUFF] = true;
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
+	this->multipassInit();
 	this->shadersInit();
 	this->modelsInit();
-
 
 	std::cout << "loaded song: Veverka" << std::endl;
 }
@@ -80,8 +55,8 @@ void CSquirrel::shadersInit(void) {
 
 void CSquirrel::modelsInit(void) {
 	// squirrels
-	m_squirrel1 = new CObjectPix(IMG_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.5f), &m_shaderPrograms[0]);
-	m_squirrel2 = new CObjectPix(IMG_SQUIRREL2, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.5f), &m_shaderPrograms[0]);
+	m_squirrel1 = new CObjectPix(IMG_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.3f), &m_shaderPrograms[0]);
+	m_squirrel2 = new CObjectPix(IMG_SQUIRREL2, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.3f), &m_shaderPrograms[0]);
 
 	// banners
 	m_bannersCount = 4;
@@ -99,22 +74,71 @@ void CSquirrel::modelsInit(void) {
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, "MULTIPASS", m_renderedTex);  // multipass
 }
 
-void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CSquirrel::multipassInit(void) {
+	glGenFramebuffers(1, &m_frameBufferObject);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glGenTextures(1, &m_renderedTex);
+	glBindTexture(GL_TEXTURE_2D, m_renderedTex);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_state->winWidth, m_state->winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // empty image
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderedTex, 0);
+
+	glGenRenderbuffers(1, &m_renderBufferObject);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferObject);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_state->winWidth, m_state->winHeight);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cerr << "Error: Cannot init frame buffer." << std::endl;
+	else m_innerMap[SQUIR_FBUFF] = true;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void CSquirrel::nextBanner(void) {
+	if (m_innerMap[SQUIR_BANNER0]) {
+		m_innerMap[SQUIR_BANNER0] = false;
+		m_innerMap[SQUIR_BANNER1] = true;
+	}
+	else if (m_innerMap[SQUIR_BANNER1]) {
+		m_innerMap[SQUIR_BANNER1] = false;
+		m_innerMap[SQUIR_BANNER2] = true;
+	}
+	else if (m_innerMap[SQUIR_BANNER2]) {
+		m_innerMap[SQUIR_BANNER2] = false;
+		m_innerMap[SQUIR_BANNER0] = true;
+	}
+	else m_innerMap[SQUIR_BANNER0] = true;
+}
+
+void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+	if (m_innerMap[SQUIR_FBUFF]) {
+		glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	// skybox
+	m_skybox->draw(PMatrix, VMatrix);
 
 	if (m_innerMap[SQUIR_SQUIRREL1]) m_squirrel1->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_SQUIRREL2]) m_squirrel2->draw(PMatrix, VMatrix);
 
-	/*if (m_innerMap[SQUIR_BANNER0])*/ m_banners[0]->draw(PMatrix, VMatrix);
+	if (m_innerMap[SQUIR_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, m_renderedTex);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	if (m_innerMap[SQUIR_FBUFF]) {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-	m_banners[3]->draw(PMatrix, VMatrix);
+		m_banners[3]->draw(PMatrix, VMatrix);
+	}
 }
 
 
@@ -123,6 +147,9 @@ void CSquirrel::update(double time) {
 	m_squirrel2->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 
 	m_squirrel1->updatePtSize(time);
+	m_squirrel2->updatePtSize(time);
+
+	m_camera->rotate(m_camOffset.x, m_camOffset.y);
 }
 
 void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -183,34 +210,40 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 		}
 	}
 	//-------------------------------------------------------------------> ALESIS SR16
+	// sends velocity 0 instead of note off
 	else if (status == MIDI_NOTE_ON_CH02) {
 		if (velocity != 0) switch (note) {
-		case MIDI_DRUM_KICK1:
-			
+		case MIDI_DRUM_KICK1: // ghost kick
+			if (m_kickCount % 4 == 0) {
+				double time = glfwGetTime();
+				m_squirrel1->m_triggerTime = time;
+				m_squirrel2->m_triggerTime = time;
+			}
+			if (m_kickCount % 16 == 0) {
+				if (rand() > RAND_MAX / 2.0f) m_camOffset.x *= -1;
+				else m_camOffset.y *= -1;
+			}
+			m_kickCount++;
 			break;
 		case MIDI_DRUM_KICK2:
-			if (m_kickCount == 0) m_squirrel1->m_triggerTime = glfwGetTime();
-			m_kickCount = (m_kickCount + 1) % 4;
+			if (!m_innerMap[SQUIR_SQUIRREL1] && !m_innerMap[SQUIR_SQUIRREL2])
+				m_innerMap[SQUIR_SQUIRREL1] = true;
+			else {
+				m_innerMap[SQUIR_SQUIRREL1] = !m_innerMap[SQUIR_SQUIRREL1];
+				m_innerMap[SQUIR_SQUIRREL2] = !m_innerMap[SQUIR_SQUIRREL2];
+			}
 			break;
 		case MIDI_DRUM_SNARE1:
-			m_innerMap[SQUIR_SQUIRREL1] = false;
-			m_innerMap[SQUIR_SQUIRREL2] = true;
 			// tear screen
 			break;
 		case MIDI_DRUM_TOM_LOW1:
-			m_innerMap[SQUIR_BANNER0] = true;
-			m_innerMap[SQUIR_BANNER1] = false;
-			m_innerMap[SQUIR_BANNER2] = false;
+			this->nextBanner();
 			break;
 		case MIDI_DRUM_TOM_MID1:
-			m_innerMap[SQUIR_BANNER0] = false;
-			m_innerMap[SQUIR_BANNER1] = true;
-			m_innerMap[SQUIR_BANNER2] = false;
+			this->nextBanner();
 			break;
 		case MIDI_DRUM_TOM_HIGH1:
-			m_innerMap[SQUIR_BANNER0] = false;
-			m_innerMap[SQUIR_BANNER1] = false;
-			m_innerMap[SQUIR_BANNER2] = true;
+			this->nextBanner();
 			break;
 		default:
 			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;

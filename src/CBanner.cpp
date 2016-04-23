@@ -9,7 +9,7 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 
 	if (strcmp(texName, "NO_TEX") == 0) {
 		m_useTex = false;
-		m_alpha = 0.2f;
+		m_alpha = 0.4f;
 	}
 	else if (strcmp(texName, "MULTIPASS") == 0) {
 		m_useTex = true;

@@ -1,6 +1,7 @@
 #include "CSong.hpp"
 
-CSong::CSong(CCamera * camera)
-	: m_camera(camera) { }
+CSong::CSong(CCamera * camera, CSkybox * skybox)
+	: m_camera(camera),
+	  m_skybox(skybox) { }
 
-CSong::~CSong(void) { }
+CSong::~CSong(void) { } // foreign objects are destroyed elsewhere

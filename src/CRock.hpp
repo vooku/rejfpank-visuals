@@ -7,12 +7,12 @@
 #define _REJFPANK_CROCK
 
 #include "CSong.hpp"
-#include "CSkybox.hpp"
 #include "CBanner.hpp"
+#include "CLoadedObj.hpp"
 
 class CRock : public CSong {
 public:
-	CRock(CCamera * camera, TCommonShaderProgram * bannerShaderProgram, CSkybox * skybox);
+	CRock(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
 	~CRock(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
@@ -21,9 +21,9 @@ public:
 	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
 
 protected:
-	/// Helper funtion for the constructor
+	/// Helper funtion for CRock()
 	void shadersInit(void);
-	/// Helper funtion for the constructor
+	/// Helper funtion for CRock()
 	void modelsInit(void);
 
 	/// Helper function for midiIn()
@@ -45,7 +45,6 @@ protected:
 	CBanner ** m_banners;
 
 	// ptrs to objects from the controller
-	CSkybox * m_skybox;
 	TCommonShaderProgram * m_bannerShaderProgram;
 
 	int m_loopCtr;

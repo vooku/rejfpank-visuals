@@ -9,7 +9,6 @@ The rest of the readme is mostly for myself.
 
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
-- m_innerMap[SQUIR_FBUFF]
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -33,8 +32,7 @@ The rest of the readme is mostly for myself.
 - [openFrameworks](http://openframeworks.cc/)
 
 ## Notes
-- Midi yoke proved to be obsolete — incompatible with 64bit SW such as Ableton Live 9. For testing purposes I am using [loopMIDI](www.tobias-erichsen.de/software/loopmidi.html) instead.
-- OSC (Open Sound Control) is (might be) the new MIDI
+- The app is currently optimalized for screens with 16:9 aspect ratio
 
 ## Similar stuff
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI

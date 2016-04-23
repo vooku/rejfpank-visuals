@@ -165,7 +165,7 @@ void rejfpankInit(GLFWwindow * window) {
 
 	callbacksInit(window);
 
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
@@ -207,8 +207,6 @@ GLFWwindow * createWindow(void) {
 	controller.m_state.winWidth = mode->width;
 	controller.m_state.winHeight = mode->height;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	return glfwCreateWindow(controller.m_state.winWidth, controller.m_state.winHeight = mode->height, WIN_TITLE, monitors[selectedMonitor], NULL);
 }
 

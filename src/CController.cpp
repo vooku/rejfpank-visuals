@@ -80,10 +80,7 @@ void CController::redraw(GLFWwindow * window) {
 		CAMERA_VIEW_START,
 		CAMERA_VIEW_DIST);
 
-	// always first
-	m_skybox->draw(PMatrix, VMatrix);
-
-	// all models in the song
+	// all models in the song, incl. the skybox
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->redraw(PMatrix, VMatrix);
 	
 	// always last
@@ -94,9 +91,9 @@ void CController::redraw(GLFWwindow * window) {
 
 void CController::nextSong(void) {
 	if (!m_state.ctrlMap[CTRL_SONG_SET]) {
-		if (ACTIVE_SONG == "Skala") m_song = new CRock(&m_camera, &m_bannerShaderProgram, m_skybox);
-		else if (ACTIVE_SONG == "Veverka") m_song = new CSquirrel(&m_camera, &m_bannerShaderProgram, &m_state);
-		//else if (ACTIVE_SONG == "Definice") m_song = new CSquirrel(&m_camera,&m_bannerShaderProgram);
+		if (ACTIVE_SONG == "Skala") m_song = new CRock(&m_camera, m_skybox, &m_bannerShaderProgram);
+		else if (ACTIVE_SONG == "Veverka") m_song = new CSquirrel(&m_camera, m_skybox, &m_bannerShaderProgram, &m_state);
+		//else if (ACTIVE_SONG == "Definice") m_song = new CSquirrel(&m_camera, m_skybox, &m_bannerShaderProgram);
 		else {
 			std::cerr << "No song selected!" << std::endl;
 			return;

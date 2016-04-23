@@ -3,10 +3,9 @@
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CRock::CRock(CCamera * camera, TCommonShaderProgram * bannerShaderProgram, CSkybox * skybox)
-	: CSong(camera),
+CRock::CRock(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+	: CSong(camera, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
-	  m_skybox(skybox),
 	  m_loopCtr(0) {
 
 	m_innerMap = new bool[ROCK_COUNT];
@@ -96,6 +95,9 @@ void CRock::modelsInit(void) {
 }
 
 void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+	// skybox
+	m_skybox->draw(PMatrix, VMatrix);
+	
 	// lego
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT) {
 		if (m_innerMap[ROCK_KICK1])
@@ -230,6 +232,7 @@ void CRock::midiIn(const unsigned int status, const unsigned int note, const uns
 		}
 	}
 	//-------------------------------------------------------------------> ALESIS SR16
+	// sends velocity 0 instead of note off
 	else if (status == MIDI_NOTE_ON_CH02) {
 		if (velocity != 0) switch (note) {
 		case MIDI_DRUM_KICK1:

@@ -9,14 +9,14 @@
 #include "data.hpp"
 #include "TControlState.hpp"
 #include "CCamera.hpp"
-#include "CLoadedObj.hpp"
+#include "CSkybox.hpp"
 
 /** Parent class for song structure
  */
 
 class CSong {
 public:
-	CSong(CCamera * camera);
+	CSong(CCamera * camera, CSkybox * skybox);
 	~CSong(void);
 
 	virtual void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
@@ -37,6 +37,7 @@ protected:
 	TCommonShaderProgram * m_shaderPrograms;
 
 	// ptrs to objects from the controller
+	CSkybox * m_skybox;
 	CCamera * m_camera;
 };
 
