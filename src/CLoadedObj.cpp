@@ -140,8 +140,7 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform3fv(m_shaderProgram->diffuseLocation, 1, glm::value_ptr(m_material.diffuse));
 	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.specular));
 	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
-	if (m_material.diffuse == glm::vec3(0.0f)) glUniform1i(m_shaderProgram->booleanFlagLocation, 1);
-	else glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
+	glUniform1i(m_shaderProgram->booleanFlagLocation, (m_material.diffuse == glm::vec3(0.0f)));
 }
 
 void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {

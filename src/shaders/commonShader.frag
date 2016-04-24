@@ -25,7 +25,7 @@ uniform mat4 MMatrix;
 uniform mat4 VMatrix;
 uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
-uniform int fadeToBlack;
+uniform bool fadeToBlack;
 //uniform sampler2D texSampler;
 
 TLight whiteLight, redLight, blueLight;
@@ -80,7 +80,7 @@ vec4 lightItUp (const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
 	vec4 result = vec4 (0.0f);
 	//result += vec4 (0.1f) * objectColor (); // Global ambient
 	result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
-	if (fadeToBlack == 1) result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
+	if (fadeToBlack) result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
 	//result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));
 	return result;
 }

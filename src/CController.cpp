@@ -48,6 +48,7 @@ void CController::shadersInit(void) {
 		m_bannerShaderProgram.ambientLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "color");
 		m_bannerShaderProgram.alphaLocation			= glGetUniformLocation(m_bannerShaderProgram.program, "alpha");
 		m_bannerShaderProgram.booleanFlagLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "useTex");
+		m_bannerShaderProgram.inverseLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "inverse");
 		// Get input locations
 		m_bannerShaderProgram.posLocation		= glGetAttribLocation(m_bannerShaderProgram.program, "position");
 		m_bannerShaderProgram.texCoordsLocation	= glGetAttribLocation(m_bannerShaderProgram.program, "texCoords");

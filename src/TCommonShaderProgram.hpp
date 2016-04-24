@@ -28,6 +28,8 @@ struct TCommonShaderProgram {
 	GLint colorMultiplierLocation;
 	GLint offsetLocation;
 	GLint booleanFlagLocation;
+	// multipass effects
+	GLint inverseLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

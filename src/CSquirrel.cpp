@@ -8,7 +8,7 @@ CSquirrel::CSquirrel(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * 
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_state(state),
 	  m_kickCount(0),
-	  m_camOffset(0.01f, 0.01f) {
+	  m_camOffset(CAMERA_ROTATE_SPEED) {
 
 	m_innerMap = new bool[SQUIR_COUNT];
 	for (int i = 0; i < SQUIR_COUNT; i++) m_innerMap[i] = false;
@@ -80,8 +80,6 @@ void CSquirrel::multipassInit(void) {
 
 	glGenTextures(1, &m_renderedTex);
 	glBindTexture(GL_TEXTURE_2D, m_renderedTex);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_state->winWidth, m_state->winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // empty image
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderedTex, 0);
@@ -125,19 +123,22 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// skybox
 	m_skybox->draw(PMatrix, VMatrix);
 
+	// squirrels
 	if (m_innerMap[SQUIR_SQUIRREL1]) m_squirrel1->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_SQUIRREL2]) m_squirrel2->draw(PMatrix, VMatrix);
 
+	// banners
 	if (m_innerMap[SQUIR_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
 	
+	// multipass
 	if (m_innerMap[SQUIR_FBUFF]) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix);
+		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[SQUIR_INVERSE]);
 	}
 }
 
@@ -149,7 +150,7 @@ void CSquirrel::update(double time) {
 	m_squirrel1->updatePtSize(time);
 	m_squirrel2->updatePtSize(time);
 
-	m_camera->rotate(m_camOffset.x, m_camOffset.y);
+	if (m_innerMap[SQUIR_ROTATE]) m_camera->rotate(m_camOffset.x, m_camOffset.y);
 }
 
 void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -219,7 +220,8 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 				m_squirrel1->m_triggerTime = time;
 				m_squirrel2->m_triggerTime = time;
 			}
-			if (m_kickCount % 16 == 0) {
+			if (m_kickCount >= 16) m_innerMap[SQUIR_ROTATE] = true;
+			if (m_innerMap[SQUIR_ROTATE] && m_kickCount % 16 == 0) {
 				if (rand() > RAND_MAX / 2.0f) m_camOffset.x *= -1;
 				else m_camOffset.y *= -1;
 			}
@@ -244,6 +246,12 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 			break;
 		case MIDI_DRUM_TOM_HIGH1:
 			this->nextBanner();
+			break;
+		case MIDI_DRUM_CYMBAL_CRASH1:
+			m_innerMap[SQUIR_INVERSE] = true;
+			break;
+		case MIDI_DRUM_CYMBAL_SPLASH:
+			m_innerMap[SQUIR_INVERSE] = false;
 			break;
 		default:
 			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;

@@ -5,7 +5,8 @@
 
 CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName, GLint texLoc)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
-	  m_camera(camera) {
+	  m_camera(camera),
+	  m_inverse(false) {
 
 	if (strcmp(texName, "NO_TEX") == 0) {
 		m_useTex = false;
@@ -90,6 +91,11 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse) {
+	m_inverse = inverse;
+	this->draw(PMatrix, VMatrix);
+}
+
 void CBanner::sendUniforms(void) {
 	glUseProgram(m_shaderProgram->program);
 
@@ -97,7 +103,6 @@ void CBanner::sendUniforms(void) {
 	glUniform1i(m_shaderProgram->texSamplerLocation, 0);
 	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_color));
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
-	CHECK_GL_ERROR();
-	if (m_useTex) glUniform1i(m_shaderProgram->booleanFlagLocation, 1);
-	else glUniform1i(m_shaderProgram->booleanFlagLocation, 0);
+	glUniform1i(m_shaderProgram->booleanFlagLocation, m_useTex);
+	glUniform1i(m_shaderProgram->inverseLocation, m_inverse);
 }

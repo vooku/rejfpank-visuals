@@ -18,11 +18,14 @@ public:
 	void updateAlpha(const double & time);
 	
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
+	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse);
 
 protected:
 	void sendUniforms(void);
 
 	bool m_useTex;
+	bool m_inverse;
+
 	glm::vec3 m_color;
 	float m_alpha;
 	const CCamera * m_camera;

@@ -5,15 +5,19 @@ in vec2 texCoordsTrans;
 uniform sampler2D texSampler;
 uniform vec3 color;
 uniform float alpha;
-uniform int useTex;
+uniform bool useTex;
+uniform bool inverse;
 
 out vec4 colorOut;
 
 void main (void) {
-	if (useTex == 1) {
-		colorOut = texture (texSampler, texCoordsTrans);
-		colorOut.w = alpha;
-	}
-	else colorOut = vec4(color, alpha);
+	vec4 colorTemp;
+
+	if (useTex) colorTemp = texture (texSampler, texCoordsTrans);
+	else colorTemp = vec4(color, 1.0f);
 	
+	if (inverse) colorTemp = vec4(1.0f) - colorTemp;
+
+	colorTemp.w = alpha;
+	colorOut = colorTemp;
 }
