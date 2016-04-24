@@ -1,12 +1,17 @@
 #include "CBanner.hpp"
 #include "data.hpp"
+#include <algorithm>
+#include <functional>
 
 #include "pgr\pgr.hpp"
 
 CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName, GLint texLoc)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),
-	  m_inverse(false) {
+	  m_inverse(false),
+	  m_reducePalette(false),
+	  m_tear(false),
+	  m_tearN(0) {
 
 	if (strcmp(texName, "NO_TEX") == 0) {
 		m_useTex = false;
@@ -54,6 +59,21 @@ void CBanner::updateAlpha(const double & time) {
 	m_alpha = (-1.0f / 3.0f) * (float)elapsedTime + 1.0f;
 }
 
+void CBanner::tear(void) {
+	m_tear = true;
+	m_tearN = rand() % SCREEN_TEARS + 1;
+
+	for (int i = 0; i < m_tearN; i++) m_tearBorders[i] = rand() / (float)RAND_MAX;
+	std::sort(m_tearBorders, m_tearBorders + m_tearN, std::less<float>());
+
+	for (int i = 0; i < m_tearN + 1; i++) m_tearOffsets[i] = rand() / (float)RAND_MAX;
+}
+
+void CBanner::untear(void) {
+	m_tear = false;
+	m_tearN = 0;
+}
+
 void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -91,8 +111,9 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse) {
+void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette) {
 	m_inverse = inverse;
+	m_reducePalette = reducePalette;
 	this->draw(PMatrix, VMatrix);
 }
 
@@ -105,4 +126,9 @@ void CBanner::sendUniforms(void) {
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
 	glUniform1i(m_shaderProgram->booleanFlagLocation, m_useTex);
 	glUniform1i(m_shaderProgram->inverseLocation, m_inverse);
+	glUniform1i(m_shaderProgram->reducePaletteLocation, m_reducePalette);
+	glUniform1i(m_shaderProgram->tearFlagLocation, m_tear);
+	glUniform1i(m_shaderProgram->tearNLocation, m_tearN);
+	glUniform1fv(m_shaderProgram->tearBordersLocation, m_tearN, m_tearBorders);
+	glUniform1fv(m_shaderProgram->tearOffsetsLocation, m_tearN + 1, m_tearOffsets);
 }

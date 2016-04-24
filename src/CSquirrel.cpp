@@ -8,6 +8,8 @@ CSquirrel::CSquirrel(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * 
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_state(state),
 	  m_kickCount(0),
+	  m_rideTriggerTime(0),
+	  m_snareTriggerTime(0),
 	  m_camOffset(CAMERA_ROTATE_SPEED) {
 
 	m_innerMap = new bool[SQUIR_COUNT];
@@ -138,7 +140,7 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[SQUIR_INVERSE]);
+		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[SQUIR_INVERSE], m_innerMap[SQUIR_REDUCE]);
 	}
 }
 
@@ -151,59 +153,50 @@ void CSquirrel::update(double time) {
 	m_squirrel2->updatePtSize(time);
 
 	if (m_innerMap[SQUIR_ROTATE]) m_camera->rotate(m_camOffset.x, m_camOffset.y);
+
+	if (m_innerMap[SQUIR_REDUCE] && time - m_rideTriggerTime > BEAT_LENGTH(175)) m_innerMap[SQUIR_REDUCE] = false;
+
+	if (m_innerMap[SQUIR_TEAR] && time - m_snareTriggerTime > BEAT_LENGTH(175) / 2.0f) {
+		m_innerMap[SQUIR_TEAR] = false;
+		m_banners[3]->untear();
+	}
 }
 
 void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
-		case MPX16_PAD01:
-			
+		case MPX16_PAD01:	
 			break;
-		case MPX16_PAD02:
-			
+		case MPX16_PAD02:			
 			break;
-		case MPX16_PAD03:
-			
+		case MPX16_PAD03:			
 			break;
-		case MPX16_PAD04:
-			
+		case MPX16_PAD04:			
 			break;
-		case MPX16_PAD05:
-			
+		case MPX16_PAD05:			
 			break;
-		case MPX16_PAD06:
-			
+		case MPX16_PAD06:			
 			break;
-		case MPX16_PAD07:
-			
+		case MPX16_PAD07:			
 			break;
-		case MPX16_PAD08:
-			
+		case MPX16_PAD08:			
 			break;
-		case MPX16_PAD09:
-			
+		case MPX16_PAD09:			
 			break;
-		case MPX16_PAD10:
-			
+		case MPX16_PAD10:			
 			break;
-		case MPX16_PAD11:
-			
+		case MPX16_PAD11:			
 			break;
-		case MPX16_PAD12:
-			
+		case MPX16_PAD12:			
 			break;
 		case MPX16_PAD13:
-
 			break;
 		case MPX16_PAD14:
-
 			break;
 		case MPX16_PAD15:
-
 			break;
 		case MPX16_PAD16:
-
 			break;
 		default:
 			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
@@ -236,7 +229,9 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 			}
 			break;
 		case MIDI_DRUM_SNARE1:
-			// tear screen
+			m_innerMap[SQUIR_TEAR] = true;
+			m_banners[3]->tear();
+			m_snareTriggerTime = glfwGetTime();
 			break;
 		case MIDI_DRUM_TOM_LOW1:
 			this->nextBanner();
@@ -252,6 +247,10 @@ void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const
 			break;
 		case MIDI_DRUM_CYMBAL_SPLASH:
 			m_innerMap[SQUIR_INVERSE] = false;
+			break;
+		case MIDI_DRUM_CYMBAL_RIDE1:
+			m_innerMap[SQUIR_REDUCE] = true;
+			m_rideTriggerTime = glfwGetTime();
 			break;
 		default:
 			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;

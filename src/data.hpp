@@ -46,6 +46,7 @@
 #define ROTATION_TIME 0.2f
 #define FLOW_MAX_TIME 2.3f
 #define BEAT_LENGTH(bpm) (60.0f / bpm)
+#define SCREEN_TEARS 10 // check bannerShader.frag if there's enough space!
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)

@@ -31,13 +31,15 @@ protected:
 	void nextBanner(void);
 
 	enum {
-		SQUIR_FBUFF, SQUIR_ROTATE, SQUIR_INVERSE,
+		SQUIR_FBUFF, SQUIR_ROTATE, SQUIR_INVERSE, SQUIR_REDUCE, SQUIR_TEAR,
 		SQUIR_SQUIRREL1, SQUIR_SQUIRREL2,
 		SQUIR_BANNER0, SQUIR_BANNER1, SQUIR_BANNER2,
 		SQUIR_COUNT
 	};
 
 	unsigned int m_kickCount;
+	double m_rideTriggerTime;
+	double m_snareTriggerTime;
 	glm::vec2 m_camOffset;
 
 	CObjectPix * m_squirrel1;

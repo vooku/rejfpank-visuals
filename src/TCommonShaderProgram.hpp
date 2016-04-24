@@ -30,6 +30,11 @@ struct TCommonShaderProgram {
 	GLint booleanFlagLocation;
 	// multipass effects
 	GLint inverseLocation;
+	GLint reducePaletteLocation;
+	GLint tearFlagLocation;
+	GLint tearNLocation;
+	GLint tearBordersLocation;
+	GLint tearOffsetsLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

@@ -16,15 +16,24 @@ public:
 
 	bool setColor(const glm::vec3 & color);
 	void updateAlpha(const double & time);
+	void tear(void);
+	void untear(void);
+
 	
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
-	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse);
+	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette);
 
 protected:
 	void sendUniforms(void);
 
 	bool m_useTex;
 	bool m_inverse;
+	bool m_reducePalette;
+	bool m_tear;
+
+	int m_tearN;
+	float m_tearBorders[SCREEN_TEARS];
+	GLfloat m_tearOffsets[SCREEN_TEARS + 1];
 
 	glm::vec3 m_color;
 	float m_alpha;

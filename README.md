@@ -21,6 +21,7 @@ The rest of the readme is mostly for myself.
 - Generate random points and draw tham as triangle strip 
 - change directional light on beat
 - trailing objects in fifo
+- switch to Uniform Buffer Object
 
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.
