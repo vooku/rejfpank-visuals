@@ -7,6 +7,7 @@
 #define _REJFPANK_CSONG
 
 #include "data.hpp"
+#include "midicodes.hpp"
 #include "TControlState.hpp"
 #include "CCamera.hpp"
 #include "CSkybox.hpp"
@@ -16,7 +17,7 @@
 
 class CSong {
 public:
-	CSong(CCamera * camera, CSkybox * skybox);
+	CSong(CCamera * camera, CSkybox * skybox = NULL);
 	~CSong(void);
 
 	virtual void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;

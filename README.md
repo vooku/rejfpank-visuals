@@ -11,6 +11,7 @@ The rest of the readme is mostly for myself.
 
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
+- 4:3 screen support
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -44,4 +45,5 @@ The rest of the readme is mostly for myself.
 - [Chrome Visuals](https://github.com/zeroerrequattro/chrome-visuals) — very similar project done in chrome
 
 ## Thanks
-- Thanks to [Floris 'floriuszzz' Smit](www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using
+- Thanks to [Floris 'floriuszzz' Smit](http://www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using
+- Thanks to [Gurkan Te](http://www.shroomarts.blogspot.cz) for the squirrel illustrations. As they are not publicly licensed, they are not part of this repository, sorry.

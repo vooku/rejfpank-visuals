@@ -3,8 +3,8 @@
 * @date		2016
 */
 
-#ifndef _REJFPANK_CVEVERKA
-#define _REJFPANK_CVEVERKA
+#ifndef _REJFPANK_CSQUIRREL
+#define _REJFPANK_CSQUIRREL
 
 #include "CSong.hpp"
 #include "CObjectPix.hpp"
@@ -55,4 +55,4 @@ protected:
 	GLuint m_renderedTex;
 };
 
-#endif // !_REJFPANK_CVEVERKA
+#endif // !_REJFPANK_CSQUIRREL

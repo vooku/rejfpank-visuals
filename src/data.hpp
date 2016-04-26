@@ -10,13 +10,6 @@
 #include <glm/glm.hpp>
 #include <string>
 
-#define TEX_TEST "res/test-tex.png"
-#define TEX_NOISE "res/noise.jpg"
-
-#define IMG_TEST "res/test-img2.png"
-#define IMG_SQUIRREL1 "res/sq-hairy.png"
-#define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
-
 #define MIDI_LONG_BUFFER_SIZE 1024
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
@@ -60,14 +53,22 @@ const std::string songNames [SONG_COUNT] = {
 	"Skala",
 	"Definice"
 };
-#define ACTIVE_SONG songNames[0] // for testing
+#define ACTIVE_SONG songNames[2] // for testing
 
 #define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
 #define LEGO_BRICKS_COUNT 8
 #define MIDAS_TIME 3.0f
 
-#define MODEL_HONEY "../res/honey-comb.obj"
+// ---------------------------------------------------------------> resources
+#define TEX_TEST "res/test-tex.png"
+#define TEX_NOISE "res/noise.jpg"
+
+#define IMG_TEST "res/test-img2.png"
+#define IMG_SQUIRREL1 "res/sq-hairy.png"
+#define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
+
+#define MODEL_HONEY "res/honey-comb.obj"
 
 // lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
 #define MODEL_LEGO_0 "res/lego-brick-1x1.obj"
@@ -80,6 +81,7 @@ const std::string songNames [SONG_COUNT] = {
 #define MODEL_LEGO_7 "res/lego-brick-4x1-low.obj"
 #define MODEL_LEGO_8 "res/lego-brick-4x2.obj"
 #define MODEL_LEGO_9 "res/lego-brick-4x2-low.obj"
+// <--------------------------------------------------------------- resources
 
 #define LEGO_BRICK_COLORS_COUNT 4
 const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {

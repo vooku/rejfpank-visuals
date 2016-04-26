@@ -1,5 +1,4 @@
 #include "CRock.hpp"
-#include "midicodes.hpp"
 #include "pgr/pgr.hpp"
 #include <vector>
 
@@ -49,7 +48,7 @@ void CRock::shadersInit(void) {
 		m_shaderPrograms[0].ambientLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "material.ambient");
 		m_shaderPrograms[0].specularLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.specular");
 		m_shaderPrograms[0].shininessLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
-		m_shaderPrograms[0].booleanFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
+		m_shaderPrograms[0].fadeToBlackLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
 		// Get input locations
 		m_shaderPrograms[0].posLocation		= glGetAttribLocation(m_shaderPrograms[0].program, "position");
 		m_shaderPrograms[0].normalLocation	= glGetAttribLocation(m_shaderPrograms[0].program, "normal");

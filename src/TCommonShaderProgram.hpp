@@ -23,11 +23,12 @@ struct TCommonShaderProgram {
 	GLint specularLocation;
 	GLint shininessLocation;
 	GLint alphaLocation;
+	GLint useTexLocation;
 	GLint texSamplerLocation;
 	// various
 	GLint colorMultiplierLocation;
 	GLint offsetLocation;
-	GLint booleanFlagLocation;
+	GLint fadeToBlackLocation;
 	// multipass effects
 	GLint inverseLocation;
 	GLint reducePaletteLocation;

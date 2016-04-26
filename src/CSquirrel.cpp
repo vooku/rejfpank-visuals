@@ -1,5 +1,4 @@
 #include "CSquirrel.hpp"
-#include "midicodes.hpp"
 #include "pgr/pgr.hpp"
 #include <vector>
 
@@ -73,7 +72,7 @@ void CSquirrel::modelsInit(void) {
 	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram); // blue
 	m_banners[2]->setColor(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, "MULTIPASS", m_renderedTex);  // multipass
+	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, "MULTIPASS", m_renderedTex); // multipass
 }
 
 void CSquirrel::multipassInit(void) {

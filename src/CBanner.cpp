@@ -124,7 +124,7 @@ void CBanner::sendUniforms(void) {
 	glUniform1i(m_shaderProgram->texSamplerLocation, 0);
 	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_color));
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
-	glUniform1i(m_shaderProgram->booleanFlagLocation, m_useTex);
+	glUniform1i(m_shaderProgram->useTexLocation, m_useTex);
 	glUniform1i(m_shaderProgram->inverseLocation, m_inverse);
 	glUniform1i(m_shaderProgram->reducePaletteLocation, m_reducePalette);
 	glUniform1i(m_shaderProgram->tearFlagLocation, m_tear);
