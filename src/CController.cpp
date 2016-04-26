@@ -7,7 +7,10 @@
 
 CController controller;
 
-CController::CController(void) {
+CController::CController(void)
+	: m_songCtr(0),
+	  m_song(NULL) {
+
 	m_state.winWidth = INIT_WIN_WIDTH;
 	m_state.winHeight = INIT_WIN_HEIGHT;
 
@@ -100,19 +103,25 @@ void CController::redraw(GLFWwindow * window) {
 }
 
 void CController::nextSong(void) {
-	if (!m_state.ctrlMap[CTRL_SONG_SET]) {
-		if (ACTIVE_SONG == "Skala") m_song = new CRock(&m_camera, m_skybox, &m_bannerShaderProgram);
-		else if (ACTIVE_SONG == "Veverka") m_song = new CSquirrel(&m_camera, m_skybox, &m_bannerShaderProgram, &m_state);
-		else if (ACTIVE_SONG == "Definice") m_song = new CDefinition(&m_camera);
-		else {
-			std::cerr << "No song selected!" << std::endl;
-			return;
-		}
-		m_state.ctrlMap[CTRL_SONG_SET] = true;
+	m_state.ctrlMap[CTRL_SONG_SET] = false;
+	if (m_song != NULL) delete m_song;
+
+	switch (m_songCtr) {
+		case 0:
+			m_song = new CSquirrel(&m_camera, m_skybox, &m_bannerShaderProgram, &m_state);
+			break;
+		case 1:
+			m_song = new CRock(&m_camera, m_skybox, &m_bannerShaderProgram);
+			break;
+		case 2:
+			m_song = new CDefinition(&m_camera);
+			break;
 	}
-	// TODO destroy
-	// TODO select from list in data
-	// TODO init
+
+	m_camera.reset();
+
+	m_songCtr = (m_songCtr + 1) % SONG_COUNT;
+	m_state.ctrlMap[CTRL_SONG_SET] = true;
 }
 
 void CController::update(void) {

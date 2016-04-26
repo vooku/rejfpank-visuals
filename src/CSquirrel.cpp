@@ -33,6 +33,8 @@ CSquirrel::~CSquirrel(void) {
 	delete[] m_innerMap;
 
 	glDeleteFramebuffers(1, &m_frameBufferObject);
+
+	std::cout << "destroyed song: Veverka" << std::endl;
 }
 
 void CSquirrel::shadersInit(void) {
@@ -72,7 +74,7 @@ void CSquirrel::modelsInit(void) {
 	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram); // blue
 	m_banners[2]->setColor(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, "MULTIPASS", m_renderedTex); // multipass
+	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
 }
 
 void CSquirrel::multipassInit(void) {

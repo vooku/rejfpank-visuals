@@ -10,6 +10,8 @@ CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonSh
 	m_axis[rand() % 3] = 1.0f; // those two lines make it one of the base axes x, y or z
 }
 
+CDrawable::~CDrawable(void) { }
+
 void CDrawable::rotate(const double & time) {
 	const double elapsedTime = time - m_triggerTime;
 	if (elapsedTime >= ROTATION_TIME) return;

@@ -80,7 +80,7 @@ static void keyCallback(GLFWwindow * window, int key, int scancode, int action, 
 			case GLFW_KEY_1:
 				controller.m_camera.reset();
 				break;
-			case GLFW_KEY_P:
+			case GLFW_KEY_N:
 				if (mods == GLFW_MOD_CONTROL) controller.nextSong();
 				break;
 			default: // do nothing;

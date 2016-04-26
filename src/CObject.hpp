@@ -22,6 +22,7 @@
 class CObject {
 public:
 	CObject (const glm::vec3 position);
+	virtual ~CObject(void);
 
 	glm::vec3 m_position;
 	glm::vec3 m_direction;

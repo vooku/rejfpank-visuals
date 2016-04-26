@@ -39,10 +39,13 @@ public:
 
 	TControlState m_state;
 protected:
+	/// Helper funtion for CController()
 	void shadersInit(void);
+	/// Helper funtion for CController()
 	void modelsInit(void);
 
 	CSong * m_song;
+	unsigned int m_songCtr;
 
 	CSkybox * m_skybox;
 	TCommonShaderProgram m_skyboxShaderProgram;

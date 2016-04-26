@@ -20,9 +20,9 @@ public:
 	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
 
 protected:
-	/// Helper funtion for CSquirrel()
+	/// Helper funtion for CDefinition()
 	void shadersInit(void);
-	/// Helper funtion for CSquirrel()
+	/// Helper funtion for CDefinition()
 	void modelsInit(void);
 
 	enum {

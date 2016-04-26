@@ -11,7 +11,7 @@
 
 class CBanner : public CDrawable {
 public:
-	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName = "NO_TEX", GLint texLoc = 0);
+	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param = BANNER_PARAM_NO_TEX, GLint texLoc = 0);
 	~CBanner(void);
 
 	bool setColor(const glm::vec3 & color);

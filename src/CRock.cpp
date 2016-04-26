@@ -28,6 +28,8 @@ CRock::~CRock(void) {
 	delete[] m_banners;
 
 	delete[] m_innerMap;
+
+	std::cout << "destroyed song: Skala" << std::endl;
 }
 
 void CRock::shadersInit(void) {
@@ -84,7 +86,7 @@ void CRock::modelsInit(void) {
 	}
 
 	// banners
-	m_banners = new CBanner * [2];
+	m_banners = new CBanner * [3];
 
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram);
 	m_banners[0]->setColor(glm::vec3(1.0f));
@@ -114,7 +116,7 @@ void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 	// banners
 	if (m_innerMap[ROCK_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
-	if (m_innerMap[ROCK_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
+	if (m_innerMap[ROCK_BANNER1] && glfwGetTime() - m_banners[1]->m_triggerTime >= 0.1) m_banners[1]->draw(PMatrix, VMatrix);
 }
 
 void CRock::replaceLoop(const int dir) {
@@ -150,6 +152,10 @@ void CRock::update(double time) {
 	if (m_innerMap[ROCK_BANNER1]) {
 		m_banners[1]->updateAlpha(time);
 		if (time - m_banners[1]->m_triggerTime >= MIDAS_TIME) m_innerMap[ROCK_BANNER1] = false;
+	}
+	if (m_innerMap[ROCK_BANNER2]) {
+		m_banners[1]->updateAlpha(time);
+		if (time - m_banners[2]->m_triggerTime >= 0.005) m_innerMap[ROCK_BANNER2] = false;
 	}
 }
 
@@ -221,7 +227,7 @@ void CRock::midiIn(const unsigned int status, const unsigned int note, const uns
 			m_innerMap[ROCK_BANNER0] = false;
 			m_innerMap[ROCK_BANNER1] = false;
 			break;
-		case MPX16_PAD16:
+		case MPX16_PAD16: 
 			m_innerMap[ROCK_BANNER1] = true;
 			m_banners[1]->m_triggerTime = glfwGetTime();
 			break;

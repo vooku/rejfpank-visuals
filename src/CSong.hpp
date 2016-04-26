@@ -18,7 +18,7 @@
 class CSong {
 public:
 	CSong(CCamera * camera, CSkybox * skybox = NULL);
-	~CSong(void);
+	virtual ~CSong(void);
 
 	virtual void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
 	virtual void update(double time) = 0;

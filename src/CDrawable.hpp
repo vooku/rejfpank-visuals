@@ -12,7 +12,8 @@
 class CDrawable : public CObject {
 public:
 	CDrawable(const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
-	
+	virtual ~CDrawable(void);
+
 	virtual void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
 	
 	void rotate(const double & time);

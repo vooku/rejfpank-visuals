@@ -26,6 +26,8 @@ CDefinition::~CDefinition(void) {
 	delete[] m_shaderPrograms;
 
 	delete[] m_innerMap;
+
+	std::cout << "destroyed song: Definice" << std::endl;
 }
 
 void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {

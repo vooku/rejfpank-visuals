@@ -12,6 +12,7 @@ The rest of the readme is mostly for myself.
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - 4:3 screen support
+- setup setlist on app start
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

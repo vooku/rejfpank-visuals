@@ -5,7 +5,7 @@
 
 #include "pgr\pgr.hpp"
 
-CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * texName, GLint texLoc)
+CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param, GLint texLoc)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),
 	  m_inverse(false),
@@ -13,18 +13,22 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 	  m_tear(false),
 	  m_tearN(0) {
 
-	if (strcmp(texName, "NO_TEX") == 0) {
+	if (strcmp(param, BANNER_PARAM_NO_TEX) == 0) {
 		m_useTex = false;
 		m_alpha = 0.4f;
 	}
-	else if (strcmp(texName, "MULTIPASS") == 0) {
+	else if (strcmp(param, BANNER_PARAM_NP_TEX_BLACK) == 0) {
+		m_useTex = false;
+		m_alpha = 1.0f;
+	}
+	else if (strcmp(param, BANNER_PARAM_MULTIPASS) == 0) {
 		m_useTex = true;
 		m_geometry.texture = texLoc;
 		m_alpha = 1.0f;
 	}
 	else {
 		m_useTex = true;
-		m_geometry.texture = pgr::createTexture(texName, false);
+		m_geometry.texture = pgr::createTexture(param, false);
 		m_alpha = 0.2f;
 	}
 

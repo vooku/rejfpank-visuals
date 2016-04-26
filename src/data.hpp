@@ -48,12 +48,10 @@
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 
 #define SONG_COUNT 3
-const std::string songNames [SONG_COUNT] = {
-	"Veverka",
-	"Skala",
-	"Definice"
-};
-#define ACTIVE_SONG songNames[2] // for testing
+
+#define BANNER_PARAM_NO_TEX "no_tex"
+#define BANNER_PARAM_NP_TEX_BLACK "no_tex_black"
+#define BANNER_PARAM_MULTIPASS "multipass"
 
 #define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
