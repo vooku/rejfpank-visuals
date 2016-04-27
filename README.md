@@ -11,7 +11,6 @@ The rest of the readme is mostly for myself.
 
 ## Don't forget
 - GLFW 3.2 should be released soon and should support toggling fullscreen
-- 4:3 screen support
 - setup setlist on app start
 
 ## Ideas
@@ -35,9 +34,6 @@ The rest of the readme is mostly for myself.
 - [Windows MIDI reference](https://msdn.microsoft.com/en-us/library/windows/desktop/dd798495(v=vs.85).aspx)
 - [MIDI notes reference](http://www.midimountain.com/midi/midi_status.htm)
 - [openFrameworks](http://openframeworks.cc/)
-
-## Notes
-- The app is currently optimalized for screens with 16:9 aspect ratio
 
 ## Similar stuff
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI

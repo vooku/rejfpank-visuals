@@ -9,16 +9,19 @@
 #include "CDrawable.hpp"
 #include "CCamera.hpp"
 
+const static unsigned int nBannerVertices = 4;
+const static unsigned int nBannerAttribsPerVertex = 5;
+extern float bannerVertices[];
+
 class CBanner : public CDrawable {
 public:
-	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param = BANNER_PARAM_NO_TEX, GLint texLoc = 0);
+	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param = BANNER_PARAM_NO_TEX, GLint multipassTexLoc = 0);
 	~CBanner(void);
 
 	bool setColor(const glm::vec3 & color);
 	void updateAlpha(const double & time);
 	void tear(void);
 	void untear(void);
-
 	
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette);

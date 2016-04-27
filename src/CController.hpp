@@ -27,7 +27,7 @@ public:
 	 * Initializes common shaders and models and the first song.
 	 * For that, everything else has to be initialized already.
 	 */
-	void init(void);
+	void init(const int winWidth, const int winHeight);
 
 	void redraw(GLFWwindow * window);
 	void update(void);

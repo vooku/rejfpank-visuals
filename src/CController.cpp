@@ -11,9 +11,6 @@ CController::CController(void)
 	: m_songCtr(FIRST_SONG),
 	  m_song(NULL) {
 
-	m_state.winWidth = INIT_WIN_WIDTH;
-	m_state.winHeight = INIT_WIN_HEIGHT;
-
 	for (int i = 0; i < CTRL_COUNT; i++) m_state.ctrlMap[i] = false;
 	for (int i = 0; i < KEY_COUNT; i++) m_state.keyMap[i] = false;
 }
@@ -70,10 +67,21 @@ void CController::shadersInit(void) {
 
 void CController::modelsInit(void) {
 	m_skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &m_skyboxShaderProgram);
-	m_grainBanner = new CBanner(&m_camera, &m_bannerShaderProgram, TEX_NOISE);
+	m_grainBanner = new CBanner(&m_camera, &m_bannerShaderProgram, (m_state.ctrlMap[CTRL_4TO3] ? TEX_NOISE_4TO3 : TEX_NOISE));
 }
 
-void CController::init(void) {
+void CController::init(const int winWidth, const int winHeight) {
+	m_state.winWidth = winWidth;
+	m_state.winHeight = winHeight;
+	if (m_state.winWidth * 3 == winHeight * 4) {
+		m_state.ctrlMap[CTRL_4TO3] = true;
+
+		bannerVertices[1] = -3.0f / 4.0f;
+		bannerVertices[6] = -3.0f / 4.0f;
+		bannerVertices[11] = 3.0f / 4.0f;
+		bannerVertices[16] = 3.0f / 4.0f;
+	}
+
 	this->shadersInit();
 	this->modelsInit();
 	this->nextSong();

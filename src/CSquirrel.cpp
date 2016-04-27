@@ -58,8 +58,9 @@ void CSquirrel::shadersInit(void) {
 
 void CSquirrel::modelsInit(void) {
 	// squirrels
-	m_squirrel1 = new CObjectPix(IMG_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.3f), &m_shaderPrograms[0]);
-	m_squirrel2 = new CObjectPix(IMG_SQUIRREL2, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(1.3f), &m_shaderPrograms[0]);
+	float scale = m_state->ctrlMap[CTRL_4TO3] ? 1.0f : 1.3f;
+	m_squirrel1 = new CObjectPix(IMG_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(scale), &m_shaderPrograms[0]);
+	m_squirrel2 = new CObjectPix(IMG_SQUIRREL2, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(scale), &m_shaderPrograms[0]);
 
 	// banners
 	m_bannersCount = 4;

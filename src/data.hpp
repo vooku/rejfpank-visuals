@@ -62,27 +62,28 @@
 #define MIDAS_TIME 3.0f
 
 // ---------------------------------------------------------------> resources
-#define TEX_TEST "res/test-tex.png"
-#define TEX_NOISE "res/noise.jpg"
+#define TEX_TEST "res/tex/test.png"
+#define TEX_NOISE "res/tex/noise.jpg"
+#define TEX_NOISE_4TO3 "res/tex/noise-4to3.jpg"
 
-#define IMG_TEST "res/test-img2.png"
-#define IMG_SQUIRREL1 "res/sq-hairy.png"
-#define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
-#define IMG_EYE_BLACK "res/mean-eye-black.png"
+#define IMG_TEST "res/img/test.png"
+#define IMG_SQUIRREL1 "res/img/sq-hairy.png"
+#define IMG_SQUIRREL2 "res/img/sq-hairy-mutant.png"
+#define IMG_EYE_BLACK "res/img/mean-eye-black.png"
 
-#define MODEL_HONEY "res/honey-comb.obj"
+#define MODEL_HONEY "res/models/honey-comb.obj"
 
 // lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
-#define MODEL_LEGO_0 "res/lego-brick-1x1.obj"
-#define MODEL_LEGO_1 "res/lego-brick-1x1-low.obj"
-#define MODEL_LEGO_2 "res/lego-brick-2x1.obj"
-#define MODEL_LEGO_3 "res/lego-brick-2x1-low.obj"
-#define MODEL_LEGO_4 "res/lego-brick-2x2.obj"
-#define MODEL_LEGO_5 "res/lego-brick-2x2-low.obj"
-#define MODEL_LEGO_6 "res/lego-brick-4x1.obj"
-#define MODEL_LEGO_7 "res/lego-brick-4x1-low.obj"
-#define MODEL_LEGO_8 "res/lego-brick-4x2.obj"
-#define MODEL_LEGO_9 "res/lego-brick-4x2-low.obj"
+#define MODEL_LEGO_0 "res/models/lego-brick-1x1.obj"
+#define MODEL_LEGO_1 "res/models/lego-brick-1x1-low.obj"
+#define MODEL_LEGO_2 "res/models/lego-brick-2x1.obj"
+#define MODEL_LEGO_3 "res/models/lego-brick-2x1-low.obj"
+#define MODEL_LEGO_4 "res/models/lego-brick-2x2.obj"
+#define MODEL_LEGO_5 "res/models/lego-brick-2x2-low.obj"
+#define MODEL_LEGO_6 "res/models/lego-brick-4x1.obj"
+#define MODEL_LEGO_7 "res/models/lego-brick-4x1-low.obj"
+#define MODEL_LEGO_8 "res/models/lego-brick-4x2.obj"
+#define MODEL_LEGO_9 "res/models/lego-brick-4x2-low.obj"
 // <--------------------------------------------------------------- resources
 
 #define LEGO_BRICK_COLORS_COUNT 4
@@ -95,7 +96,7 @@ const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {
 
 /// controls in controlState
 enum {
-	CTRL_FULLSCREEN, CTRL_INIT,
+	CTRL_FULLSCREEN, CTRL_INIT, CTRL_4TO3,
 	CTRL_SONG_SET,
 	CTRL_COUNT
 };
@@ -105,40 +106,6 @@ enum {
 	KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
 	KEY_W, KEY_S, KEY_A, KEY_D, KEY_Q, KEY_E,
 	KEY_COUNT
-};
-
-const unsigned int nCubeVertices = 8;
-const unsigned int nCubeAttribsPerVertex = 6;
-const float cubeVertices[nCubeVertices * nCubeAttribsPerVertex] = {
-	// x      y      z       nx     ny    nz
-	-1.0f, -1.0f, -1.0f,  -1.0f, -1.0f, -1.0f,
-	-1.0f, -1.0f,  1.0f,  -1.0f, -1.0f,  1.0f,
-	-1.0f,  1.0f, -1.0f,  -1.0f,  1.0f, -1.0f,
-	-1.0f,  1.0f,  1.0f,  -1.0f,  1.0f,  1.0f,
-	1.0f, -1.0f, -1.0f,   1.0f, -1.0f, -1.0f,
-	1.0f, -1.0f,  1.0f,   1.0f, -1.0f,  1.0f,
-	1.0f,  1.0f, -1.0f,   1.0f,  1.0f, -1.0f,
-	1.0f,  1.0f,  1.0f,   1.0f,  1.0f,  1.0f
-};
-
-const unsigned int nCubeTriangles = 36;
-const unsigned short cubeTriangles[nCubeTriangles] = {
-	0, 2, 4,   4, 2, 6, // back face
-	0, 1, 2,   2, 1, 3, // left face
-	1, 5, 3,   3, 5, 7, // front face
-	5, 4, 7,   7, 4, 6, // right face
-	3, 7, 2,   2, 7, 6, // upper face
-	0, 4, 1,   1, 4, 5, // lower face
-};
-
-const unsigned int nBannerVertices = 4;
-const unsigned int nBannerAttribsPerVertex = 5;
-const float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
-	// x      y           z     u     v
-	-1.0f, -9.0f/16.0f, 0.0f, 0.0f, 0.0f,
-	 1.0f, -9.0f/16.0f, 0.0f, 1.0f, 0.0f,
-	-1.0f,  9.0f/16.0f, 0.0f, 0.0f, 1.0f,
-	 1.0f,  9.0f/16.0f, 0.0f, 1.0f, 1.0f,
 };
 
 #endif // !_REJFPANK_DATA_HPP

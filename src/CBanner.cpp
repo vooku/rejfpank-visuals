@@ -5,7 +5,15 @@
 
 #include "pgr\pgr.hpp"
 
-CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param, GLint texLoc)
+float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
+	// x      y           z     u     v
+	-1.0f, -9.0f / 16.0f, 0.0f, 0.0f, 0.0f,
+	 1.0f, -9.0f / 16.0f, 0.0f, 1.0f, 0.0f,
+	-1.0f,  9.0f / 16.0f, 0.0f, 0.0f, 1.0f,
+	 1.0f,  9.0f / 16.0f, 0.0f, 1.0f, 1.0f
+};
+
+CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param, GLint multipassTexLoc)
 	: CDrawable(camera->m_position + glm::normalize(camera->m_direction), glm::vec3(BANNER_SIZE), shaderProgram),
 	  m_camera(camera),
 	  m_inverse(false),
@@ -23,7 +31,7 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 	}
 	else if (strcmp(param, BANNER_PARAM_MULTIPASS) == 0) {
 		m_useTex = true;
-		m_geometry.texture = texLoc;
+		m_geometry.texture = multipassTexLoc;
 		m_alpha = 1.0f;
 	}
 	else {

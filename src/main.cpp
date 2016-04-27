@@ -176,7 +176,10 @@ void rejfpankInit(GLFWwindow * window) {
 	glfwSwapInterval(1);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-	controller.init();
+	int winWidth, winHeight;
+	glfwGetWindowSize(window, &winWidth, &winHeight);
+
+	controller.init(winWidth, winHeight);
 	controller.m_state.ctrlMap[CTRL_INIT] = true; // for synchro, now all is initiated and no void pointer conflicts etc should occur
 }
 
