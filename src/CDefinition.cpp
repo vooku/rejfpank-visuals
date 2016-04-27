@@ -6,8 +6,8 @@
 #include "CDefinition.hpp"
 #include "pgr/pgr.hpp"
 
-CDefinition::CDefinition(CCamera * camera)
-	: CSong(camera),
+CDefinition::CDefinition(CCamera * camera, TControlState * state)
+	: CSong(camera, state),
 	  m_kickCount(0) {
 	glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
 
@@ -100,7 +100,6 @@ void CDefinition::modelsInit(void) {
 
 	m_eye = new CObjectPix(IMG_EYE_BLACK, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(2.5f), &m_shaderPrograms[1], 12.0f);
 }
-
 
 void CDefinition::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16

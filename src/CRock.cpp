@@ -2,8 +2,8 @@
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CRock::CRock(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
-	: CSong(camera, skybox),
+CRock::CRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_loopCtr(0) {
 

@@ -12,7 +12,7 @@
 
 class CRock : public CSong {
 public:
-	CRock(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
+	CRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
 	~CRock(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);

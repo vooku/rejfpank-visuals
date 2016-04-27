@@ -56,35 +56,37 @@
 #define BANNER_PARAM_NP_TEX_BLACK "no_tex_black"
 #define BANNER_PARAM_MULTIPASS "multipass"
 
+// ---------------------------------------------------------------> resources
+#define TEX_TEST		"res/tex/test.png"
+#define TEX_NOISE		"res/tex/noise.jpg"
+#define TEX_NOISE_4TO3	"res/tex/noise-4to3.jpg"
+#define TEX_DEF_1		"res/tex/definice1.png"
+#define TEX_DEF_1_4TO3	"res/tex/definice1-4to3.png"
+#define TEX_DEF_2		"res/tex/definice2.png"
+#define TEX_DEF_2_4TO3	"res/tex/definice2-4to3.png"
+
+#define IMG_TEST		"res/img/test.png"
+#define IMG_SQUIRREL1	"res/img/sq-hairy.png"
+#define IMG_SQUIRREL2	"res/img/sq-hairy-mutant.png"
+#define IMG_EYE_BLACK	"res/img/mean-eye-black.png"
+
+#define MODEL_HONEY		"res/models/honey-comb.obj"
+#define MODEL_LEGO_0	"res/models/lego-brick-1x1.obj"
+#define MODEL_LEGO_1	"res/models/lego-brick-1x1-low.obj"
+#define MODEL_LEGO_2	"res/models/lego-brick-2x1.obj"
+#define MODEL_LEGO_3	"res/models/lego-brick-2x1-low.obj"
+#define MODEL_LEGO_4	"res/models/lego-brick-2x2.obj"
+#define MODEL_LEGO_5	"res/models/lego-brick-2x2-low.obj"
+#define MODEL_LEGO_6	"res/models/lego-brick-4x1.obj"
+#define MODEL_LEGO_7	"res/models/lego-brick-4x1-low.obj"
+#define MODEL_LEGO_8	"res/models/lego-brick-4x2.obj"
+#define MODEL_LEGO_9	"res/models/lego-brick-4x2-low.obj"
+// <--------------------------------------------------------------- resources
+
 #define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
 #define LEGO_BRICKS_COUNT 8
 #define MIDAS_TIME 3.0f
-
-// ---------------------------------------------------------------> resources
-#define TEX_TEST "res/tex/test.png"
-#define TEX_NOISE "res/tex/noise.jpg"
-#define TEX_NOISE_4TO3 "res/tex/noise-4to3.jpg"
-
-#define IMG_TEST "res/img/test.png"
-#define IMG_SQUIRREL1 "res/img/sq-hairy.png"
-#define IMG_SQUIRREL2 "res/img/sq-hairy-mutant.png"
-#define IMG_EYE_BLACK "res/img/mean-eye-black.png"
-
-#define MODEL_HONEY "res/models/honey-comb.obj"
-
-// lego brick models kindly provided by Floris 'floriuszzz' Smit www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html
-#define MODEL_LEGO_0 "res/models/lego-brick-1x1.obj"
-#define MODEL_LEGO_1 "res/models/lego-brick-1x1-low.obj"
-#define MODEL_LEGO_2 "res/models/lego-brick-2x1.obj"
-#define MODEL_LEGO_3 "res/models/lego-brick-2x1-low.obj"
-#define MODEL_LEGO_4 "res/models/lego-brick-2x2.obj"
-#define MODEL_LEGO_5 "res/models/lego-brick-2x2-low.obj"
-#define MODEL_LEGO_6 "res/models/lego-brick-4x1.obj"
-#define MODEL_LEGO_7 "res/models/lego-brick-4x1-low.obj"
-#define MODEL_LEGO_8 "res/models/lego-brick-4x2.obj"
-#define MODEL_LEGO_9 "res/models/lego-brick-4x2-low.obj"
-// <--------------------------------------------------------------- resources
 
 #define LEGO_BRICK_COLORS_COUNT 4
 const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {

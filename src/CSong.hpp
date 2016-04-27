@@ -17,7 +17,7 @@
 
 class CSong {
 public:
-	CSong(CCamera * camera, CSkybox * skybox = NULL);
+	CSong(CCamera * camera, TControlState * state, CSkybox * skybox = NULL);
 	virtual ~CSong(void);
 
 	virtual void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
@@ -30,6 +30,8 @@ protected:
 	virtual void shadersInit(void) = 0;
 	/// Helper funtion for the constructor
 	virtual void modelsInit(void) = 0;
+	/// Helper funtion for CSong()
+	void multipassInit(void);
 
 	/// map of inner controls
 	bool * m_innerMap;
@@ -40,6 +42,12 @@ protected:
 	// ptrs to objects from the controller
 	CSkybox * m_skybox;
 	CCamera * m_camera;
+	TControlState * m_state;
+
+	GLuint m_frameBufferObject;
+	GLuint m_renderBufferObject;
+	GLuint m_renderedTex;
+	bool m_multipass;
 };
 
 #endif // !_REJFPANK_CSONG

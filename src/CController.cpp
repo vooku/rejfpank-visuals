@@ -116,13 +116,13 @@ void CController::nextSong(void) {
 
 	switch (m_songCtr) {
 		case 0:
-			m_song = new CSquirrel(&m_camera, m_skybox, &m_bannerShaderProgram, &m_state);
+			m_song = new CSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 1:
-			m_song = new CRock(&m_camera, m_skybox, &m_bannerShaderProgram);
+			m_song = new CRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CDefinition(&m_camera);
+			m_song = new CDefinition(&m_camera, &m_state);
 			break;
 	}
 

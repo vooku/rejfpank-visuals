@@ -2,10 +2,9 @@
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CSquirrel::CSquirrel(CCamera * camera, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram, TControlState * state)
-	: CSong(camera, skybox),
+CSquirrel::CSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
-	  m_state(state),
 	  m_kickCount(0),
 	  m_rideTriggerTime(0),
 	  m_snareTriggerTime(0),
@@ -78,30 +77,6 @@ void CSquirrel::modelsInit(void) {
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
 }
 
-void CSquirrel::multipassInit(void) {
-	glGenFramebuffers(1, &m_frameBufferObject);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
-
-	glGenTextures(1, &m_renderedTex);
-	glBindTexture(GL_TEXTURE_2D, m_renderedTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_state->winWidth, m_state->winHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL); // empty image
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderedTex, 0);
-
-	glGenRenderbuffers(1, &m_renderBufferObject);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferObject);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_state->winWidth, m_state->winHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBufferObject);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cerr << "Error: Cannot init frame buffer." << std::endl;
-	else m_innerMap[SQUIR_FBUFF] = true;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
 void CSquirrel::nextBanner(void) {
 	if (m_innerMap[SQUIR_BANNER0]) {
 		m_innerMap[SQUIR_BANNER0] = false;
@@ -119,7 +94,7 @@ void CSquirrel::nextBanner(void) {
 }
 
 void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	if (m_innerMap[SQUIR_FBUFF]) {
+	if (m_multipass) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
@@ -137,7 +112,7 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_innerMap[SQUIR_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
 	
 	// multipass
-	if (m_innerMap[SQUIR_FBUFF]) {
+	if (m_multipass) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
