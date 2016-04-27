@@ -9,6 +9,7 @@
 CDefinition::CDefinition(CCamera * camera)
 	: CSong(camera),
 	  m_kickCount(0) {
+	glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
 
 	m_innerMap = new bool[DEF_COUNT];
 	for (int i = 0; i < DEF_COUNT; i++) m_innerMap[i] = false;
@@ -20,18 +21,23 @@ CDefinition::CDefinition(CCamera * camera)
 }
 
 CDefinition::~CDefinition(void) {
-	for (int i = 0; i < 1; i++) delete m_honeycombs[i];
+	delete m_honeyData;
+	for (int i = 0; i < 8; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
+
+	delete m_eye;
 
 	delete[] m_shaderPrograms;
 
 	delete[] m_innerMap;
 
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	std::cout << "destroyed song: Definice" << std::endl;
 }
 
 void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	m_honeycombs[0]->draw(PMatrix, VMatrix);
+	for (int i = 0; i < 8; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
+	m_eye->draw(PMatrix, VMatrix);
 }
 
 void CDefinition::update(double time) {
@@ -41,7 +47,7 @@ void CDefinition::update(double time) {
 
 void CDefinition::shadersInit(void) {
 	std::vector<GLuint> shaders;
-	m_shaderPrograms = new TCommonShaderProgram[1];
+	m_shaderPrograms = new TCommonShaderProgram[2];
 
 	// Init lego shaders
 	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/commonShader.vert"));
@@ -63,11 +69,36 @@ void CDefinition::shadersInit(void) {
 		m_shaderPrograms[0].normalLocation =	glGetAttribLocation(m_shaderPrograms[0].program, "normal");
 
 	shaders.clear();
+
+	// Init pix shaders
+	shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/pixShader.vert"));
+	shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/pixShader.frag"));
+	m_shaderPrograms[1].program = pgr::createProgram(shaders);
+
+		// Get uniform locations
+		m_shaderPrograms[1].PVMMatrixLocation = glGetUniformLocation(m_shaderPrograms[1].program, "PVMMatrix");
+		// Get input locations
+		m_shaderPrograms[1].posLocation =		glGetAttribLocation(m_shaderPrograms[1].program, "position");
+		m_shaderPrograms[1].ambientLocation =	glGetAttribLocation(m_shaderPrograms[1].program, "color");
+		m_shaderPrograms[1].offsetLocation =	glGetAttribLocation(m_shaderPrograms[1].program, "offset");
+
+	shaders.clear();
 }
 
 void CDefinition::modelsInit(void) {
-	m_honeycombs = new CLoadedObj * [1];
-	m_honeycombs[0] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0]);
+	m_honeyData = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0]);
+
+	m_honeycombs = new CLoadedObj * [8];
+	float phi = 0.0f;
+	float r = 2.5f;
+	for (int i = 0; i < 8; i++) {
+		m_honeycombs[i] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f, r * glm::sin(phi), r * glm::cos(phi)), glm::vec3(1.0f), &m_shaderPrograms[0], m_honeyData);
+		m_honeycombs[i]->rotate(M_PI / 2.0f - phi, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		phi += M_PI / 4.0f;
+	}
+
+	m_eye = new CObjectPix(IMG_EYE_BLACK, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(2.5f), &m_shaderPrograms[1], 12.0f);
 }
 
 

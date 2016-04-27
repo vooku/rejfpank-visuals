@@ -16,6 +16,7 @@ public:
 
 	virtual void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
 	
+	void rotate(const float angle, const glm::vec3 & axis);
 	void rotate(const double & time);
 	void switchRotAxis(const double & time);
 		

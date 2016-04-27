@@ -15,7 +15,8 @@ public:
 	CObjectPix(const char * filename,
 			   const glm::vec3 & position,
 			   const glm::vec3 & scale,
-			   TCommonShaderProgram * shaderProgram);
+			   TCommonShaderProgram * shaderProgram,
+			   const float & ptSize = 7.0f);
 	//~CObjectPix(void);
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);

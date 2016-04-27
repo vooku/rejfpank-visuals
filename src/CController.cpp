@@ -8,7 +8,7 @@
 CController controller;
 
 CController::CController(void)
-	: m_songCtr(0),
+	: m_songCtr(FIRST_SONG),
 	  m_song(NULL) {
 
 	m_state.winWidth = INIT_WIN_WIDTH;

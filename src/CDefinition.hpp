@@ -8,6 +8,7 @@
 
 #include "CSong.hpp"
 #include "CLoadedObj.hpp"
+#include "CObjectPix.hpp"
 
 class CDefinition : public CSong {
 public:
@@ -29,7 +30,9 @@ protected:
 		DEF_COUNT
 	};
 
+	CLoadedObj * m_honeyData;
 	CLoadedObj ** m_honeycombs;
+	CObjectPix * m_eye;
 
 	unsigned int m_kickCount;
 };

@@ -10,6 +10,8 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#define M_PI 3.14159265359f
+
 #define MIDI_LONG_BUFFER_SIZE 1024
 
 #define SELECT_MIDI_PORT_MAN false // for testing purposes
@@ -48,6 +50,7 @@
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 
 #define SONG_COUNT 3
+#define FIRST_SONG 2 // for testing
 
 #define BANNER_PARAM_NO_TEX "no_tex"
 #define BANNER_PARAM_NP_TEX_BLACK "no_tex_black"
@@ -65,6 +68,7 @@
 #define IMG_TEST "res/test-img2.png"
 #define IMG_SQUIRREL1 "res/sq-hairy.png"
 #define IMG_SQUIRREL2 "res/sq-hairy-mutant.png"
+#define IMG_EYE_BLACK "res/mean-eye-black.png"
 
 #define MODEL_HONEY "res/honey-comb.obj"
 
