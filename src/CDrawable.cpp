@@ -1,16 +1,22 @@
 #include "CDrawable.hpp"
 
-CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram)
+CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram, const float & alpha)
 	: CObject (position),
 	  m_scale (scale),
 	  m_shaderProgram (shaderProgram),
 	  m_rotMatrix(glm::mat4(1.0f)),
-	  m_pastRotMatrix(glm::mat4(1.0f)) {
+	  m_pastRotMatrix(glm::mat4(1.0f)),
+	  m_alpha(alpha){
 	m_axis = glm::vec3(0.0f);
 	m_axis[rand() % 3] = 1.0f; // those two lines make it one of the base axes x, y or z
 }
 
 CDrawable::~CDrawable(void) { }
+
+void CDrawable::updateAlpha(const double & time) {
+	const double elapsedTime = time - m_triggerTime;
+	m_alpha = (-1.0f / 3.0f) * (float)elapsedTime + 1.0f;
+}
 
 void CDrawable::rotate(const float angle, const glm::vec3 & axis) {
 	m_rotMatrix = glm::rotate(glm::mat4(1.0f), angle, axis);

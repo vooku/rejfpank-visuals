@@ -16,7 +16,8 @@ public:
 			   const glm::vec3 & scale,
 			   TCommonShaderProgram * shaderProgram,
 			   const CLoadedObj * dataObj = NULL,
-			   const unsigned int materialIdx = 0);
+			   const unsigned int materialIdx = 0,
+			   const float & alpha = 1.0f);
 
 	bool loadObj(const char * filename);
 	void setMaterials(const char * filename);

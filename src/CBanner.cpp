@@ -66,11 +66,6 @@ bool CBanner::setColor(const glm::vec3 & color) {
 	return true;
 }
 
-void CBanner::updateAlpha(const double & time) {
-	const double elapsedTime = time - m_triggerTime;
-	m_alpha = (-1.0f / 3.0f) * (float)elapsedTime + 1.0f;
-}
-
 void CBanner::tear(void) {
 	m_tear = true;
 	m_tearN = rand() % SCREEN_TEARS + 1;

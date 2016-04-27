@@ -14,8 +14,9 @@ CLoadedObj::CLoadedObj(const char * filename,
 					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram,
 					   const CLoadedObj * dataObj,
-					   const unsigned int materialIdx)
-	: CDrawable(position, scale, shaderProgram),
+					   const unsigned int materialIdx,
+					   const float & alpha)
+	: CDrawable(position, scale, shaderProgram, alpha),
 	  m_dataObj(dataObj) {
 
 	m_material.index = materialIdx;
@@ -140,6 +141,7 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform3fv(m_shaderProgram->diffuseLocation, 1, glm::value_ptr(m_material.diffuse));
 	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.specular));
 	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
+	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
 	glUniform1i(m_shaderProgram->fadeToBlackLocation, (m_material.diffuse == glm::vec3(0.0f)));
 }
 

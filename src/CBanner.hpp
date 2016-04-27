@@ -18,13 +18,12 @@ public:
 	CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const char * param = BANNER_PARAM_NO_TEX, GLint multipassTexLoc = 0);
 	~CBanner(void);
 
-	bool setColor(const glm::vec3 & color);
-	void updateAlpha(const double & time);
-	void tear(void);
-	void untear(void);
-	
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette);
+
+	bool setColor(const glm::vec3 & color);
+	void tear(void);
+	void untear(void);
 
 protected:
 	void sendUniforms(void);
@@ -39,7 +38,6 @@ protected:
 	GLfloat m_tearOffsets[SCREEN_TEARS + 1];
 
 	glm::vec3 m_color;
-	float m_alpha;
 	const CCamera * m_camera;
 };
 

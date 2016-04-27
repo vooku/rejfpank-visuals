@@ -11,11 +11,12 @@
 
 class CDrawable : public CObject {
 public:
-	CDrawable(const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram);
+	CDrawable(const glm::vec3 position, const glm::vec3 scale, TCommonShaderProgram * shaderProgram, const float & alpha = 1.0f);
 	virtual ~CDrawable(void);
 
 	virtual void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) = 0;
-	
+
+	void updateAlpha(const double & time);
 	void rotate(const float angle, const glm::vec3 & axis);
 	void rotate(const double & time);
 	void switchRotAxis(const double & time);
@@ -36,6 +37,8 @@ protected:
 		unsigned int numTriangles;
 		GLuint texture;
 	} m_geometry;
+	
+	float m_alpha;
 
 	struct TTempMatrices {
 		glm::mat4 PVMMatrix;

@@ -50,6 +50,7 @@ void CRock::shadersInit(void) {
 		m_shaderPrograms[0].ambientLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "material.ambient");
 		m_shaderPrograms[0].specularLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.specular");
 		m_shaderPrograms[0].shininessLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
+		m_shaderPrograms[0].alphaLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
 		m_shaderPrograms[0].fadeToBlackLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
 		// Get input locations
 		m_shaderPrograms[0].posLocation		= glGetAttribLocation(m_shaderPrograms[0].program, "position");

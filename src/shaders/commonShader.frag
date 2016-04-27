@@ -26,6 +26,7 @@ uniform mat4 VMatrix;
 uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
 uniform bool fadeToBlack;
+uniform float alpha;
 //uniform sampler2D texSampler;
 
 TLight whiteLight, redLight, blueLight;
@@ -91,4 +92,5 @@ void main (void) {
 	
 	lightsInit();
 	color = lightItUp(cameraSpacePosition, cameraSpaceNormal);
+	color.a = alpha;
 }
