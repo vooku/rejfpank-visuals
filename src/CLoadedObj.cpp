@@ -13,6 +13,8 @@ CLoadedObj::CLoadedObj(const char * filename,
 					   const glm::vec3 & position,
 					   const glm::vec3 & scale,
 					   TCommonShaderProgram * shaderProgram,
+					   const char * texname,
+					   const bool randomizeUV,
 					   const CLoadedObj * dataObj,
 					   const unsigned int materialIdx,
 					   const float & alpha)
@@ -22,16 +24,27 @@ CLoadedObj::CLoadedObj(const char * filename,
 	m_material.index = materialIdx;
 
 	if (dataObj == NULL) {
-		m_enableDraw = this->loadObj(filename);
+		m_enableDraw = this->loadObj(filename, randomizeUV);
 		if (!m_enableDraw) {
 			std::cerr << "Error: Cannot load .obj file: " << filename << std::endl;
 			return;
 		}
+
+		if (texname != NULL) {
+			m_geometry.texture = pgr::createTexture(texname, false);
+			m_useTex = m_geometry.texture != 0;
+			if (m_useTex) std::cout << "loaded texture: " << texname << std::endl;
+			else std::cerr << "Error: Cannot load texture: " << texname << std::endl;
+		}
+		else m_useTex = false;
+
 		m_dataObj = this;
 		m_containsData = true;
 		std::cout << "loaded .obj file: " << filename << std::endl;
 	}
 	else {
+		m_useTex = dataObj->m_useTex;
+		if (m_useTex) m_geometry.texture = dataObj->m_geometry.texture;
 		m_containsData = false;
 		m_enableDraw = true;
 	}
@@ -42,7 +55,7 @@ CLoadedObj::CLoadedObj(const char * filename,
 /** Load mesh using assimp library
  * @param filename [in] file to open/load
  */
-bool CLoadedObj::loadObj(const char * filename) {
+bool CLoadedObj::loadObj(const char * filename, const bool randomizeUV) {
 	Assimp::Importer importer;
 
 	importer.SetPropertyInteger(AI_CONFIG_PP_PTV_NORMALIZE, 1); // normalize the model, makes scaling easier
@@ -74,8 +87,14 @@ bool CLoadedObj::loadObj(const char * filename) {
 		vertices[8 * i + 3] = loadedMesh->mNormals[i].x;
 		vertices[8 * i + 4] = loadedMesh->mNormals[i].y;
 		vertices[8 * i + 5] = loadedMesh->mNormals[i].z;
-		vertices[8 * i + 6] = loadedMesh->HasTextureCoords(0) ? loadedMesh->mTextureCoords[0][i].x : 0;
-		vertices[8 * i + 7] = loadedMesh->HasTextureCoords(0) ? loadedMesh->mTextureCoords[0][i].y : 0;
+		if (randomizeUV) {
+			vertices[8 * i + 6] = rand() / (float)RAND_MAX;
+			vertices[8 * i + 7] = rand() / (float)RAND_MAX;
+		}
+		else {
+			vertices[8 * i + 6] = loadedMesh->HasTextureCoords(0) ? loadedMesh->mTextureCoords[0][i].x : 0;
+			vertices[8 * i + 7] = loadedMesh->HasTextureCoords(0) ? loadedMesh->mTextureCoords[0][i].y : 0;
+		}
 	}
 	// the indices are not stored in one array in the mesh but in their own containers
 	unsigned int * indices = new unsigned int[loadedMesh->mNumFaces * 3];
@@ -100,6 +119,8 @@ bool CLoadedObj::loadObj(const char * filename) {
 	glVertexAttribPointer(m_shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
 	glEnableVertexAttribArray(m_shaderProgram->normalLocation);
 	glVertexAttribPointer(m_shaderProgram->normalLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
+	glEnableVertexAttribArray(m_shaderProgram->texCoordsLocation);
+	glVertexAttribPointer(m_shaderProgram->texCoordsLocation, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
 
 	delete[] vertices;
 	delete[] indices;
@@ -115,6 +136,8 @@ void CLoadedObj::setMaterials(const char * filename) {
 	glm::vec3 color;
 	if (strstr(filename, "lego") != NULL)
 		color = legoBrickColors[m_material.index % LEGO_BRICK_COLORS_COUNT];
+	else if (m_useTex)
+		color = glm::vec3(1.0f);
 	else
 		color = glm::vec3(0.7f);
 
@@ -142,6 +165,7 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.specular));
 	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
+	glUniform1f(m_shaderProgram->useTexLocation, m_useTex);
 	glUniform1i(m_shaderProgram->fadeToBlackLocation, (m_material.diffuse == glm::vec3(0.0f)));
 }
 
@@ -155,8 +179,10 @@ void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 	m_tempMats.normalMatrix = glm::transpose(glm::inverse(m_tempMats.MMatrix));
 
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
+	if (m_useTex) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
+	}
 
 	this->sendUniforms();
 

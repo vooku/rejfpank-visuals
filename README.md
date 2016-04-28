@@ -26,6 +26,7 @@ The rest of the readme is mostly for myself.
 - change directional light on beat
 - trailing objects in fifo
 - switch to Uniform Buffer Object
+- use DES in multipass postproduction
 
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.

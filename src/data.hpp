@@ -64,6 +64,8 @@
 #define TEX_DEF_1_4TO3	"res/tex/definice1-4to3.png"
 #define TEX_DEF_2		"res/tex/definice2.png"
 #define TEX_DEF_2_4TO3	"res/tex/definice2-4to3.png"
+#define TEX_DEF_MODERAT	"res/tex/moderat.jpg"
+#define TEX_MEAN_EYE	"res/tex/mean-eye.png"
 
 #define IMG_TEST		"res/img/test.png"
 #define IMG_SQUIRREL1	"res/img/sq-hairy.png"

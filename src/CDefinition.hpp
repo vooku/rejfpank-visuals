@@ -30,7 +30,8 @@ protected:
 		DEF_COUNT
 	};
 
-	CLoadedObj * m_honeyData;
+	CLoadedObj ** m_honeyData;
+	int m_honeyDataN;
 	CLoadedObj ** m_honeycombs;
 	CObjectPix * m_eye;
 

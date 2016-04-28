@@ -22,9 +22,11 @@ CDefinition::CDefinition(CCamera * camera, TControlState * state)
 }
 
 CDefinition::~CDefinition(void) {
-	delete m_honeyData;
 	for (int i = 0; i < 24; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
+
+	for (int i = 0; i < m_honeyDataN; i++) delete m_honeyData[i];
+	delete[] m_honeyData;
 
 	delete m_eye;
 
@@ -42,7 +44,7 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 	for (int i = 0; i < 24; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
 
-	m_eye->draw(PMatrix, VMatrix);
+	//m_eye->draw(PMatrix, VMatrix);
 
 	glDisable(GL_BLEND);
 }
@@ -72,9 +74,11 @@ void CDefinition::shadersInit(void) {
 		m_shaderPrograms[0].shininessLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
 		m_shaderPrograms[0].alphaLocation =			glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
 		m_shaderPrograms[0].fadeToBlackLocation =	glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
+		m_shaderPrograms[0].useTexLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "useTex");
 		// Get input locations
 		m_shaderPrograms[0].posLocation =		glGetAttribLocation(m_shaderPrograms[0].program, "position");
 		m_shaderPrograms[0].normalLocation =	glGetAttribLocation(m_shaderPrograms[0].program, "normal");
+		m_shaderPrograms[0].texCoordsLocation = glGetAttribLocation(m_shaderPrograms[0].program, "texCoords");
 
 	shaders.clear();
 
@@ -95,7 +99,10 @@ void CDefinition::shadersInit(void) {
 
 void CDefinition::modelsInit(void) {
 	// honeycombs
-	m_honeyData = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0]);
+	m_honeyDataN = 2;
+	m_honeyData = new CLoadedObj * [m_honeyDataN];
+	m_honeyData[0] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MODERAT, true);
+	m_honeyData[1] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_MEAN_EYE, true);
 
 	m_honeycombs = new CLoadedObj * [24];
 	float phi = 0.0f;
@@ -109,7 +116,9 @@ void CDefinition::modelsInit(void) {
 											 glm::vec3(1.7f, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
-											 m_honeyData,
+											 NULL,
+											 false,
+											 m_honeyData[rand() % m_honeyDataN],
 											 0,
 											 alpha);
 		m_honeycombs[i + 0]->rotate(M_PI / 2.0f - phi - M_PI / 8.0f, axis);
@@ -119,7 +128,9 @@ void CDefinition::modelsInit(void) {
 											 glm::vec3(0.0f, r * glm::sin(phi), r * glm::cos(phi) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
-											 m_honeyData,
+											 NULL,
+											 false,
+											 m_honeyData[rand() % m_honeyDataN],
 											 0,
 											 alpha);
 		m_honeycombs[i + 1]->rotate(M_PI / 2.0f - phi, axis);
@@ -129,7 +140,9 @@ void CDefinition::modelsInit(void) {
 											 glm::vec3(-1.7f, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
-											 m_honeyData,
+											 NULL,
+											 false,
+											 m_honeyData[rand() % m_honeyDataN],
 											 0,
 											 alpha);
 		m_honeycombs[i + 2]->rotate(M_PI / 2.0f - phi - M_PI / 8.0f, axis);

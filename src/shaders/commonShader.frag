@@ -18,7 +18,7 @@ struct TLight {
 // ----------------------------------------------------------------------------------- Global variables
 in vec3 positionTrans;
 in vec3 normalTrans;
-//in vec2 texCoordsTrans;
+in vec2 texCoordsTrans;
 
 uniform mat4 PVMMatrix;
 uniform mat4 MMatrix;
@@ -26,8 +26,9 @@ uniform mat4 VMatrix;
 uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
 uniform bool fadeToBlack;
+uniform bool useTex;
 uniform float alpha;
-//uniform sampler2D texSampler;
+uniform sampler2D texSampler;
 
 TLight whiteLight, redLight, blueLight;
 
@@ -50,11 +51,7 @@ void lightsInit(void) {
 	blueLight.diffuse = vec3 (0.5f, 0.0f, 0.5f);
 	blueLight.specular = vec3 (1.0f, 0.0f, 1.0f);
 }
-/*
-vec3 objectColor (void) {
-	return texture (texSampler, texCoordsTrans);
-}
-*/
+
 vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal, const vec3 toLight) {
 	vec3 result = vec3 (0.0f);
 	vec3 toCamera = normalize (-cameraSpacePosition);
@@ -68,7 +65,7 @@ vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const
 	result += (max (cos_angle, 0)) * light.diffuse * material.diffuse;
 
 	// add texture
-	//result *= objectColor ();
+	if (useTex) result *= texture(texSampler, texCoordsTrans);
 
 	// specular
 	cos_angle = dot (s, cameraSpaceNormal); 

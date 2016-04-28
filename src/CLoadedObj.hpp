@@ -15,11 +15,13 @@ public:
 			   const glm::vec3 & position,
 			   const glm::vec3 & scale,
 			   TCommonShaderProgram * shaderProgram,
+			   const char * texname = NULL,
+			   const bool randomizeUV = false,
 			   const CLoadedObj * dataObj = NULL,
 			   const unsigned int materialIdx = 0,
 			   const float & alpha = 1.0f);
 
-	bool loadObj(const char * filename);
+	bool loadObj(const char * filename, const bool randomizeUV);
 	void setMaterials(const char * filename);
 
 	void fadeToBlack(void);
@@ -31,6 +33,7 @@ protected:
 
 	bool m_enableDraw; ///< whether the object was properly initialized (loaded)
 	bool m_containsData;
+	bool m_useTex;
 	const CLoadedObj * m_dataObj;
 
 	struct TMaterial {

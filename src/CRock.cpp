@@ -52,9 +52,11 @@ void CRock::shadersInit(void) {
 		m_shaderPrograms[0].shininessLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
 		m_shaderPrograms[0].alphaLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
 		m_shaderPrograms[0].fadeToBlackLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
+		m_shaderPrograms[0].useTexLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "useTex");
 		// Get input locations
-		m_shaderPrograms[0].posLocation		= glGetAttribLocation(m_shaderPrograms[0].program, "position");
-		m_shaderPrograms[0].normalLocation	= glGetAttribLocation(m_shaderPrograms[0].program, "normal");
+		m_shaderPrograms[0].posLocation			= glGetAttribLocation(m_shaderPrograms[0].program, "position");
+		m_shaderPrograms[0].normalLocation		= glGetAttribLocation(m_shaderPrograms[0].program, "normal");
+		m_shaderPrograms[0].texCoordsLocation	= glGetAttribLocation(m_shaderPrograms[0].program, "texCoords");
 
 	shaders.clear();
 }
@@ -74,16 +76,16 @@ void CRock::modelsInit(void) {
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS; i++) {
 		// kick bricks
-		m_lego[i * LEGO_BRICKS_COUNT + 0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x,  kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[0], i);
-		m_lego[i * LEGO_BRICKS_COUNT + 1] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x,  kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[0], i);
-		m_lego[i * LEGO_BRICKS_COUNT + 2] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x, -kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[0], i);
-		m_lego[i * LEGO_BRICKS_COUNT + 3] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x, -kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[0], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 0] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x,  kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[0], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 1] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x,  kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[0], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 2] = new CLoadedObj(MODEL_LEGO_8, glm::vec3(-kickPos.x, -kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[0], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 3] = new CLoadedObj(MODEL_LEGO_8, glm::vec3( kickPos.x, -kickPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[0], i);
 		// hihat bricks
-		m_lego[i * LEGO_BRICKS_COUNT + 4] = new CLoadedObj(MODEL_LEGO_7, glm::vec3( hihatPos.x, hihatPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[1], i);
-		m_lego[i * LEGO_BRICKS_COUNT + 5] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(-hihatPos.x, hihatPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[1], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 4] = new CLoadedObj(MODEL_LEGO_7, glm::vec3( hihatPos.x, hihatPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[1], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 5] = new CLoadedObj(MODEL_LEGO_7, glm::vec3(-hihatPos.x, hihatPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[1], i);
 		// pluck bricks
-		m_lego[i * LEGO_BRICKS_COUNT + 6] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(pluckPos.x,  pluckPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[2], i);
-		m_lego[i * LEGO_BRICKS_COUNT + 7] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(pluckPos.x, -pluckPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], m_legoData[2], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 6] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(pluckPos.x,  pluckPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[2], i);
+		m_lego[i * LEGO_BRICKS_COUNT + 7] = new CLoadedObj(MODEL_LEGO_9, glm::vec3(pluckPos.x, -pluckPos.y, i * LEGO_BRICKS_DIST), glm::vec3(1.0f), &m_shaderPrograms[0], NULL, false, m_legoData[2], i);
 	}
 
 	// banners
