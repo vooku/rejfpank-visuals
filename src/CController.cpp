@@ -67,7 +67,7 @@ void CController::shadersInit(void) {
 
 void CController::modelsInit(void) {
 	m_skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &m_skyboxShaderProgram);
-	m_grainBanner = new CBanner(&m_camera, &m_bannerShaderProgram, (m_state.ctrlMap[CTRL_4TO3] ? TEX_NOISE_4TO3 : TEX_NOISE));
+	m_grainBanner = new CBanner(&m_camera, &m_bannerShaderProgram, (m_state.ctrlMap[CTRL_4TO3] ? TEX_GEN_NOISE_4TO3 : TEX_GEN_NOISE));
 }
 
 void CController::init(const int winWidth, const int winHeight) {
@@ -122,7 +122,7 @@ void CController::nextSong(void) {
 			m_song = new CRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CDefinition(&m_camera, &m_state);
+			m_song = new CDefinition(&m_camera, &m_state, m_skybox);
 			break;
 	}
 

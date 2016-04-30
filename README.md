@@ -16,7 +16,7 @@ The rest of the readme is mostly for myself.
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
-	- parameter (starting from 1) is the 'tessellation lvl' -> cell count equals 1 / (tessellation lvl + 1)^2
+	+ parameter (starting from 1) is the 'tessellation lvl' -> cell count equals 1 / (tessellation lvl + 1)^2
 - Voronoi diagram with taxicab geometry
 - Fog color depending on the y coordinate
 - Switch dynamically between ortographic and perspective projection
@@ -26,7 +26,10 @@ The rest of the readme is mostly for myself.
 - change directional light on beat
 - trailing objects in fifo
 - switch to Uniform Buffer Object
-- use DES in multipass postproduction
+- multipass postproduction FX
+	+ DES encryption
+	+ color shift
+	+ diffusion
 
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.
@@ -46,3 +49,4 @@ The rest of the readme is mostly for myself.
 ## Thanks
 - Thanks to [Floris 'floriuszzz' Smit](http://www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using
 - Thanks to [Gurkan Te](http://www.shroomarts.blogspot.cz) for the squirrel illustrations. As they are not publicly licensed, they are not part of this repository, sorry.
+

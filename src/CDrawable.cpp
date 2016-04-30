@@ -19,7 +19,7 @@ void CDrawable::updateAlpha(const double & time) {
 }
 
 void CDrawable::rotate(const float angle, const glm::vec3 & axis) {
-	m_rotMatrix = glm::rotate(glm::mat4(1.0f), angle, axis);
+	m_rotMatrix = glm::rotate(m_rotMatrix, angle, axis);
 }
 
 void CDrawable::rotate(const double & time) {

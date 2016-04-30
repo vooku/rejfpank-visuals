@@ -6,14 +6,12 @@
 #include "CDefinition.hpp"
 #include "pgr/pgr.hpp"
 
-CDefinition::CDefinition(CCamera * camera, TControlState * state)
-	: CSong(camera, state),
+CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skybox)
+	: CSong(camera, state, skybox),
 	  m_kickCount(0) {
 
 	m_innerMap = new bool[DEF_COUNT];
 	for (int i = 0; i < DEF_COUNT; i++) m_innerMap[i] = false;
-
-	glClearColor(0.1f, 0.0f, 0.01f, 1.0f);
 
 	this->shadersInit();
 	this->modelsInit();
@@ -22,6 +20,8 @@ CDefinition::CDefinition(CCamera * camera, TControlState * state)
 }
 
 CDefinition::~CDefinition(void) {
+	m_skybox->rotate(M_PI, glm::vec3(0.0f, 1.0f, 0.0f)); // just turn it back
+
 	for (int i = 0; i < 24; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
 
@@ -34,13 +34,14 @@ CDefinition::~CDefinition(void) {
 
 	delete[] m_innerMap;
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	std::cout << "destroyed song: Definice" << std::endl;
 }
 
 void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	m_skybox->draw(PMatrix, VMatrix);
 
 	for (int i = 0; i < 24; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
 
@@ -98,22 +99,28 @@ void CDefinition::shadersInit(void) {
 }
 
 void CDefinition::modelsInit(void) {
+	// skybox
+	m_skybox->rotate(M_PI, glm::vec3(0.0f, 1.0f, 0.0f));
+
 	// honeycombs
-	m_honeyDataN = 2;
+	m_honeyDataN = 4;
 	m_honeyData = new CLoadedObj * [m_honeyDataN];
-	m_honeyData[0] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MODERAT, true);
-	m_honeyData[1] = new CLoadedObj(MODEL_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_MEAN_EYE, true);
+	m_honeyData[0] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MOD, true);
+	m_honeyData[1] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MEANEYE, false);
+	m_honeyData[2] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_IMPACT, true);
+	m_honeyData[3] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_FMOON, true);
 
 	m_honeycombs = new CLoadedObj * [24];
 	float phi = 0.0f;
 	float r = 2.5f;
 	float offset = -1.5f;
-	float alpha = 0.5f;
+	float dist = 1.7f;
+	float alpha = 0.7f;
 	glm::vec3 axis = glm::vec3(1.0f, 0.0f, 0.0f);
 	for (int i = 0; i < 24; i += 3) {
 		// left
-		m_honeycombs[i + 0] = new CLoadedObj(MODEL_HONEY,
-											 glm::vec3(1.7f, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
+		m_honeycombs[i + 0] = new CLoadedObj(MODEL_DEF_HONEY,
+											 glm::vec3(dist, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
 											 NULL,
@@ -124,7 +131,7 @@ void CDefinition::modelsInit(void) {
 		m_honeycombs[i + 0]->rotate(M_PI / 2.0f - phi - M_PI / 8.0f, axis);
 
 		// middle
-		m_honeycombs[i + 1] = new CLoadedObj(MODEL_HONEY,
+		m_honeycombs[i + 1] = new CLoadedObj(MODEL_DEF_HONEY,
 											 glm::vec3(0.0f, r * glm::sin(phi), r * glm::cos(phi) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
@@ -136,8 +143,8 @@ void CDefinition::modelsInit(void) {
 		m_honeycombs[i + 1]->rotate(M_PI / 2.0f - phi, axis);
 
 		// right
-		m_honeycombs[i + 2] = new CLoadedObj(MODEL_HONEY,
-											 glm::vec3(-1.7f, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
+		m_honeycombs[i + 2] = new CLoadedObj(MODEL_DEF_HONEY,
+											 glm::vec3(-dist, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
 											 glm::vec3(1.0f),
 											 &m_shaderPrograms[0],
 											 NULL,
@@ -151,7 +158,7 @@ void CDefinition::modelsInit(void) {
 	}
 
 	// eye
-	m_eye = new CObjectPix(IMG_EYE_BLACK, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(2.5f), &m_shaderPrograms[1], 12.0f);
+	m_eye = new CObjectPix(IMG_DEF_EYE_BLACK, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(2.5f), &m_shaderPrograms[1], 12.0f);
 }
 
 void CDefinition::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {

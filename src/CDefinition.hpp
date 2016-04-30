@@ -12,7 +12,7 @@
 
 class CDefinition : public CSong {
 public:
-	CDefinition(CCamera * camera, TControlState * state);
+	CDefinition(CCamera * camera, TControlState * state, CSkybox * skybox);
 	~CDefinition(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);

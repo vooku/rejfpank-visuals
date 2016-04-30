@@ -32,6 +32,7 @@ void CSkybox::sendUniforms(void) {
 void CSkybox::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
 	m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, m_scale);
+	m_tempMats.MMatrix = m_tempMats.MMatrix * m_rotMatrix;
 	m_tempMats.MMatrix = glm::rotate(m_tempMats.MMatrix, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	//tempMats.VMatrix = VMatrix;
 	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
