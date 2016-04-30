@@ -114,6 +114,8 @@ void CController::nextSong(void) {
 	m_state.ctrlMap[CTRL_SONG_SET] = false;
 	if (m_song != NULL) delete m_song;
 
+	m_camera.reset();
+
 	switch (m_songCtr) {
 		case 0:
 			m_song = new CSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
@@ -125,8 +127,6 @@ void CController::nextSong(void) {
 			m_song = new CDefinition(&m_camera, &m_state, m_skybox);
 			break;
 	}
-
-	m_camera.reset();
 
 	m_songCtr = (m_songCtr + 1) % SONG_COUNT;
 	m_state.ctrlMap[CTRL_SONG_SET] = true;

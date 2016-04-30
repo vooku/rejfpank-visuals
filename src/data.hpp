@@ -87,6 +87,9 @@
 #define MODEL_ROC_LEGO_9	"res/models/roc_lego-brick-4x2-low.obj"
 // <--------------------------------------------------------------- resources
 
+#define DEF_HONEYCOMBS_N_PER_LINE 16
+#define DEF_HONEYCOMBS_LINES_N 5
+
 #define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
 #define LEGO_BRICKS_COUNT 8

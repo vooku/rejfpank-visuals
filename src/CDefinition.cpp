@@ -22,7 +22,7 @@ CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skyb
 CDefinition::~CDefinition(void) {
 	m_skybox->rotate(M_PI, glm::vec3(0.0f, 1.0f, 0.0f)); // just turn it back
 
-	for (int i = 0; i < 24; i++) delete m_honeycombs[i];
+	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
 
 	for (int i = 0; i < m_honeyDataN; i++) delete m_honeyData[i];
@@ -43,7 +43,7 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 	m_skybox->draw(PMatrix, VMatrix);
 
-	for (int i = 0; i < 24; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
+	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
 
 	//m_eye->draw(PMatrix, VMatrix);
 
@@ -110,52 +110,34 @@ void CDefinition::modelsInit(void) {
 	m_honeyData[2] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_IMPACT, true);
 	m_honeyData[3] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_FMOON, true);
 
-	m_honeycombs = new CLoadedObj * [24];
+	m_honeycombs = new CLoadedObj * [DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N];
 	float phi = 0.0f;
-	float r = 2.5f;
-	float offset = -1.5f;
-	float dist = 1.7f;
-	float alpha = 0.7f;
+	float phiStep = M_PI / (DEF_HONEYCOMBS_N_PER_LINE / 2.0f);
+	float r = DEF_HONEYCOMBS_N_PER_LINE / 4.0f + DEF_HONEYCOMBS_N_PER_LINE / 16.0f;
+	float zOffset = -0.0f; // move it closer to the camera
+	float xOffset = 1.7f; // move it left and right
+	float alpha = 0.8f;
 	glm::vec3 axis = glm::vec3(1.0f, 0.0f, 0.0f);
-	for (int i = 0; i < 24; i += 3) {
-		// left
-		m_honeycombs[i + 0] = new CLoadedObj(MODEL_DEF_HONEY,
-											 glm::vec3(dist, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
-											 glm::vec3(1.0f),
-											 &m_shaderPrograms[0],
-											 NULL,
-											 false,
-											 m_honeyData[rand() % m_honeyDataN],
-											 0,
-											 alpha);
-		m_honeycombs[i + 0]->rotate(M_PI / 2.0f - phi - M_PI / 8.0f, axis);
+	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) {
+		int xFactor = (i % DEF_HONEYCOMBS_LINES_N) - floor(DEF_HONEYCOMBS_LINES_N / 2.0f);
+		int phiFactor = (i % DEF_HONEYCOMBS_LINES_N) % 2;
+		float actualXOffset = xOffset * xFactor;
+		float phiOffset = (M_PI / DEF_HONEYCOMBS_N_PER_LINE) * phiFactor;
+		
+		m_honeycombs[i] = new CLoadedObj(MODEL_DEF_HONEY,
+										 glm::vec3(actualXOffset, r * glm::sin(phi + phiOffset), r * glm::cos(phi + phiOffset) + zOffset),
+										 glm::vec3(1.0f),
+										 &m_shaderPrograms[0],
+										 NULL,
+										 false,
+										 m_honeyData[rand() % m_honeyDataN],
+										 0,
+										 alpha);
+		m_honeycombs[i]->rotate(M_PI / 2.0f - phi - phiOffset, axis);
 
-		// middle
-		m_honeycombs[i + 1] = new CLoadedObj(MODEL_DEF_HONEY,
-											 glm::vec3(0.0f, r * glm::sin(phi), r * glm::cos(phi) + offset),
-											 glm::vec3(1.0f),
-											 &m_shaderPrograms[0],
-											 NULL,
-											 false,
-											 m_honeyData[rand() % m_honeyDataN],
-											 0,
-											 alpha);
-		m_honeycombs[i + 1]->rotate(M_PI / 2.0f - phi, axis);
-
-		// right
-		m_honeycombs[i + 2] = new CLoadedObj(MODEL_DEF_HONEY,
-											 glm::vec3(-dist, r * glm::sin(phi + M_PI / 8.0f), r * glm::cos(phi + M_PI / 8.0f) + offset),
-											 glm::vec3(1.0f),
-											 &m_shaderPrograms[0],
-											 NULL,
-											 false,
-											 m_honeyData[rand() % m_honeyDataN],
-											 0,
-											 alpha);
-		m_honeycombs[i + 2]->rotate(M_PI / 2.0f - phi - M_PI / 8.0f, axis);
-
-		phi += M_PI / 4.0f;
+		phi += phiStep;
 	}
+	m_camera->m_position = glm::vec3(0.0f, 0.0f, - r - 4.0f);
 
 	// eye
 	m_eye = new CObjectPix(IMG_DEF_EYE_BLACK, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(2.5f), &m_shaderPrograms[1], 12.0f);
