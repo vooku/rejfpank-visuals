@@ -53,7 +53,7 @@
 #define FIRST_SONG 2 // for testing
 
 #define BANNER_PARAM_NO_TEX "no_tex"
-#define BANNER_PARAM_NP_TEX_BLACK "no_tex_black"
+#define BANNER_PARAM_NO_TEX_BLACK "no_tex_black"
 #define BANNER_PARAM_MULTIPASS "multipass"
 
 // ---------------------------------------------------------------> resources
@@ -64,6 +64,8 @@
 #define TEX_DEF_1_4TO3		"res/tex/def_1-4to3.png"
 #define TEX_DEF_2			"res/tex/def_2.png"
 #define TEX_DEF_2_4TO3		"res/tex/def_2-4to3.png"
+#define TEX_DEF_3			"res/tex/def_3.png"
+#define TEX_DEF_3_4TO3		"res/tex/def_3-4to3.png"
 #define TEX_DEF_MOD			"res/tex/def_mod.png"
 #define TEX_DEF_MEANEYE		"res/tex/def_mean-eye.png"
 #define TEX_DEF_IMPACT		"res/tex/def_impact.png"

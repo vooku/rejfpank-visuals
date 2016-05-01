@@ -13,6 +13,8 @@ The rest of the readme is mostly for myself.
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - setup setlist on app start
 - differentiate trigger times in CDrawable
+- reset skybox color multiplier
+- revise count/n variables and constants
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

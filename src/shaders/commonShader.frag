@@ -36,17 +36,17 @@ out vec4 color;
 
 // ----------------------------------------------------------------------------------- Functions
 void lightsInit(void) {
-	whiteLight.position = (VMatrix * vec4 (-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
+	whiteLight.position = (VMatrix * vec4(-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
 	whiteLight.ambient =  vec3(1.0f);
 	whiteLight.diffuse =  vec3(1.0f);
 	whiteLight.specular = vec3(0.5f);
 	
-	redLight.position = (VMatrix * vec4 (-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
+	redLight.position = (VMatrix * vec4(-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
 	redLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	redLight.diffuse = vec3 (0.5f, 0.0f, 0.0f);
 	redLight.specular = vec3 (1.5f, 0.0f, 0.0f);
 
-	blueLight.position = (VMatrix * vec4 (-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
+	blueLight.position = (VMatrix * vec4(-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
 	blueLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
 	blueLight.diffuse = vec3 (0.5f, 0.0f, 0.5f);
 	blueLight.specular = vec3 (1.0f, 0.0f, 1.0f);
@@ -75,8 +75,8 @@ vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const
 }
 
 vec4 lightItUp (const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
-	vec4 result = vec4 (0.0f);
-	//result += vec4 (0.1f) * objectColor (); // Global ambient
+	vec4 result = vec4 (0.1f);
+	if (useTex) result *= texture(texSampler, texCoordsTrans);// Global ambient
 	result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
 	if (fadeToBlack) result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
 	//result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));

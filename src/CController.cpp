@@ -105,7 +105,10 @@ void CController::redraw(GLFWwindow * window) {
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->redraw(PMatrix, VMatrix);
 	
 	// always last
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	m_grainBanner->draw(PMatrix, VMatrix);
+	glDisable(GL_BLEND);
 
 	glfwSwapBuffers(window);
 }
@@ -124,7 +127,7 @@ void CController::nextSong(void) {
 			m_song = new CRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CDefinition(&m_camera, &m_state, m_skybox);
+			m_song = new CDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 	}
 

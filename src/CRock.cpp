@@ -118,8 +118,11 @@ void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	}
 
 	// banners
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	if (m_innerMap[ROCK_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[ROCK_BANNER1] && glfwGetTime() - m_banners[1]->m_triggerTime >= 0.1) m_banners[1]->draw(PMatrix, VMatrix);
+	glDisable(GL_BLEND);
 }
 
 void CRock::replaceLoop(const int dir) {

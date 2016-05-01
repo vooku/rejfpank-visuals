@@ -107,10 +107,13 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_innerMap[SQUIR_SQUIRREL2]) m_squirrel2->draw(PMatrix, VMatrix);
 
 	// banners
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	if (m_innerMap[SQUIR_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 	if (m_innerMap[SQUIR_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
-	
+	glDisable(GL_BLEND);
+
 	// multipass
 	if (m_multipass) {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

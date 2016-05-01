@@ -25,7 +25,7 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 		m_useTex = false;
 		m_alpha = 0.4f;
 	}
-	else if (strcmp(param, BANNER_PARAM_NP_TEX_BLACK) == 0) {
+	else if (strcmp(param, BANNER_PARAM_NO_TEX_BLACK) == 0) {
 		m_useTex = false;
 		m_alpha = 1.0f;
 	}
@@ -37,7 +37,9 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 	else {
 		m_useTex = true;
 		m_geometry.texture = pgr::createTexture(param, false);
-		m_alpha = 0.2f;
+		std::cout << "loaded texture: " << param << std::endl;
+		if (strcmp(param, TEX_GEN_NOISE) == 0 || strcmp(param, TEX_GEN_NOISE_4TO3) == 0) m_alpha = 0.2f;
+		else m_alpha = 1.0f;
 	}
 
 	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
@@ -82,9 +84,6 @@ void CBanner::untear(void) {
 }
 
 void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
 	glDisable(GL_DEPTH_TEST);
 	
 	// just take rotation part of the view transform
@@ -114,7 +113,6 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glBindVertexArray(0);
 	glUseProgram(0);
 
-	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
 
