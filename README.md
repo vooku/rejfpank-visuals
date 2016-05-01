@@ -16,6 +16,7 @@ The rest of the readme is mostly for myself.
 - reset skybox color multiplier
 - revise count/n variables and constants
 - make multipass banner standalone object
+- add support for any axes in CCamera::placeOnCircle()
 
 ## Ideas
 - create an algorithm to tessellate a rectangle

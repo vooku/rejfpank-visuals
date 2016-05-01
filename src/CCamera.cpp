@@ -45,6 +45,19 @@ void CCamera::flow(const double time, const int dir) {
 	this->move(dir * STEP_LENGTH);
 }
 
+bool CCamera::placeOnCircle(const double time, const float r, const glm::vec3 axis) {
+	if (axis == glm::vec3(1.0f, 0.0f, 0.0f)) m_position = glm::vec3(0.0f, r * glm::sin(time), r * glm::cos(time));
+	else if (axis == glm::vec3(0.0f, 1.0f, 0.0f)) m_position = glm::vec3(r * glm::sin(time), 0.0f, r * glm::cos(time));
+	else if (axis == glm::vec3(0.0f, 0.0f, 1.0f)) m_position = glm::vec3(r * glm::sin(time), r * glm::cos(time), 0.0f);
+	else return false;
+
+	m_direction = glm::normalize(-m_position);
+	m_right = axis;
+	m_up = glm::normalize(glm::cross(m_right, m_direction));
+
+	return true;
+}
+
 void CCamera::reset(void) {
 	m_position = CAMERA_INIT_POS;
 	m_direction = CAMERA_INIT_DIR;

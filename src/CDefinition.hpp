@@ -31,6 +31,7 @@ protected:
 	enum {
 		DEF_BANNER0, DEF_BANNER1, DEF_BANNER2, DEF_BANNER4, // banner 3 is for multipass
 		DEF_INVERSE, DEF_REDUCE, DEF_SWEEP,
+		DEF_BACKGROUND,
 		DEF_COUNT
 	};
 
@@ -46,6 +47,8 @@ protected:
 
 	unsigned int m_kickCount;
 	double m_sweepTriggerTime;
+	float m_r;
+	float m_camOffset;
 };
 
 #endif // !_REJFPANK_CDEFINITION

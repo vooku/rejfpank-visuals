@@ -22,8 +22,6 @@ CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skyb
 }
 
 CDefinition::~CDefinition(void) {
-	m_skybox->rotate(M_PI, glm::vec3(0.0f, 1.0f, 0.0f)); // just turn it back
-
 	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
 
@@ -47,13 +45,15 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	}
 
 	// skybox
-	m_skybox->draw(PMatrix, VMatrix);
+	if (m_innerMap[DEF_BACKGROUND]) m_skybox->draw(PMatrix, VMatrix);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	// honeycombs
-	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) m_honeycombs[i]->draw(PMatrix, VMatrix);
+	if (m_innerMap[DEF_BACKGROUND])
+		for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++)
+			m_honeycombs[i]->draw(PMatrix, VMatrix);
 
 	// banners
 	if (m_innerMap[DEF_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
@@ -115,6 +115,7 @@ void CDefinition::update(double time) {
 		else m_innerMap[DEF_SWEEP] = false;
 	}
 
+	m_camera->placeOnCircle(CAMERA_ENCIRCLE_SPEED * time, m_r + m_camOffset, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 
@@ -148,9 +149,6 @@ void CDefinition::shadersInit(void) {
 }
 
 void CDefinition::modelsInit(void) {
-	// skybox
-	m_skybox->rotate(M_PI, glm::vec3(0.0f, 1.0f, 0.0f));
-
 	// honeycombs
 	m_honeyDataN = 4;
 	m_honeyData = new CLoadedObj * [m_honeyDataN];
@@ -162,7 +160,8 @@ void CDefinition::modelsInit(void) {
 	m_honeycombs = new CLoadedObj * [DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N];
 	float phi = 0.0f;
 	float phiStep = M_PI / (DEF_HONEYCOMBS_N_PER_LINE / 2.0f);
-	float r = DEF_HONEYCOMBS_N_PER_LINE / 4.0f + DEF_HONEYCOMBS_N_PER_LINE / 16.0f;
+	m_r = DEF_HONEYCOMBS_N_PER_LINE / 4.0f + DEF_HONEYCOMBS_N_PER_LINE / 16.0f;
+	m_camOffset = DEF_HONEYCOMBS_LINES_N * 0.9f;
 	float zOffset = -0.0f; // move it closer to the camera
 	float xOffset = 1.7f; // move it left and right
 	float alpha = 0.8f;
@@ -174,7 +173,7 @@ void CDefinition::modelsInit(void) {
 		float phiOffset = (M_PI / DEF_HONEYCOMBS_N_PER_LINE) * phiFactor;
 		
 		m_honeycombs[i] = new CLoadedObj(MODEL_DEF_HONEY,
-										 glm::vec3(actualXOffset, r * glm::sin(phi + phiOffset), r * glm::cos(phi + phiOffset) + zOffset),
+										 glm::vec3(actualXOffset, m_r * glm::sin(phi + phiOffset), m_r * glm::cos(phi + phiOffset) + zOffset),
 										 glm::vec3(1.0f),
 										 &m_shaderPrograms[0],
 										 NULL,
@@ -182,12 +181,10 @@ void CDefinition::modelsInit(void) {
 										 m_honeyData[rand() % m_honeyDataN],
 										 0,
 										 alpha);
-		m_honeycombs[i]->rotate(M_PI * 3.0f / 2.0f - phi - phiOffset, axis);
+		m_honeycombs[i]->rotate(M_PI / 2.0f - phi - phiOffset, axis);
 
 		phi += phiStep;
 	}
-
-	m_camera->m_position = glm::vec3(0.0f, 0.0f, - r - 4.0f);
 
 	// banners
 	m_bannersN = 5;
@@ -260,8 +257,9 @@ void CDefinition::midiIn(const unsigned int status, const unsigned int note, con
 			m_innerMap[DEF_BANNER0] = true;
 			m_banners[0]->m_triggerTime = time;
 			break;
-		//case MIDI_DRUM_KICK2:
-		//	break;
+		case MIDI_DRUM_KICK2:
+			m_innerMap[DEF_BACKGROUND] = true;
+			break;
 		case MIDI_DRUM_SNARE1:
 			m_innerMap[DEF_BANNER1] = true;
 			m_banners[1]->m_triggerTime = time;

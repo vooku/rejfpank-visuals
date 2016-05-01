@@ -33,6 +33,7 @@
 #define CAMERA_DIR_FORWARD 1
 #define CAMERA_DIR_BACKWARD -1
 #define CAMERA_ROTATE_SPEED 0.02f
+#define CAMERA_ENCIRCLE_SPEED 0.3f
 
 #define MOUSE_SENSITIVITY 0.01f
 #define ROTATION_ANGLE_DELTA 0.02f ///< in degrees
@@ -92,7 +93,7 @@
 // <--------------------------------------------------------------- resources
 
 #define DEF_HONEYCOMBS_N_PER_LINE 16
-#define DEF_HONEYCOMBS_LINES_N 5
+#define DEF_HONEYCOMBS_LINES_N 5 // only odd numbers, even ones break the pattern
 
 #define LEGO_BRICKS_LOOPS 8
 #define LEGO_BRICKS_DIST 5
