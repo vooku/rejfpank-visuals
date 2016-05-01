@@ -59,6 +59,7 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_innerMap[DEF_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[DEF_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 	if (m_innerMap[DEF_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
+	if (m_innerMap[DEF_BANNER4]) m_banners[4]->draw(PMatrix, VMatrix);
 
 	glDisable(GL_BLEND);
 
@@ -68,26 +69,52 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[DEF_INVERSE], false);
+		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[DEF_INVERSE], m_innerMap[DEF_REDUCE]);
 	}
 }
 
 void CDefinition::update(double time) {
-	float thirtysecond = BEAT_LENGTH(175) / 32.0f;
-	float sixteenth = BEAT_LENGTH(175) / 16.0f;
+	float halftime = BEAT_LENGTH(175) / 32.0f;
+	float fulltime = BEAT_LENGTH(175) / 16.0f;
+	float triplet  = BEAT_LENGTH(175) / 3.0f;
 
 	if (m_innerMap[DEF_BANNER0]) {
-		if (time - m_banners[0]->m_triggerTime > thirtysecond) m_innerMap[DEF_INVERSE] = true;
-		if (time - m_banners[0]->m_triggerTime > sixteenth) m_innerMap[DEF_BANNER0] = m_innerMap[DEF_INVERSE] = false;
+		if (time - m_banners[0]->m_triggerTime > halftime) m_innerMap[DEF_INVERSE] = true;
+		if (time - m_banners[0]->m_triggerTime > fulltime) m_innerMap[DEF_BANNER0] = m_innerMap[DEF_INVERSE] = false;
 	}
 	if (m_innerMap[DEF_BANNER1]) {
-		if (time - m_banners[1]->m_triggerTime > thirtysecond) m_innerMap[DEF_INVERSE] = true;
-		if (time - m_banners[1]->m_triggerTime > sixteenth) m_innerMap[DEF_BANNER1] = m_innerMap[DEF_INVERSE] = false;
+		if (time - m_banners[1]->m_triggerTime > halftime) m_innerMap[DEF_INVERSE] = true;
+		if (time - m_banners[1]->m_triggerTime > fulltime) m_innerMap[DEF_BANNER1] = m_innerMap[DEF_INVERSE] = false;
 	}
 	if (m_innerMap[DEF_BANNER2]) {
-		if (time - m_banners[2]->m_triggerTime > thirtysecond) m_innerMap[DEF_INVERSE] = true;
-		if (time - m_banners[2]->m_triggerTime > sixteenth) m_innerMap[DEF_BANNER2] = m_innerMap[DEF_INVERSE] = false;
+		if (time - m_banners[2]->m_triggerTime > halftime) m_innerMap[DEF_INVERSE] = true;
+		if (time - m_banners[2]->m_triggerTime > fulltime) m_innerMap[DEF_BANNER2] = m_innerMap[DEF_INVERSE] = false;
 	}
+
+	if (m_innerMap[DEF_SWEEP]) {
+		m_innerMap[DEF_BANNER0] = false;
+		m_innerMap[DEF_BANNER1] = false;
+		m_innerMap[DEF_BANNER2] = false;
+		m_innerMap[DEF_INVERSE] = false;
+
+			 if (time - m_sweepTriggerTime <= triplet) m_innerMap[DEF_BANNER0] = true;
+		else if (time - m_sweepTriggerTime <= 2 * triplet) {
+				 m_innerMap[DEF_BANNER0] = true;
+				 m_innerMap[DEF_INVERSE] = true;
+			 }
+		else if (time - m_sweepTriggerTime <= 3 * triplet) m_innerMap[DEF_BANNER1] = true;
+		else if (time - m_sweepTriggerTime <= 4 * triplet) {
+			m_innerMap[DEF_BANNER1] = true;
+			m_innerMap[DEF_INVERSE] = true;
+		}
+		else if (time - m_sweepTriggerTime <= 5 * triplet) m_innerMap[DEF_BANNER2] = true;
+		else if (time - m_sweepTriggerTime <= 6 * triplet) {
+			m_innerMap[DEF_BANNER2] = true;
+			m_innerMap[DEF_INVERSE] = true;
+		}
+		else m_innerMap[DEF_SWEEP] = false;
+	}
+
 }
 
 
@@ -163,49 +190,62 @@ void CDefinition::modelsInit(void) {
 	m_camera->m_position = glm::vec3(0.0f, 0.0f, - r - 4.0f);
 
 	// banners
-	m_bannersN = 4;
+	m_bannersN = 5;
 	m_banners = new CBanner * [m_bannersN];
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_1_4TO3 : TEX_DEF_1));
 	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_2_4TO3 : TEX_DEF_2));
 	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_3_4TO3 : TEX_DEF_3));
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
+	m_banners[4] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_GEN_FIN_4TO3 : TEX_GEN_FIN)); // fin
+}
+
+void CDefinition::sweepBanners(const double time) {
+	m_innerMap[DEF_SWEEP] = true;
+	m_sweepTriggerTime = time;
 }
 
 void CDefinition::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+	double time = glfwGetTime();
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
-		case MPX16_PAD01:
+		case MPX16_PAD01: // tech 1
+			this->sweepBanners(time);
 			break;
-		case MPX16_PAD02:
+		case MPX16_PAD02: // tech 2
+			this->sweepBanners(time);
 			break;
-		case MPX16_PAD03:
+		case MPX16_PAD03: // tech 3
+			this->sweepBanners(time);
 			break;
-		case MPX16_PAD04:
+		case MPX16_PAD04: // tech 4
+			this->sweepBanners(time);
 			break;
-		case MPX16_PAD05:
+		case MPX16_PAD05: // block tech 1
+			break;			  
+		case MPX16_PAD06: // block tech 2
+			break;			  
+		case MPX16_PAD07: // block tech 3
+			break;			  
+		case MPX16_PAD08: // block tech 4
 			break;
-		case MPX16_PAD06:
+		case MPX16_PAD09: // laser
 			break;
-		case MPX16_PAD07:
+		case MPX16_PAD10: // laser
 			break;
-		case MPX16_PAD08:
+		case MPX16_PAD11: // block definition
 			break;
-		case MPX16_PAD09:
+		case MPX16_PAD12: // definition
 			break;
-		case MPX16_PAD10:
+		case MPX16_PAD13:  // lazer + 2
 			break;
-		case MPX16_PAD11:
+		case MPX16_PAD14: // lazer + 4
 			break;
-		case MPX16_PAD12:
+		case MPX16_PAD15: // block mlp
+			m_innerMap[DEF_BANNER4] = false;
 			break;
-		case MPX16_PAD13:
-			break;
-		case MPX16_PAD14:
-			break;
-		case MPX16_PAD15:
-			break;
-		case MPX16_PAD16:
+		case MPX16_PAD16: // mlp
+			m_innerMap[DEF_BANNER4] = true;
 			break;
 		default:
 			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
@@ -218,17 +258,17 @@ void CDefinition::midiIn(const unsigned int status, const unsigned int note, con
 		if (velocity != 0) switch (note) {
 		case MIDI_DRUM_KICK1:
 			m_innerMap[DEF_BANNER0] = true;
-			m_banners[0]->m_triggerTime = glfwGetTime();
+			m_banners[0]->m_triggerTime = time;
 			break;
 		//case MIDI_DRUM_KICK2:
 		//	break;
 		case MIDI_DRUM_SNARE1:
 			m_innerMap[DEF_BANNER1] = true;
-			m_banners[1]->m_triggerTime = glfwGetTime();
+			m_banners[1]->m_triggerTime = time;
 			break;
 		case MIDI_DRUM_HIHAT_OPEN:
 			m_innerMap[DEF_BANNER2] = true;
-			m_banners[2]->m_triggerTime = glfwGetTime();
+			m_banners[2]->m_triggerTime = time;
 			break;
 		//case MIDI_DRUM_TOM_LOW1:
 		//	break;

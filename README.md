@@ -15,6 +15,7 @@ The rest of the readme is mostly for myself.
 - differentiate trigger times in CDrawable
 - reset skybox color multiplier
 - revise count/n variables and constants
+- make multipass banner standalone object
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -41,6 +42,7 @@ The rest of the readme is mostly for myself.
 - [Windows MIDI reference](https://msdn.microsoft.com/en-us/library/windows/desktop/dd798495(v=vs.85).aspx)
 - [MIDI notes reference](http://www.midimountain.com/midi/midi_status.htm)
 - [openFrameworks](http://openframeworks.cc/)
+- [OpenGL 4.4 blend modes](http://www.slideshare.net/Mark_Kilgard/blend-modes-for-opengl)
 
 ## Similar stuff
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI

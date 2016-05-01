@@ -26,9 +26,11 @@ protected:
 	/// Helper funtion for CDefinition()
 	void modelsInit(void);
 
+	void sweepBanners(const double time);
+
 	enum {
-		DEF_BANNER0, DEF_BANNER1, DEF_BANNER2,
-		DEF_INVERSE,
+		DEF_BANNER0, DEF_BANNER1, DEF_BANNER2, DEF_BANNER4, // banner 3 is for multipass
+		DEF_INVERSE, DEF_REDUCE, DEF_SWEEP,
 		DEF_COUNT
 	};
 
@@ -43,6 +45,7 @@ protected:
 	TCommonShaderProgram * m_bannerShaderProgram;
 
 	unsigned int m_kickCount;
+	double m_sweepTriggerTime;
 };
 
 #endif // !_REJFPANK_CDEFINITION

@@ -60,6 +60,8 @@
 #define TEX_GEN_TEST		"res/tex/gen_test.png"
 #define TEX_GEN_NOISE		"res/tex/gen_noise.jpg"
 #define TEX_GEN_NOISE_4TO3	"res/tex/gen_noise-4to3.jpg"
+#define TEX_GEN_FIN			"res/tex/gen_fin.jpg"
+#define TEX_GEN_FIN_4TO3	"res/tex/gen_fin-4to3.jpg"
 #define TEX_DEF_1			"res/tex/def_1.png"
 #define TEX_DEF_1_4TO3		"res/tex/def_1-4to3.png"
 #define TEX_DEF_2			"res/tex/def_2.png"
