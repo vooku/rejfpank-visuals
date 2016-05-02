@@ -1,6 +1,6 @@
 /**
  * @author	Vadim Petrov
- * @date		2016
+ * @date	2016
  */
 
 #include "CDefinition.hpp"
