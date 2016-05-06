@@ -29,6 +29,8 @@ CRock::~CRock(void) {
 
 	delete[] m_innerMap;
 
+	m_skybox->m_colorMultiplier = 1.0f;
+
 	std::cout << "destroyed song: Skala" << std::endl;
 }
 
@@ -51,7 +53,11 @@ void CRock::shadersInit(void) {
 		m_shaderPrograms[0].specularLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.specular");
 		m_shaderPrograms[0].shininessLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
 		m_shaderPrograms[0].alphaLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
-		m_shaderPrograms[0].fadeToBlackLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
+		m_shaderPrograms[0].whiteFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "whiteFlag");
+		m_shaderPrograms[0].redFlagLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "redFlag");
+		m_shaderPrograms[0].blueFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "blueFlag");
+		m_shaderPrograms[0].pointFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "pointFlag");
+		m_shaderPrograms[0].cameraPositionLocation	= glGetUniformLocation(m_shaderPrograms[0].program, "cameraPosition");
 		m_shaderPrograms[0].useTexLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "useTex");
 		// Get input locations
 		m_shaderPrograms[0].posLocation			= glGetAttribLocation(m_shaderPrograms[0].program, "position");
@@ -103,6 +109,12 @@ void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	m_skybox->draw(PMatrix, VMatrix);
 	
 	// lego
+	glUseProgram(m_shaderPrograms[0].program);
+	glUniform1f(m_shaderPrograms[0].whiteFlagLocation, !m_innerMap[ROCK_BLACK]);
+	glUniform1f(m_shaderPrograms[0].redFlagLocation, m_innerMap[ROCK_BLACK]);
+	glUniform1f(m_shaderPrograms[0].blueFlagLocation, false);
+	glUniform1f(m_shaderPrograms[0].pointFlagLocation, false);
+
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i += LEGO_BRICKS_COUNT) {
 		if (m_innerMap[ROCK_KICK1])
 			for (int j = 0; j < 4; j++)

@@ -25,10 +25,15 @@ struct TCommonShaderProgram {
 	GLint alphaLocation;
 	GLint useTexLocation;
 	GLint texSamplerLocation;
+	//lights
+	GLint whiteFlagLocation;
+	GLint redFlagLocation;
+	GLint blueFlagLocation;
+	GLint pointFlagLocation;
+	GLint cameraPositionLocation;
 	// various
 	GLint colorMultiplierLocation;
 	GLint offsetLocation;
-	GLint fadeToBlackLocation;
 	// multipass effects
 	GLint inverseLocation;
 	GLint reducePaletteLocation;

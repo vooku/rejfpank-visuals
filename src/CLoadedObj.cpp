@@ -166,7 +166,6 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
 	glUniform1f(m_shaderProgram->useTexLocation, m_useTex);
-	glUniform1i(m_shaderProgram->fadeToBlackLocation, (m_material.diffuse == glm::vec3(0.0f)));
 }
 
 void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {

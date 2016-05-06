@@ -25,31 +25,45 @@ uniform mat4 MMatrix;
 uniform mat4 VMatrix;
 uniform mat4 normalMatrix; // inverse transposed Matrix
 uniform TMaterial material;
-uniform bool fadeToBlack;
+uniform bool whiteFlag;
+uniform bool redFlag;
+uniform bool blueFlag;
+uniform bool pointFlag;
+uniform vec3 cameraPosition;
 uniform bool useTex;
 uniform float alpha;
 uniform sampler2D texSampler;
 
-TLight whiteLight, redLight, blueLight;
+TLight white, red, blue, point;
 
 out vec4 color;
 
 // ----------------------------------------------------------------------------------- Functions
 void lightsInit(void) {
-	whiteLight.position = (VMatrix * vec4(-1.0f, 1.0f, 0.0f, 0.0f)).xyz;
-	whiteLight.ambient =  vec3(1.0f);
-	whiteLight.diffuse =  vec3(1.0f);
-	whiteLight.specular = vec3(0.5f);
-	
-	redLight.position = (VMatrix * vec4(-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
-	redLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
-	redLight.diffuse = vec3 (0.5f, 0.0f, 0.0f);
-	redLight.specular = vec3 (1.5f, 0.0f, 0.0f);
-
-	blueLight.position = (VMatrix * vec4(-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
-	blueLight.ambient = vec3 (1.0f, 1.0f, 1.0f);
-	blueLight.diffuse = vec3 (0.5f, 0.0f, 0.5f);
-	blueLight.specular = vec3 (1.0f, 0.0f, 1.0f);
+	if (whiteFlag) {
+		white.position	= (VMatrix * vec4(-1.0f, 0.0f, 1.0f, 0.0f)).xyz;
+		white.ambient	= vec3(1.0f);
+		white.diffuse	= vec3(1.0f);
+		white.specular	= vec3(0.5f);
+	}
+	if (redFlag) {
+		red.position	= (VMatrix * vec4(-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
+		red.ambient		= vec3 (1.0f, 1.0f, 1.0f);
+		red.diffuse		= vec3 (0.5f, 0.0f, 0.0f);
+		red.specular	= vec3 (1.5f, 0.0f, 0.0f);
+	}
+	if (blueFlag) {
+		blue.position	= (VMatrix * vec4(-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
+		blue.ambient	= vec3 (1.0f, 1.0f, 1.0f);
+		blue.diffuse	= vec3 (0.5f, 0.0f, 0.5f);
+		blue.specular	= vec3 (1.0f, 0.0f, 1.0f);
+	}
+	if (pointFlag) {
+		point.position	= (/*VMatrix */ vec4(cameraPosition, 0.0f)).xyz;
+		point.ambient	= vec3 (2.0f);
+		point.diffuse	= vec3 (2.0f);
+		point.specular	= vec3 (2.0f);
+	}
 }
 
 vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal, const vec3 toLight) {
@@ -74,18 +88,35 @@ vec4 computeLightParts(const TLight light, const vec3 cameraSpacePosition, const
 	return vec4 (result, 1.0f);
 }
 
-vec4 lightItUp (const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
-	vec4 result = vec4 (0.1f);
-	if (useTex) result *= texture(texSampler, texCoordsTrans);// Global ambient
-	result += computeLightParts (whiteLight, cameraSpacePosition, cameraSpaceNormal, normalize (whiteLight.position));
-	if (fadeToBlack) result += computeLightParts (redLight, cameraSpacePosition, cameraSpaceNormal, normalize (redLight.position));
-	//result += computeLightParts (blueLight, cameraSpacePosition, cameraSpaceNormal, normalize (blueLight.position));
+vec4 directionalLight(const TLight light, const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
+	return computeLightParts (light, cameraSpacePosition, cameraSpaceNormal, normalize (-light.position));
+}
+
+float computeAttenuation (const float dist, const float constant, const float linear, const float quadratic) {
+	return 1.0f / (constant + linear * dist + quadratic * pow (dist, 2));
+}
+
+vec4 pointLight(const TLight light, const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
+	vec3 toLight = light.position - cameraSpacePosition;
+	vec4 result = computeLightParts(light, cameraSpacePosition, cameraSpaceNormal, normalize (toLight));
+	float attenuationFactor = computeAttenuation (length(toLight), 0.0f, 0.1f, 0.03f);
+
+	return result * attenuationFactor;
+}
+
+vec4 lightItUp(const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
+	vec4 result = vec4 (0.05f);
+	if (whiteFlag)	result += directionalLight(white, cameraSpacePosition, cameraSpaceNormal);
+	if (redFlag)	result += directionalLight(red,	cameraSpacePosition, cameraSpaceNormal);
+	if (blueFlag)	result += directionalLight(blue, cameraSpacePosition, cameraSpaceNormal);
+	if (pointFlag)	result += pointLight(point, cameraSpacePosition, cameraSpaceNormal);
+	if (useTex) result *= texture(texSampler, texCoordsTrans);
 	return result;
 }
 
 void main (void) {
-	vec3 cameraSpacePosition = (VMatrix * MMatrix * vec4 (positionTrans, 1.0f)).xyz;
-	vec3 cameraSpaceNormal = normalize ((VMatrix * MMatrix * vec4 (normalTrans, 0.0)).xyz); // normalmatrix ?!!!
+	vec3 cameraSpacePosition = (VMatrix * MMatrix * vec4(positionTrans, 0.0f)).xyz;
+	vec3 cameraSpaceNormal = normalize((normalMatrix * vec4(normalTrans, 0.0f)).xyz);
 	
 	lightsInit();
 	color = lightItUp(cameraSpacePosition, cameraSpaceNormal);

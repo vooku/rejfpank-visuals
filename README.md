@@ -13,10 +13,10 @@ The rest of the readme is mostly for myself.
 - GLFW 3.2 should be released soon and should support toggling fullscreen
 - setup setlist on app start
 - differentiate trigger times in CDrawable
-- reset skybox color multiplier
 - revise count/n variables and constants
 - make multipass banner standalone object
 - add support for any axes in CCamera::placeOnCircle()
+- rename song classes
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -44,6 +44,7 @@ The rest of the readme is mostly for myself.
 - [MIDI notes reference](http://www.midimountain.com/midi/midi_status.htm)
 - [openFrameworks](http://openframeworks.cc/)
 - [OpenGL 4.4 blend modes](http://www.slideshare.net/Mark_Kilgard/blend-modes-for-opengl)
+- [Imaging algorithms inspiration](http://www.tannerhelland.com/programming-directory/)
 
 ## Similar stuff
 - [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI

@@ -9,6 +9,7 @@
 CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
 	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
+	  m_laserTriggerTime(0.0),
 	  m_kickCount(0) {
 
 	m_innerMap = new bool[DEF_COUNT];
@@ -35,6 +36,8 @@ CDefinition::~CDefinition(void) {
 
 	delete[] m_innerMap;
 
+	m_skybox->m_colorMultiplier = 1.0f;
+
 	std::cout << "destroyed song: Definice" << std::endl;
 }
 
@@ -52,8 +55,15 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	
 	// honeycombs
 	if (m_innerMap[DEF_BACKGROUND])
-		for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++)
+		for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) {
+			glUseProgram(m_shaderPrograms[0].program);
+			glUniform1f(m_shaderPrograms[0].whiteFlagLocation, false);
+			glUniform1f(m_shaderPrograms[0].redFlagLocation, false);
+			glUniform1f(m_shaderPrograms[0].blueFlagLocation, false);
+			glUniform1f(m_shaderPrograms[0].pointFlagLocation, m_innerMap[DEF_LASER]);
+			glUniform3fv(m_shaderPrograms[0].cameraPositionLocation, 1, glm::value_ptr(m_camera->m_position));
 			m_honeycombs[i]->draw(PMatrix, VMatrix);
+		}
 
 	// banners
 	if (m_innerMap[DEF_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
@@ -115,6 +125,8 @@ void CDefinition::update(double time) {
 		else m_innerMap[DEF_SWEEP] = false;
 	}
 
+	if (m_innerMap[DEF_LASER]) if (time - m_laserTriggerTime > fulltime * 4) m_innerMap[DEF_LASER] = false;
+
 	m_camera->placeOnCircle(CAMERA_ENCIRCLE_SPEED * time, m_r + m_camOffset, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
@@ -129,26 +141,33 @@ void CDefinition::shadersInit(void) {
 	m_shaderPrograms[0].program = pgr::createProgram(shaders);
 
 		// Get uniform locations
-		m_shaderPrograms[0].PVMMatrixLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "PVMMatrix");
-		m_shaderPrograms[0].VMatrixLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "VMatrix");
-		m_shaderPrograms[0].MMatrixLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "MMatrix");
-		m_shaderPrograms[0].normalMatrixLocation =	glGetUniformLocation(m_shaderPrograms[0].program, "normalMatrix");
-		m_shaderPrograms[0].diffuseLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "material.diffuse");
-		m_shaderPrograms[0].ambientLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "material.ambient");
-		m_shaderPrograms[0].specularLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "material.specular");
-		m_shaderPrograms[0].shininessLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
-		m_shaderPrograms[0].alphaLocation =			glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
-		m_shaderPrograms[0].fadeToBlackLocation =	glGetUniformLocation(m_shaderPrograms[0].program, "fadeToBlack");
-		m_shaderPrograms[0].useTexLocation =		glGetUniformLocation(m_shaderPrograms[0].program, "useTex");
+		m_shaderPrograms[0].PVMMatrixLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "PVMMatrix");
+		m_shaderPrograms[0].VMatrixLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "VMatrix");
+		m_shaderPrograms[0].MMatrixLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "MMatrix");
+		m_shaderPrograms[0].normalMatrixLocation	= glGetUniformLocation(m_shaderPrograms[0].program, "normalMatrix");
+		m_shaderPrograms[0].diffuseLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "material.diffuse");
+		m_shaderPrograms[0].ambientLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "material.ambient");
+		m_shaderPrograms[0].specularLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.specular");
+		m_shaderPrograms[0].shininessLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "material.shininess");
+		m_shaderPrograms[0].alphaLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "alpha");
+		m_shaderPrograms[0].whiteFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "whiteFlag");
+		m_shaderPrograms[0].redFlagLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "redFlag");
+		m_shaderPrograms[0].blueFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "blueFlag");
+		m_shaderPrograms[0].pointFlagLocation		= glGetUniformLocation(m_shaderPrograms[0].program, "pointFlag");
+		m_shaderPrograms[0].cameraPositionLocation	= glGetUniformLocation(m_shaderPrograms[0].program, "cameraPosition");
+		m_shaderPrograms[0].useTexLocation			= glGetUniformLocation(m_shaderPrograms[0].program, "useTex");
 		// Get input locations
-		m_shaderPrograms[0].posLocation =		glGetAttribLocation(m_shaderPrograms[0].program, "position");
-		m_shaderPrograms[0].normalLocation =	glGetAttribLocation(m_shaderPrograms[0].program, "normal");
-		m_shaderPrograms[0].texCoordsLocation = glGetAttribLocation(m_shaderPrograms[0].program, "texCoords");
+		m_shaderPrograms[0].posLocation			= glGetAttribLocation(m_shaderPrograms[0].program, "position");
+		m_shaderPrograms[0].normalLocation		= glGetAttribLocation(m_shaderPrograms[0].program, "normal");
+		m_shaderPrograms[0].texCoordsLocation	= glGetAttribLocation(m_shaderPrograms[0].program, "texCoords");
 
 	shaders.clear();
 }
 
 void CDefinition::modelsInit(void) {
+	// skybox
+	m_skybox->m_colorMultiplier = 0.2f;
+
 	// honeycombs
 	m_honeyDataN = 4;
 	m_honeyData = new CLoadedObj * [m_honeyDataN];
@@ -227,16 +246,24 @@ void CDefinition::midiIn(const unsigned int status, const unsigned int note, con
 		case MPX16_PAD08: // block tech 4
 			break;
 		case MPX16_PAD09: // laser
+			m_laserTriggerTime = time;
+			m_innerMap[DEF_LASER] = true;
 			break;
 		case MPX16_PAD10: // laser
+			m_laserTriggerTime = time;
+			m_innerMap[DEF_LASER] = true;
 			break;
 		case MPX16_PAD11: // block definition
 			break;
 		case MPX16_PAD12: // definition
 			break;
 		case MPX16_PAD13:  // lazer + 2
+			m_laserTriggerTime = time;
+			m_innerMap[DEF_LASER] = true;
 			break;
 		case MPX16_PAD14: // lazer + 4
+			m_laserTriggerTime = time;
+			m_innerMap[DEF_LASER] = true;
 			break;
 		case MPX16_PAD15: // block mlp
 			m_innerMap[DEF_BANNER4] = false;
