@@ -41,13 +41,13 @@ out vec4 color;
 // ----------------------------------------------------------------------------------- Functions
 void lightsInit(void) {
 	if (whiteFlag) {
-		white.position	= (VMatrix * vec4(-1.0f, 0.0f, 1.0f, 0.0f)).xyz;
+		white.position	= (VMatrix * vec4(-1.0f, 0.0f, -1.0f, 0.0f)).xyz;
 		white.ambient	= vec3(1.0f);
 		white.diffuse	= vec3(1.0f);
 		white.specular	= vec3(0.5f);
 	}
 	if (redFlag) {
-		red.position	= (VMatrix * vec4(-1.0f, 1.0f, -1.0f, 0.0f)).xyz;
+		red.position	= (VMatrix * vec4(1.0f, 0.0f, -1.0f, 0.0f)).xyz;
 		red.ambient		= vec3 (1.0f, 1.0f, 1.0f);
 		red.diffuse		= vec3 (0.5f, 0.0f, 0.0f);
 		red.specular	= vec3 (1.5f, 0.0f, 0.0f);
@@ -116,7 +116,7 @@ vec4 lightItUp(const vec3 cameraSpacePosition, const vec3 cameraSpaceNormal) {
 
 void main (void) {
 	vec3 cameraSpacePosition = (VMatrix * MMatrix * vec4(positionTrans, 0.0f)).xyz;
-	vec3 cameraSpaceNormal = normalize((normalMatrix * vec4(normalTrans, 0.0f)).xyz);
+	vec3 cameraSpaceNormal = normalize((normalMatrix * vec4(normalTrans, 1.0f)).xyz);
 	
 	lightsInit();
 	color = lightItUp(cameraSpacePosition, cameraSpaceNormal);

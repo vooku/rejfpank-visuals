@@ -148,16 +148,20 @@ void cursorPosCallback(GLFWwindow * window, double x, double y) {
 }
 
 static void winRefreshCallback(GLFWwindow * window) {
-	glfwGetFramebufferSize(window, &controller.m_state.winWidth, &controller.m_state.winHeight);
 	glViewport(0, 0, controller.m_state.winWidth, controller.m_state.winHeight);
+}
 
-	controller.redraw(window);
+void winResizeCallback(GLFWwindow * window, int width, int height) {
+	controller.m_state.winWidth = width;
+	controller.m_state.winHeight = height;
+	glViewport(0, 0, controller.m_state.winWidth, controller.m_state.winHeight);
 }
 
 void callbacksInit(GLFWwindow * window) {
 	glfwSetKeyCallback(window, keyCallback);
 	glfwSetCursorPosCallback(window, cursorPosCallback);
 	glfwSetWindowRefreshCallback(window, winRefreshCallback);
+	glfwSetWindowSizeCallback(window, winResizeCallback);
 }
 
 void rejfpankInit(GLFWwindow * window) {
@@ -186,7 +190,7 @@ void rejfpankInit(GLFWwindow * window) {
 GLFWwindow * createWindow(void) {
 	int count;
 	GLFWmonitor ** monitors = glfwGetMonitors(&count);
-
+	
 	if (count == 1) return glfwCreateWindow(INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
 
 	std::cout << "Available monitors:" << std::endl;
@@ -209,6 +213,8 @@ GLFWwindow * createWindow(void) {
 	const GLFWvidmode * mode = glfwGetVideoMode(monitors[selectedMonitor]);
 	controller.m_state.winWidth = mode->width;
 	controller.m_state.winHeight = mode->height;
+
+	glfwWindowHint(GLFW_AUTO_ICONIFY, false);
 
 	return glfwCreateWindow(controller.m_state.winWidth, controller.m_state.winHeight = mode->height, WIN_TITLE, monitors[selectedMonitor], NULL);
 }
