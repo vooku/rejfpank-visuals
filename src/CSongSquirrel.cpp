@@ -1,8 +1,8 @@
-#include "CSquirrel.hpp"
+#include "CSongSquirrel.hpp"
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CSquirrel::CSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+CSongSquirrel::CSongSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
 	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_kickCount(0),
@@ -20,7 +20,7 @@ CSquirrel::CSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, 
 	std::cout << "loaded song: Veverka" << std::endl;
 }
 
-CSquirrel::~CSquirrel(void) {
+CSongSquirrel::~CSongSquirrel(void) {
 	delete m_squirrel1;
 	delete m_squirrel2;
 
@@ -36,7 +36,7 @@ CSquirrel::~CSquirrel(void) {
 	std::cout << "destroyed song: Veverka" << std::endl;
 }
 
-void CSquirrel::shadersInit(void) {
+void CSongSquirrel::shadersInit(void) {
 	std::vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[1];
 
@@ -55,7 +55,7 @@ void CSquirrel::shadersInit(void) {
 	shaders.clear();
 }
 
-void CSquirrel::modelsInit(void) {
+void CSongSquirrel::modelsInit(void) {
 	// squirrels
 	float scale = m_state->ctrlMap[CTRL_4TO3] ? 1.0f : 1.3f;
 	m_squirrel1 = new CObjectPix(IMG_SQI_SQUIRREL1, m_camera->m_position + glm::normalize(m_camera->m_direction), glm::vec3(scale), &m_shaderPrograms[0]);
@@ -77,7 +77,7 @@ void CSquirrel::modelsInit(void) {
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
 }
 
-void CSquirrel::nextBanner(void) {
+void CSongSquirrel::nextBanner(void) {
 	if (m_innerMap[SQUIR_BANNER0]) {
 		m_innerMap[SQUIR_BANNER0] = false;
 		m_innerMap[SQUIR_BANNER1] = true;
@@ -93,7 +93,7 @@ void CSquirrel::nextBanner(void) {
 	else m_innerMap[SQUIR_BANNER0] = true;
 }
 
-void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CSongSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_multipass) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -125,7 +125,7 @@ void CSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 }
 
 
-void CSquirrel::update(double time) {
+void CSongSquirrel::update(double time) {
 	m_squirrel1->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 	m_squirrel2->m_position = m_camera->m_position + glm::normalize(m_camera->m_direction);
 
@@ -142,7 +142,7 @@ void CSquirrel::update(double time) {
 	}
 }
 
-void CSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+void CSongSquirrel::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {

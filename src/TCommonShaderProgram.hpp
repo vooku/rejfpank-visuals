@@ -41,6 +41,7 @@ struct TCommonShaderProgram {
 	GLint tearNLocation;
 	GLint tearBordersLocation;
 	GLint tearOffsetsLocation;
+	GLint colorShiftLocation;
 };
 
 #endif // !_REJFPANK_TCOMMONSHADERPROGRAM

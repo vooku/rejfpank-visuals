@@ -1,8 +1,8 @@
-#include "CRock.hpp"
+#include "CSongRock.hpp"
 #include "pgr/pgr.hpp"
 #include <vector>
 
-CRock::CRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+CSongRock::CSongRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
 	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
 	  m_loopCtr(0) {
@@ -16,7 +16,7 @@ CRock::CRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonS
 	std::cout << "loaded song: Skala" << std::endl;
 }
 
-CRock::~CRock(void) {
+CSongRock::~CSongRock(void) {
 	delete[] m_shaderPrograms;
 
 	for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) delete m_lego[i];
@@ -34,7 +34,7 @@ CRock::~CRock(void) {
 	std::cout << "destroyed song: Skala" << std::endl;
 }
 
-void CRock::shadersInit(void) {
+void CSongRock::shadersInit(void) {
 	std::vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[1];
 
@@ -67,7 +67,7 @@ void CRock::shadersInit(void) {
 	shaders.clear();
 }
 
-void CRock::modelsInit(void) {
+void CSongRock::modelsInit(void) {
 	// lego
 	m_legoData = new CLoadedObj * [3];
 	m_legoData[0] = new CLoadedObj(MODEL_ROC_LEGO_8, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0]); // kick
@@ -104,7 +104,7 @@ void CRock::modelsInit(void) {
 	m_banners[1]->setColor(glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
-void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CSongRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// skybox
 	m_skybox->draw(PMatrix, VMatrix);
 	
@@ -137,7 +137,7 @@ void CRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glDisable(GL_BLEND);
 }
 
-void CRock::replaceLoop(const int dir) {
+void CSongRock::replaceLoop(const int dir) {
 	if (dir == CAMERA_DIR_FORWARD) {
 		int index = m_loopCtr * LEGO_BRICKS_COUNT;
 		for (int i = 0; i < LEGO_BRICKS_COUNT; i++)
@@ -152,7 +152,7 @@ void CRock::replaceLoop(const int dir) {
 	}
 }
 
-void CRock::update(double time) {
+void CSongRock::update(double time) {
 	if (m_innerMap[ROCK_CAM_FORWARD]) m_camera->flow(time, CAMERA_DIR_FORWARD);
 	if (m_innerMap[ROCK_CAM_BACKWARD]) m_camera->flow(time, CAMERA_DIR_BACKWARD);
 	if (m_innerMap[ROCK_CAM_Q]) m_camera->roll(ROTATION_ANGLE_DELTA);
@@ -177,7 +177,7 @@ void CRock::update(double time) {
 	}
 }
 
-void CRock::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
+void CSongRock::setCamFlow(const bool flowForward, const bool flowBackward, const bool rollQ, const bool rollE, const bool trigger) {
 	m_innerMap[ROCK_CAM_FORWARD] = flowForward;
 	m_innerMap[ROCK_CAM_BACKWARD] = flowBackward;
 	m_innerMap[ROCK_CAM_Q] = rollQ;
@@ -186,7 +186,7 @@ void CRock::setCamFlow(const bool flowForward, const bool flowBackward, const bo
 	if (trigger) m_camera->m_triggerTime = glfwGetTime();
 }
 
-void CRock::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+void CSongRock::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {

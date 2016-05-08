@@ -12,6 +12,7 @@ uniform bool tearFlag;
 uniform int tearN; // actual number of tear borders
 uniform float tearBorders[10]; // enough space for max 10
 uniform float tearOffsets[11]; // enough space for max 11
+uniform int colorShift;
 
 out vec4 colorOut;
 
@@ -28,26 +29,33 @@ vec2 getTear(void) {
 	return texCoordsOut;
 }
 
-vec4 getInverse(vec4 color) {
-	return vec4(1.0f) - color;
+vec3 getInverse(vec3 color) {
+	return vec3(1.0f) - color;
 }
 
-vec4 getReducePalette(vec4 color) {
+vec3 getReducePalette(vec3 color) {
 	return round(color);;
 }
 
+vec3 getColorShift(vec3 color) {
+	if (colorShift == 1) return color.gbr;
+	else if (colorShift == 2) return color.brg;
+	else return color;
+}
+
 void main(void) {
-	vec4 colorTemp;
+	vec3 colorTemp;
 
 	if (useTex) {
-		if (tearFlag) colorTemp = texture (texSampler, getTear());
-		else colorTemp = texture (texSampler, texCoordsTrans);
+		if (tearFlag) colorTemp = (texture(texSampler, getTear())).rgb;
+		else colorTemp = (texture(texSampler, texCoordsTrans)).rgb;
 	}
 	else colorTemp.rgb = color;
 	
 	if (inverse) colorTemp = getInverse(colorTemp);
 	if (reducePalette) colorTemp = getReducePalette(colorTemp);
 	
-	colorTemp.a = alpha;
-	colorOut = colorTemp;
+	colorTemp = getColorShift(colorTemp);
+
+	colorOut = vec4(colorTemp, alpha);
 }

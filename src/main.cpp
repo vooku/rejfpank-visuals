@@ -223,6 +223,7 @@ int main (void) {
 	// MIDI init
 	if (!cMIDIControl.init()) {
 		std::cerr << "Error: Cannot initiate MIDI!" << std::endl;
+		system("PAUSE");
 		return -1;
 	}
 

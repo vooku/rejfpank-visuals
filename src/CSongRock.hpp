@@ -3,17 +3,17 @@
 * @date		2016
 */
 
-#ifndef _REJFPANK_CROCK
-#define _REJFPANK_CROCK
+#ifndef _REJFPANK_CSONGROCK
+#define _REJFPANK_CSONGROCK
 
 #include "CSong.hpp"
 #include "CBanner.hpp"
 #include "CLoadedObj.hpp"
 
-class CRock : public CSong {
+class CSongRock : public CSong {
 public:
-	CRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
-	~CRock(void);
+	CSongRock(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
+	~CSongRock(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 	void update(double time);
@@ -21,9 +21,9 @@ public:
 	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
 
 protected:
-	/// Helper funtion for CRock()
+	/// Helper funtion for CSongRock()
 	void shadersInit(void);
-	/// Helper funtion for CRock()
+	/// Helper funtion for CSongRock()
 	void modelsInit(void);
 
 	/// Helper function for midiIn()
@@ -50,4 +50,4 @@ protected:
 	int m_loopCtr;
 };
 
-#endif // !_REJFPANK_CROCK
+#endif // !_REJFPANK_CSONGROCK

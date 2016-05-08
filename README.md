@@ -16,7 +16,6 @@ The rest of the readme is mostly for myself.
 - revise count/n variables and constants
 - make multipass banner standalone object
 - add support for any axes in CCamera::placeOnCircle()
-- rename song classes
 
 ## Ideas
 - create an algorithm to tessellate a rectangle
@@ -38,6 +37,7 @@ The rest of the readme is mostly for myself.
 ## Known Issues
 - When connecting to AKAI MPX16, WinMM throws the "not enough memory" error. The MPX16 MIDI implementation sucks pretty hard though and in the end I won't be using it anyway.
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues
+- point light attenuation not behaving correctly
 
 ## Useful links
 - [Procedural textures inspiration](http://www.upvector.com/?section=Tutorials&subsection=Intro%20to%20Procedural%20Textures)

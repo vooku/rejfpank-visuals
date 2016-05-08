@@ -1,9 +1,9 @@
 #include "CController.hpp"
 #include <vector>
 #include "pgr/pgr.hpp"
-#include "CRock.hpp"
-#include "CSquirrel.hpp"
-#include "CDefinition.hpp"
+#include "CSongRock.hpp"
+#include "CSongSquirrel.hpp"
+#include "CSongDefinition.hpp"
 
 CController controller;
 
@@ -22,6 +22,8 @@ CController::~CController(void) {
 	}
 
 	delete m_skybox;
+	delete m_finBanner;
+	delete m_grainBanner;
 }
 
 void CController::shadersInit(void) {
@@ -58,6 +60,7 @@ void CController::shadersInit(void) {
 		m_bannerShaderProgram.tearNLocation			= glGetUniformLocation(m_bannerShaderProgram.program, "tearN");
 		m_bannerShaderProgram.tearBordersLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "tearBorders");
 		m_bannerShaderProgram.tearOffsetsLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "tearOffsets");
+		m_bannerShaderProgram.colorShiftLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "colorShift");
 		// Get input locations
 		m_bannerShaderProgram.posLocation		= glGetAttribLocation(m_bannerShaderProgram.program, "position");
 		m_bannerShaderProgram.texCoordsLocation	= glGetAttribLocation(m_bannerShaderProgram.program, "texCoords");
@@ -68,6 +71,7 @@ void CController::shadersInit(void) {
 void CController::modelsInit(void) {
 	m_skybox = new CSkybox(glm::vec3(0.0f), glm::vec3(100.0f), &m_skyboxShaderProgram);
 	m_grainBanner = new CBanner(&m_camera, &m_bannerShaderProgram, (m_state.ctrlMap[CTRL_4TO3] ? TEX_GEN_NOISE_4TO3 : TEX_GEN_NOISE));
+	m_finBanner = new CBanner(&m_camera, &m_bannerShaderProgram, (m_state.ctrlMap[CTRL_4TO3] ? TEX_GEN_FIN_4TO3 : TEX_GEN_FIN));
 }
 
 void CController::init(const int winWidth, const int winHeight) {
@@ -104,6 +108,8 @@ void CController::redraw(GLFWwindow * window) {
 	// all models in the song, incl. the skybox
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->redraw(PMatrix, VMatrix);
 	
+	if (m_state.ctrlMap[CTRL_FIN]) m_finBanner->draw(PMatrix, VMatrix);
+
 	// always last
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -121,13 +127,13 @@ void CController::nextSong(void) {
 
 	switch (m_songCtr) {
 		case 0:
-			m_song = new CSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 1:
-			m_song = new CRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 	}
 
@@ -152,6 +158,10 @@ void CController::update(void) {
 }
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+	if (m_songCtr == 0 && status == MIDI_NOTE_ON_CH10) {
+		if (note == MPX16_PAD16) m_state.ctrlMap[CTRL_FIN] = true;
+		else if (note == MPX16_PAD12) m_state.ctrlMap[CTRL_FIN] = false;
+	}
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->midiIn(status, note, velocity);
 	else std::cerr << "No song currently set, MIDI message discarded: " << status << " " << note << " " << velocity << std::endl;
 }

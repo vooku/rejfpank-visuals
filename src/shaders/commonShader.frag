@@ -47,16 +47,16 @@ void lightsInit(void) {
 		white.specular	= vec3(0.5f);
 	}
 	if (redFlag) {
-		red.position	= (VMatrix * vec4(1.0f, 0.0f, -1.0f, 0.0f)).xyz;
+		red.position	= (VMatrix * vec4(-1.0f, 0.0f, -1.0f, 0.0f)).xyz;
 		red.ambient		= vec3 (1.0f, 1.0f, 1.0f);
-		red.diffuse		= vec3 (0.5f, 0.0f, 0.0f);
+		red.diffuse		= vec3 (1.0f, 0.0f, 0.0f);
 		red.specular	= vec3 (1.5f, 0.0f, 0.0f);
 	}
 	if (blueFlag) {
 		blue.position	= (VMatrix * vec4(-1.0f, -1.0f, 1.0f, 0.0f)).xyz;
 		blue.ambient	= vec3 (1.0f, 1.0f, 1.0f);
-		blue.diffuse	= vec3 (0.5f, 0.0f, 0.5f);
-		blue.specular	= vec3 (1.0f, 0.0f, 1.0f);
+		blue.diffuse	= vec3 (0.0f, 0.0f, 1.0f);
+		blue.specular	= vec3 (0.0f, 0.0f, 1.5f);
 	}
 	if (pointFlag) {
 		point.position	= (/*VMatrix */ vec4(cameraPosition, 0.0f)).xyz;

@@ -3,17 +3,17 @@
 * @date		2016
 */
 
-#ifndef _REJFPANK_CSQUIRREL
-#define _REJFPANK_CSQUIRREL
+#ifndef _REJFPANK_CSONGSQUIRREL
+#define _REJFPANK_CSONGSQUIRREL
 
 #include "CSong.hpp"
 #include "CObjectPix.hpp"
 #include "CBanner.hpp"
 
-class CSquirrel : public CSong {
+class CSongSquirrel : public CSong {
 public:
-	CSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
-	~CSquirrel(void);
+	CSongSquirrel(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram);
+	~CSongSquirrel(void);
 
 	void redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 	void update(double time);
@@ -21,9 +21,9 @@ public:
 	void midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity);
 
 protected:
-	/// Helper funtion for CSquirrel()
+	/// Helper funtion for CSongSquirrel()
 	void shadersInit(void);
-	/// Helper funtion for CSquirrel()
+	/// Helper funtion for CSongSquirrel()
 	void modelsInit(void);
 	/// Helper function for midiIn()
 	void nextBanner(void);
@@ -48,4 +48,4 @@ protected:
 	TCommonShaderProgram * m_bannerShaderProgram;
 };
 
-#endif // !_REJFPANK_CSQUIRREL
+#endif // !_REJFPANK_CSONGSQUIRREL

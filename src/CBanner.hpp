@@ -19,7 +19,7 @@ public:
 	~CBanner(void);
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
-	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette);
+	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette, const int colorShift = 0);
 
 	bool setColor(const glm::vec3 & color);
 	void tear(void);
@@ -32,6 +32,8 @@ protected:
 	bool m_inverse;
 	bool m_reducePalette;
 	bool m_tear;
+
+	int m_colorShift;
 
 	int m_tearN;
 	float m_tearBorders[SCREEN_TEARS];

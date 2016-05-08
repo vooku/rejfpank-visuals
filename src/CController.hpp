@@ -45,11 +45,12 @@ protected:
 	void modelsInit(void);
 
 	CSong * m_song;
-	unsigned int m_songCtr;
+	unsigned int m_songCtr; // index of the next song to be loaded
 
 	CSkybox * m_skybox;
 	TCommonShaderProgram m_skyboxShaderProgram;
 	CBanner * m_grainBanner;
+	CBanner * m_finBanner;
 	TCommonShaderProgram m_bannerShaderProgram;
 };
 

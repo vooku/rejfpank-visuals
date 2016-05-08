@@ -18,6 +18,7 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 	  m_camera(camera),
 	  m_inverse(false),
 	  m_reducePalette(false),
+	  m_colorShift(0),
 	  m_tear(false),
 	  m_tearN(0) {
 
@@ -116,9 +117,10 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette) {
+void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette, const int colorShift) {
 	m_inverse = inverse;
 	m_reducePalette = reducePalette;
+	m_colorShift = colorShift;
 	this->draw(PMatrix, VMatrix);
 }
 
@@ -136,4 +138,5 @@ void CBanner::sendUniforms(void) {
 	glUniform1i(m_shaderProgram->tearNLocation, m_tearN);
 	glUniform1fv(m_shaderProgram->tearBordersLocation, m_tearN, m_tearBorders);
 	glUniform1fv(m_shaderProgram->tearOffsetsLocation, m_tearN + 1, m_tearOffsets);
+	glUniform1i(m_shaderProgram->colorShiftLocation, m_colorShift);
 }

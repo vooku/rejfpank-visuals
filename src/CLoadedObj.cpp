@@ -151,6 +151,7 @@ void CLoadedObj::fadeToBlack(void) {
 	glm::vec3 black = glm::vec3(0.0f);
 	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
 	m_material.diffuse = black;
+	m_material.shininess = 0.5f;
 }
 
 void CLoadedObj::sendUniforms(void) {

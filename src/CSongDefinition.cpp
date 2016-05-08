@@ -3,17 +3,18 @@
  * @date	2016
  */
 
-#include "CDefinition.hpp"
+#include "CSongDefinition.hpp"
 #include "pgr/pgr.hpp"
 
-CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
+CSongDefinition::CSongDefinition(CCamera * camera, TControlState * state, CSkybox * skybox, TCommonShaderProgram * bannerShaderProgram)
 	: CSong(camera, state, skybox),
 	  m_bannerShaderProgram(bannerShaderProgram),
-	  m_laserTriggerTime(0.0),
-	  m_kickCount(0) {
+	  m_colorShift(0) {
 
 	m_innerMap = new bool[DEF_COUNT];
 	for (int i = 0; i < DEF_COUNT; i++) m_innerMap[i] = false;
+
+	for (int i = 0; i < 4; i++) m_triggerTimes[i] = 0.0;
 
 	this->multipassInit();
 	this->shadersInit();
@@ -22,7 +23,7 @@ CDefinition::CDefinition(CCamera * camera, TControlState * state, CSkybox * skyb
 	std::cout << "loaded song: Definice" << std::endl;
 }
 
-CDefinition::~CDefinition(void) {
+CSongDefinition::~CSongDefinition(void) {
 	for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) delete m_honeycombs[i];
 	delete[] m_honeycombs;
 
@@ -41,7 +42,7 @@ CDefinition::~CDefinition(void) {
 	std::cout << "destroyed song: Definice" << std::endl;
 }
 
-void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CSongDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_multipass) {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferObject);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -58,9 +59,9 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		for (int i = 0; i < DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N; i++) {
 			glUseProgram(m_shaderPrograms[0].program);
 			glUniform1f(m_shaderPrograms[0].whiteFlagLocation, false);
-			glUniform1f(m_shaderPrograms[0].redFlagLocation, false);
-			glUniform1f(m_shaderPrograms[0].blueFlagLocation, false);
-			glUniform1f(m_shaderPrograms[0].pointFlagLocation, m_innerMap[DEF_LASER]);
+			glUniform1f(m_shaderPrograms[0].redFlagLocation, m_innerMap[DEF_RED]);
+			glUniform1f(m_shaderPrograms[0].blueFlagLocation, m_innerMap[DEF_BLUE]);
+			glUniform1f(m_shaderPrograms[0].pointFlagLocation, m_innerMap[DEF_POINT]);
 			glUniform3fv(m_shaderPrograms[0].cameraPositionLocation, 1, glm::value_ptr(m_camera->m_position));
 			m_honeycombs[i]->draw(PMatrix, VMatrix);
 		}
@@ -69,7 +70,6 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_innerMap[DEF_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[DEF_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
 	if (m_innerMap[DEF_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
-	if (m_innerMap[DEF_BANNER4]) m_banners[4]->draw(PMatrix, VMatrix);
 
 	glDisable(GL_BLEND);
 
@@ -79,11 +79,11 @@ void CDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[DEF_INVERSE], m_innerMap[DEF_REDUCE]);
+		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[DEF_INVERSE], m_innerMap[DEF_REDUCE], m_colorShift);
 	}
 }
 
-void CDefinition::update(double time) {
+void CSongDefinition::update(double time) {
 	float halftime = BEAT_LENGTH(175) / 32.0f;
 	float fulltime = BEAT_LENGTH(175) / 16.0f;
 	float triplet  = BEAT_LENGTH(175) / 3.0f;
@@ -107,31 +107,33 @@ void CDefinition::update(double time) {
 		m_innerMap[DEF_BANNER2] = false;
 		m_innerMap[DEF_INVERSE] = false;
 
-			 if (time - m_sweepTriggerTime <= triplet) m_innerMap[DEF_BANNER0] = true;
-		else if (time - m_sweepTriggerTime <= 2 * triplet) {
+			 if (time - m_triggerTimes[0] <= triplet) m_innerMap[DEF_BANNER0] = true;
+		else if (time - m_triggerTimes[0] <= 2 * triplet) {
 				 m_innerMap[DEF_BANNER0] = true;
 				 m_innerMap[DEF_INVERSE] = true;
 			 }
-		else if (time - m_sweepTriggerTime <= 3 * triplet) m_innerMap[DEF_BANNER1] = true;
-		else if (time - m_sweepTriggerTime <= 4 * triplet) {
+		else if (time - m_triggerTimes[0] <= 3 * triplet) m_innerMap[DEF_BANNER1] = true;
+		else if (time - m_triggerTimes[0] <= 4 * triplet) {
 			m_innerMap[DEF_BANNER1] = true;
 			m_innerMap[DEF_INVERSE] = true;
 		}
-		else if (time - m_sweepTriggerTime <= 5 * triplet) m_innerMap[DEF_BANNER2] = true;
-		else if (time - m_sweepTriggerTime <= 6 * triplet) {
+		else if (time - m_triggerTimes[0] <= 5 * triplet) m_innerMap[DEF_BANNER2] = true;
+		else if (time - m_triggerTimes[0] <= 6 * triplet) {
 			m_innerMap[DEF_BANNER2] = true;
 			m_innerMap[DEF_INVERSE] = true;
 		}
 		else m_innerMap[DEF_SWEEP] = false;
 	}
 
-	if (m_innerMap[DEF_LASER]) if (time - m_laserTriggerTime > fulltime * 4) m_innerMap[DEF_LASER] = false;
+	if (m_innerMap[DEF_POINT]) if (time - m_triggerTimes[1] > fulltime * 4) m_innerMap[DEF_POINT] = false;
+	if (m_innerMap[DEF_RED]) if (time - m_triggerTimes[2] > fulltime * 4) m_innerMap[DEF_RED] = false;
+	if (m_innerMap[DEF_BLUE]) if (time - m_triggerTimes[3] > fulltime * 4) m_innerMap[DEF_BLUE] = false;
 
 	m_camera->placeOnCircle(CAMERA_ENCIRCLE_SPEED * time, m_r + m_camOffset, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 
-void CDefinition::shadersInit(void) {
+void CSongDefinition::shadersInit(void) {
 	std::vector<GLuint> shaders;
 	m_shaderPrograms = new TCommonShaderProgram[1];
 
@@ -164,7 +166,7 @@ void CDefinition::shadersInit(void) {
 	shaders.clear();
 }
 
-void CDefinition::modelsInit(void) {
+void CSongDefinition::modelsInit(void) {
 	// skybox
 	m_skybox->m_colorMultiplier = 0.2f;
 
@@ -206,21 +208,20 @@ void CDefinition::modelsInit(void) {
 	}
 
 	// banners
-	m_bannersN = 5;
+	m_bannersN = 4;
 	m_banners = new CBanner * [m_bannersN];
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_1_4TO3 : TEX_DEF_1));
 	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_2_4TO3 : TEX_DEF_2));
 	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_DEF_3_4TO3 : TEX_DEF_3));
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
-	m_banners[4] = new CBanner(m_camera, m_bannerShaderProgram, (m_state->ctrlMap[CTRL_4TO3] ? TEX_GEN_FIN_4TO3 : TEX_GEN_FIN)); // fin
 }
 
-void CDefinition::sweepBanners(const double time) {
+void CSongDefinition::sweepBanners(const double time) {
 	m_innerMap[DEF_SWEEP] = true;
-	m_sweepTriggerTime = time;
+	m_triggerTimes[0] = time;
 }
 
-void CDefinition::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
+void CSongDefinition::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	double time = glfwGetTime();
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
@@ -246,30 +247,28 @@ void CDefinition::midiIn(const unsigned int status, const unsigned int note, con
 		case MPX16_PAD08: // block tech 4
 			break;
 		case MPX16_PAD09: // laser
-			m_laserTriggerTime = time;
-			m_innerMap[DEF_LASER] = true;
+			m_triggerTimes[1] = time;
+			m_innerMap[DEF_POINT] = true;
 			break;
 		case MPX16_PAD10: // laser
-			m_laserTriggerTime = time;
-			m_innerMap[DEF_LASER] = true;
+			m_triggerTimes[1] = time;
+			m_innerMap[DEF_POINT] = true;
 			break;
 		case MPX16_PAD11: // block definition
 			break;
 		case MPX16_PAD12: // definition
 			break;
 		case MPX16_PAD13:  // lazer + 2
-			m_laserTriggerTime = time;
-			m_innerMap[DEF_LASER] = true;
+			m_triggerTimes[1] = time;
+			m_innerMap[DEF_POINT] = true;
 			break;
 		case MPX16_PAD14: // lazer + 4
-			m_laserTriggerTime = time;
-			m_innerMap[DEF_LASER] = true;
+			m_triggerTimes[1] = time;
+			m_innerMap[DEF_POINT] = true;
 			break;
-		case MPX16_PAD15: // block mlp
-			m_innerMap[DEF_BANNER4] = false;
+		case MPX16_PAD15:
 			break;
-		case MPX16_PAD16: // mlp
-			m_innerMap[DEF_BANNER4] = true;
+		case MPX16_PAD16:
 			break;
 		default:
 			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
@@ -291,22 +290,34 @@ void CDefinition::midiIn(const unsigned int status, const unsigned int note, con
 			m_innerMap[DEF_BANNER1] = true;
 			m_banners[1]->m_triggerTime = time;
 			break;
+		case MIDI_DRUM_SNARE2: // nothing, used just for stronger transient
+			break;
 		case MIDI_DRUM_HIHAT_OPEN:
 			m_innerMap[DEF_BANNER2] = true;
 			m_banners[2]->m_triggerTime = time;
 			break;
-		//case MIDI_DRUM_TOM_LOW1:
-		//	break;
-		//case MIDI_DRUM_TOM_MID1:
-		//	break;
+		case MIDI_DRUM_HIHAT_CLOSED:
+			m_colorShift = (m_colorShift + 1) % 3;
+			break;
+		case MIDI_DRUM_TOM_LOW1:
+			m_triggerTimes[2] = time;
+			m_innerMap[DEF_RED] = true;
+			break;
+		case MIDI_DRUM_TOM_MID1:
+			m_triggerTimes[3] = time;
+			m_innerMap[DEF_BLUE] = true;
+			break;
 		//case MIDI_DRUM_TOM_HIGH1: // laser tom
 		//	break;
-		//case MIDI_DRUM_CYMBAL_CRASH1:
-		//	break;
-		//case MIDI_DRUM_CYMBAL_SPLASH:
-		//	break;
-		//case MIDI_DRUM_CYMBAL_RIDE1:
-		//	break;
+		case MIDI_DRUM_CYMBAL_CRASH1:
+			m_colorShift = (m_colorShift + 1) % 3;
+			break;
+		case MIDI_DRUM_CYMBAL_SPLASH:
+			m_colorShift = (m_colorShift + 1) % 3;
+			break;
+		case MIDI_DRUM_CYMBAL_RIDE1:
+			m_colorShift = (m_colorShift + 1) % 3;
+			break;
 		default:
 			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;
 			break;

@@ -14,7 +14,7 @@
 
 #define MIDI_LONG_BUFFER_SIZE 1024
 
-#define SELECT_MIDI_PORT_MAN true // for testing purposes
+#define SELECT_MIDI_PORT_MAN false // for testing purposes
 #define SELECT_MIDI_PORT_DEFAULT 11
 #define SELECT_MONITOR_MAN false // for testing purposes
 #define SELECT_MONITOR_DEFAULT 2
@@ -51,7 +51,7 @@
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 
 #define SONG_COUNT 3
-#define FIRST_SONG 0 // for testing
+#define FIRST_SONG 1 // for testing
 
 #define BANNER_PARAM_NO_TEX "no_tex"
 #define BANNER_PARAM_NO_TEX_BLACK "no_tex_black"
@@ -111,7 +111,7 @@ const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {
 /// controls in controlState
 enum {
 	CTRL_FULLSCREEN, CTRL_INIT, CTRL_4TO3,
-	CTRL_SONG_SET,
+	CTRL_SONG_SET, CTRL_FIN,
 	CTRL_COUNT
 };
 
