@@ -36,10 +36,6 @@ protected:
 	std::vector<glm::vec3> m_offsets;
 	std::vector<int> m_offsetsIndices;
 
-	struct TPixel {
-		unsigned char r, g, b, a;
-	};
-
 	struct TBlock {
 		glm::vec3 color;
 		glm::vec3 position;

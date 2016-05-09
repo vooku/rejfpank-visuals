@@ -11,7 +11,7 @@
  * @date	2016
  */
 
-#include "CMIDIControl.hpp" // has to be included before glfw!
+#include "CMIDIController.hpp" // has to be included before glfw!
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -194,7 +194,10 @@ GLFWwindow * createWindow(void) {
 	if (count == 1) return glfwCreateWindow(INIT_WIN_WIDTH, INIT_WIN_HEIGHT, WIN_TITLE, NULL, NULL);
 
 	std::cout << "Available monitors:" << std::endl;
-	for (int i = 0; i < count; i++) std::cout << "\t" << i + 1 << ":\t" << glfwGetMonitorName(monitors[i]) << std::endl;
+	for (int i = 0; i < count; i++) {
+		const GLFWvidmode * mode = glfwGetVideoMode(monitors[i]);
+		std::cout << "\t" << i + 1 << ":\t" << glfwGetMonitorName(monitors[i]) << "\t" << mode->width << "x" << mode->height << std::endl;
+	}
 
 	int selectedMonitor = -1;
 	if (SELECT_MONITOR_MAN) {
@@ -221,7 +224,7 @@ GLFWwindow * createWindow(void) {
 
 int main (void) {
 	// MIDI init
-	if (!cMIDIControl.init()) {
+	if (!MIDIController.init()) {
 		std::cerr << "Error: Cannot initiate MIDI!" << std::endl;
 		system("PAUSE");
 		return -1;

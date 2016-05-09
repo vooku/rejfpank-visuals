@@ -3,21 +3,21 @@
  * @date	2016
  */
 
-#ifndef _REJFPANK_CLOADEDOBJ
-#define _REJFPANK_CLOADEDOBJ
+#ifndef _REJFPANK_CMODEL
+#define _REJFPANK_CMODEL
 
 #include "CDrawable.hpp"
 #include "TCommonShaderProgram.hpp"
 
-class CLoadedObj : public CDrawable {
+class CModel : public CDrawable {
 public:
-	CLoadedObj(const char * filename,
+	CModel(const char * filename,
 			   const glm::vec3 & position,
 			   const glm::vec3 & scale,
 			   TCommonShaderProgram * shaderProgram,
 			   const char * texname = NULL,
 			   const bool randomizeUV = false,
-			   const CLoadedObj * dataObj = NULL,
+			   const CModel * dataObj = NULL,
 			   const unsigned int materialIdx = 0,
 			   const float & alpha = 1.0f);
 
@@ -34,7 +34,7 @@ protected:
 	bool m_enableDraw; ///< whether the object was properly initialized (loaded)
 	bool m_containsData;
 	bool m_useTex;
-	const CLoadedObj * m_dataObj;
+	const CModel * m_dataObj;
 
 	struct TMaterial {
 		unsigned int index; ///< Material hinted from outside
@@ -48,4 +48,4 @@ protected:
 	} m_material;
 };
 
-#endif // !_REJFPANK_CLOADEDOBJ
+#endif // !_REJFPANK_CMODEL

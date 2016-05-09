@@ -172,13 +172,13 @@ void CSongDefinition::modelsInit(void) {
 
 	// honeycombs
 	m_honeyDataN = 4;
-	m_honeyData = new CLoadedObj * [m_honeyDataN];
-	m_honeyData[0] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MOD, true);
-	m_honeyData[1] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MEANEYE, false);
-	m_honeyData[2] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_IMPACT, true);
-	m_honeyData[3] = new CLoadedObj(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_FMOON, true);
+	m_honeyData = new CModel * [m_honeyDataN];
+	m_honeyData[0] = new CModel(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MOD, true);
+	m_honeyData[1] = new CModel(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_MEANEYE, false);
+	m_honeyData[2] = new CModel(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_IMPACT, true);
+	m_honeyData[3] = new CModel(MODEL_DEF_HONEY, glm::vec3(0.0f), glm::vec3(1.0f), &m_shaderPrograms[0], TEX_DEF_FMOON, true);
 
-	m_honeycombs = new CLoadedObj * [DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N];
+	m_honeycombs = new CModel * [DEF_HONEYCOMBS_N_PER_LINE * DEF_HONEYCOMBS_LINES_N];
 	float phi = 0.0f;
 	float phiStep = M_PI / (DEF_HONEYCOMBS_N_PER_LINE / 2.0f);
 	m_r = DEF_HONEYCOMBS_N_PER_LINE / 4.0f + DEF_HONEYCOMBS_N_PER_LINE / 16.0f;
@@ -193,7 +193,7 @@ void CSongDefinition::modelsInit(void) {
 		float actualXOffset = xOffset * xFactor;
 		float phiOffset = (M_PI / DEF_HONEYCOMBS_N_PER_LINE) * phiFactor;
 		
-		m_honeycombs[i] = new CLoadedObj(MODEL_DEF_HONEY,
+		m_honeycombs[i] = new CModel(MODEL_DEF_HONEY,
 										 glm::vec3(actualXOffset, m_r * glm::sin(phi + phiOffset), m_r * glm::cos(phi + phiOffset) + zOffset),
 										 glm::vec3(1.0f),
 										 &m_shaderPrograms[0],

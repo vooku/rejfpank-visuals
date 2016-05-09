@@ -8,7 +8,7 @@
 
 #include "CSong.hpp"
 #include "CBanner.hpp"
-#include "CLoadedObj.hpp"
+#include "CModel.hpp"
 
 class CSongRock : public CSong {
 public:
@@ -40,8 +40,8 @@ protected:
 	};
 
 	// own objects
-	CLoadedObj ** m_legoData;
-	CLoadedObj ** m_lego;
+	CModel ** m_legoData;
+	CModel ** m_lego;
 	CBanner ** m_banners;
 
 	// ptrs to objects from the controller

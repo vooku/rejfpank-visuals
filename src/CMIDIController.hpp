@@ -3,8 +3,8 @@
  * @date	2016
  */
 
-#ifndef _REJFPANK_CMIDICONTROL
-#define _REJFPANK_CMIDICONTROL
+#ifndef _REJFPANK_CMIDICONTROLLER
+#define _REJFPANK_CMIDICONTROLLER
 #include <windows.h>
 
 void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
@@ -13,12 +13,12 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
  * @class CMIDICotrol
  * @brief Class to control the MIDI input.
  *
- * CMIDIControl makes use of the WinMM api and therefore is platform dependent. The class doesn't include the callback for received messages.
+ * CMIDIController makes use of the WinMM api and therefore is platform dependent. The class doesn't include the callback for received messages.
  */
-class CMIDIControl {
+class CMIDIController {
 public:
-	CMIDIControl(void);
-	~CMIDIControl(void);
+	CMIDIController(void);
+	~CMIDIController(void);
 	
 	bool init(void);
 
@@ -35,6 +35,6 @@ private:
 	char * m_midiLongBuffer;
 	MMRESULT m_res;
 };
-extern CMIDIControl cMIDIControl;
+extern CMIDIController MIDIController;
 
-#endif // !_REJFPANK_CMIDICONTROL
+#endif // !_REJFPANK_CMIDICONTROLLER

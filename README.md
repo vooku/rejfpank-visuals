@@ -31,7 +31,6 @@ The rest of the readme is mostly for myself.
 - switch to Uniform Buffer Object
 - multipass postproduction FX
 	+ DES encryption
-	+ color shift
 	+ diffusion
 
 ## Known Issues
@@ -56,4 +55,3 @@ The rest of the readme is mostly for myself.
 ## Thanks
 - Thanks to [Floris 'floriuszzz' Smit](http://www.tf3dm.com/3d-model/lego-all-sizes-colors-94903.html) whose Lego Brick 3D models I'm using
 - Thanks to [Gurkan Te](http://www.shroomarts.blogspot.cz) for the squirrel illustrations. As they are not publicly licensed, they are not part of this repository, sorry.
-

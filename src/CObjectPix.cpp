@@ -77,9 +77,9 @@ bool CObjectPix::loadImg(const char * filename) {
 	// move the blocks so the center is in the middle (the - 0.5f is just magic)
 	glm::vec3 offset = glm::vec3((-width / 2.0f - 0.5f) / larger, (-height / 2.0f - 0.5f) / larger, 0.0f);
 
-	std::vector<TPixel> pixels;
+	std::vector<glm::vec4> pixels;
 	for (unsigned int i = 0; i < width * height * bytesPerPixel; i += bytesPerPixel) {
-		TPixel newPixel;
+		glm::vec4 newPixel;
 		newPixel.r = data[i + 0];
 		newPixel.g = data[i + 1];
 		newPixel.b = data[i + 2];

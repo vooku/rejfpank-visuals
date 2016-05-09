@@ -7,7 +7,7 @@
 #define _REJFPANK_CSONGDEFINITION
 
 #include "CSong.hpp"
-#include "CLoadedObj.hpp"
+#include "CModel.hpp"
 #include "CBanner.hpp"
 
 class CSongDefinition : public CSong {
@@ -37,9 +37,9 @@ protected:
 	};
 
 	// own objects
-	CLoadedObj ** m_honeyData;
+	CModel ** m_honeyData;
 	int m_honeyDataN;
-	CLoadedObj ** m_honeycombs;
+	CModel ** m_honeycombs;
 	CBanner ** m_banners;
 	int m_bannersN;
 

@@ -3,7 +3,7 @@
  * @date	2016
  */
 
-#include "CMIDIControl.hpp"
+#include "CMIDIController.hpp"
 #include "data.hpp"
 #include "CController.hpp"
 
@@ -11,28 +11,28 @@
 #include <string>
 #include <stdlib.h>
 
-CMIDIControl cMIDIControl;
+CMIDIController MIDIController;
 
-CMIDIControl::CMIDIControl(void) 
+CMIDIController::CMIDIController(void) 
 	: m_nPorts (midiInGetNumDevs()),
 	  m_selectedPort (0) {
 	m_midiLongBuffer = new char[MIDI_LONG_BUFFER_SIZE];
 }
 
-CMIDIControl::~CMIDIControl() {
+CMIDIController::~CMIDIController() {
 	midiInUnprepareHeader(m_inHandle, &m_midiHdr, sizeof(m_midiHdr));
 	midiInReset(m_inHandle);
 	midiInClose(m_inHandle);
 	delete[] m_midiLongBuffer;
 }
 
-bool CMIDIControl::init(void) {
+bool CMIDIController::init(void) {
 	if (!this->listPorts()) return false;
 	this->selectPort();
 	return this->openPort();
 }
 
-bool CMIDIControl::listPorts(void) {
+bool CMIDIController::listPorts(void) {
 	std::cout << "\nAvailable MIDI ports:" << std::endl;
 	if (m_nPorts == 0) {
 		std::cerr << "Error: No MIDI ports available!" << std::endl;
@@ -56,7 +56,7 @@ bool CMIDIControl::listPorts(void) {
 	return true;
 }
 
-void CMIDIControl::selectPort(void) {
+void CMIDIController::selectPort(void) {
 	if (SELECT_MIDI_PORT_MAN) {
 		std::string data;
 		do {
@@ -115,7 +115,7 @@ void CALLBACK midiInCallback(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, D
 	}
 }
 
-void CMIDIControl::manageMMError(const char * comment) {
+void CMIDIController::manageMMError(const char * comment) {
 	TCHAR errorText[256];
 	midiInGetErrorText(m_res, errorText, 255);
 	#if defined (UNICODE) || defined (_UNICODE)
@@ -125,7 +125,7 @@ void CMIDIControl::manageMMError(const char * comment) {
 	#endif
 }
 
-bool CMIDIControl::openPort(void) {
+bool CMIDIController::openPort(void) {
 	m_res = midiInOpen(&m_inHandle, m_selectedPort, (DWORD_PTR) &midiInCallback, NULL, CALLBACK_FUNCTION);
 	if (m_res != MMSYSERR_NOERROR) {
 		manageMMError("Cannot open port!");

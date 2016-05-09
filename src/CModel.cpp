@@ -1,4 +1,4 @@
-#include "CLoadedObj.hpp"
+#include "CModel.hpp"
 #include <fstream>
 #include <string>
 #include <cstring>
@@ -9,15 +9,15 @@
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 
-CLoadedObj::CLoadedObj(const char * filename,
-					   const glm::vec3 & position,
-					   const glm::vec3 & scale,
-					   TCommonShaderProgram * shaderProgram,
-					   const char * texname,
-					   const bool randomizeUV,
-					   const CLoadedObj * dataObj,
-					   const unsigned int materialIdx,
-					   const float & alpha)
+CModel::CModel(const char * filename,
+			   const glm::vec3 & position,
+			   const glm::vec3 & scale,
+			   TCommonShaderProgram * shaderProgram,
+			   const char * texname,
+			   const bool randomizeUV,
+			   const CModel * dataObj,
+			   const unsigned int materialIdx,
+			   const float & alpha)
 	: CDrawable(position, scale, shaderProgram, alpha),
 	  m_dataObj(dataObj) {
 
@@ -26,7 +26,7 @@ CLoadedObj::CLoadedObj(const char * filename,
 	if (dataObj == NULL) {
 		m_enableDraw = this->loadObj(filename, randomizeUV);
 		if (!m_enableDraw) {
-			std::cerr << "Error: Cannot load .obj file: " << filename << std::endl;
+			std::cerr << "Error: Cannot load model: " << filename << std::endl;
 			return;
 		}
 
@@ -40,7 +40,7 @@ CLoadedObj::CLoadedObj(const char * filename,
 
 		m_dataObj = this;
 		m_containsData = true;
-		std::cout << "loaded .obj file: " << filename << std::endl;
+		std::cout << "loaded model: " << filename << std::endl;
 	}
 	else {
 		m_useTex = dataObj->m_useTex;
@@ -55,7 +55,7 @@ CLoadedObj::CLoadedObj(const char * filename,
 /** Load mesh using assimp library
  * @param filename [in] file to open/load
  */
-bool CLoadedObj::loadObj(const char * filename, const bool randomizeUV) {
+bool CModel::loadObj(const char * filename, const bool randomizeUV) {
 	Assimp::Importer importer;
 
 	importer.SetPropertyInteger(AI_CONFIG_PP_PTV_NORMALIZE, 1); // normalize the model, makes scaling easier
@@ -132,7 +132,7 @@ bool CLoadedObj::loadObj(const char * filename, const bool randomizeUV) {
 	return true;
 }
 
-void CLoadedObj::setMaterials(const char * filename) {
+void CModel::setMaterials(const char * filename) {
 	glm::vec3 color;
 	if (strstr(filename, "lego") != NULL)
 		color = legoBrickColors[m_material.index % LEGO_BRICK_COLORS_COUNT];
@@ -147,14 +147,14 @@ void CLoadedObj::setMaterials(const char * filename) {
 	m_material.shininess = MATERIAL_LEGO_SHININES;
 }
 
-void CLoadedObj::fadeToBlack(void) {
+void CModel::fadeToBlack(void) {
 	glm::vec3 black = glm::vec3(0.0f);
 	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
 	m_material.diffuse = black;
 	m_material.shininess = 0.5f;
 }
 
-void CLoadedObj::sendUniforms(void) {
+void CModel::sendUniforms(void) {
 	glUseProgram(m_shaderProgram->program);
 
 	glUniformMatrix4fv(m_shaderProgram->PVMMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.PVMMatrix));
@@ -169,7 +169,7 @@ void CLoadedObj::sendUniforms(void) {
 	glUniform1f(m_shaderProgram->useTexLocation, m_useTex);
 }
 
-void CLoadedObj::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
+void CModel::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (!m_enableDraw) return;
 
 	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
