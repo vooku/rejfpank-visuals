@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CObject">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAACAAAAIAAAAIAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CObject.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDrawable">
+    <Position X="0.75" Y="3.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="CDrawable::TMeshGeometry">
+        <TypeIdentifier>
+          <NewMemberFileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CDrawable.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="CDrawable::TTempMatrices">
+        <TypeIdentifier>
+          <NewMemberFileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CDrawable.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAUAAEACBACCCAoIQAAACAAAAAAAAAAQAAAAEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CDrawable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCamera">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABEAAIAAACAAAAUAAAgIAROAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CCamera.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObjectPix">
+    <Position X="0.75" Y="12" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="CObjectPix::TBlock">
+        <TypeIdentifier>
+          <NewMemberFileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CObjectPix.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgCAAAAACIBAICAAAAAAAAIAACAAAIAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CObjectPix.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSkybox">
+    <Position X="4.75" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAACAAAIAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSkybox.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBanner">
+    <Position X="7" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAMCAQIIAgAAAEIIACAAgAAAAAAgsAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CBanner.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CModel">
+    <Position X="2.75" Y="12" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="CModel::TMaterial">
+        <TypeIdentifier>
+          <NewMemberFileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CModel.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAACAAACACAIAgAEAAAQAAAAAQAAIQAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CModel.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

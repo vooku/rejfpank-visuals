@@ -31,14 +31,6 @@ protected:
 	/// Helper function for update()
 	void replaceLoop(const int dir);
 
-	enum {
-		ROCK_CAM_FORWARD, ROCK_CAM_BACKWARD, ROCK_CAM_Q, ROCK_CAM_E,
-		ROCK_BANNER0, ROCK_BANNER1, ROCK_BANNER2,
-		ROCK_BLACK,
-		ROCK_KICK1, ROCK_HIHAT_CLOSED, ROCK_PLUCK,
-		ROCK_COUNT
-	};
-
 	// own objects
 	CModel ** m_legoData;
 	CModel ** m_lego;

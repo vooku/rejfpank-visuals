@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CObject" Collapsed="true">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAACAAAAIAAAAIAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CObject.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CDrawable" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAUAAEACBACCCAoIQAAACAAAAAAAAAAQAAAAEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CDrawable.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCamera" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABEAAIAAACAAAAUAAAgIAROAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CCamera.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CModel" Collapsed="true">
+    <Position X="2.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAACAAACACAIAgAEAAAQAAAAAQAAIQAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CModel.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObjectPix" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgCAAAAACIBAICAAAAAAAAIAACAAAIAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CObjectPix.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSkybox" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAACAAAIAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSkybox.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBanner" Collapsed="true">
+    <Position X="6" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAMCAQIIAgAAAEIIACAAgAAAAAAgsAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CBanner.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSong" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAHAIMBQEAAAAAAAAAAEEACGAAIAAAEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSong.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSongDefinition" Collapsed="true">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAECCAIBQAAAABAgQAEACEAAAABAgAEEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSongDefinition.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSongRock" Collapsed="true">
+    <Position X="2.5" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAAQQAAAAAAIBQAAAAAAAAAEEAkCAAABACAAEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSongRock.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSongSquirrel" Collapsed="true">
+    <Position X="4.25" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgAIADAAAAAAAIBQAAAAAAAQAGAAEQAAABAgAhEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CSongSquirrel.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CController" Collapsed="true">
+    <Position X="0.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAQAMAAhCIIBQAAAAAIACAEAAEIAAAAIAAAEAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CController.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMIDIController" Collapsed="true">
+    <Position X="2.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAACAAAAAAEAAAAAAEAAIACADAoAAAQAGAAAAAA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\CMIDIController.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TCommonShaderProgram" Collapsed="true">
+    <Position X="0.75" Y="8.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAQEQoACAIAAAQQACAAoHgEkEAIAAAAAQAUAAAhAE=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\TCommonShaderProgram.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TControlState" Collapsed="true">
+    <Position X="3.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAEAAAAAAAAABAAAAAAAAAEA=</HashCode>
+      <FileName>D:\ownCloud\Documents\BIBAK\rejfpank-visuals\src\TControlState.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

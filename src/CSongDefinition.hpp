@@ -28,14 +28,6 @@ protected:
 
 	void sweepBanners(const double time);
 
-	enum {
-		DEF_BANNER0, DEF_BANNER1, DEF_BANNER2,
-		DEF_BLUE, DEF_RED, DEF_POINT,
-		DEF_INVERSE, DEF_REDUCE, DEF_SWEEP,
-		DEF_BACKGROUND,
-		DEF_COUNT
-	};
-
 	// own objects
 	CModel ** m_honeyData;
 	int m_honeyDataN;
