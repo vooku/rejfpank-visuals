@@ -215,8 +215,7 @@ GLuint createTexture(const std::string &fileName, bool mipmap) {
 		return 0;
 	}
 	// create mipmaps
-	if (mipmap)
-		glGenerateMipmap(GL_TEXTURE_2D);
+	if (mipmap) glGenerateMipmap(GL_TEXTURE_2D);
 	// unbind the texture (just in case someone will mess up with texture calls later)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CHECK_GL_ERROR();

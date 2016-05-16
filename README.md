@@ -37,19 +37,14 @@ The rest of the readme is mostly for myself.
 ## Known Issues
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues
 - point light attenuation not behaving correctly
+- minor memory leaks
 
 ## Useful links
 - [Procedural textures inspiration](http://www.upvector.com/?section=Tutorials&subsection=Intro%20to%20Procedural%20Textures)
-- [Windows MIDI reference](https://msdn.microsoft.com/en-us/library/windows/desktop/dd798495(v=vs.85).aspx)
-- [MIDI notes reference](http://www.midimountain.com/midi/midi_status.htm)
-- [openFrameworks](http://openframeworks.cc/)
 - [OpenGL 4.4 blend modes](http://www.slideshare.net/Mark_Kilgard/blend-modes-for-opengl)
 - [Imaging algorithms inspiration](http://www.tannerhelland.com/programming-directory/)
 
 ## Similar stuff
-- [OpenTZT](http://opentzt.sourceforge.net/) — VJ tool based on DirectX, also receives MIDI
-- [midi2opengl](http://chancesend.com/2004/12/midi-2-opengl-visualization/) — Similar concept developed for the Oxygen8 keyboard controller. The site is cluttered with dead links and the project seems to be dead since it's publication in 2004.
-- [MIDI.live](http://www.zaposerver.net/projects/midilive/files/midilive.pdf) — abandoned in 2009 pre-beta
 - [Chrome Visuals](https://github.com/zeroerrequattro/chrome-visuals) — very similar project done in chrome
 
 ## Thanks

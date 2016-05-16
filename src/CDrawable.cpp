@@ -11,7 +11,12 @@ CDrawable::CDrawable (const glm::vec3 position, const glm::vec3 scale, TCommonSh
 	m_axis[rand() % 3] = 1.0f; // those two lines make it one of the base axes x, y or z
 }
 
-CDrawable::~CDrawable(void) { }
+CDrawable::~CDrawable(void) {
+	glDeleteBuffers(1, &m_geometry.elementBufferObject);
+	glDeleteBuffers(1, &m_geometry.elementBufferObject);
+	glDeleteBuffers(1, &m_geometry.vertexArrayObject);
+	glDeleteTextures(1, &m_geometry.texture);
+}
 
 void CDrawable::updateAlpha(const double & time) {
 	const double elapsedTime = time - m_triggerTime;

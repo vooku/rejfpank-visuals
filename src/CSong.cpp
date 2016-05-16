@@ -6,7 +6,11 @@ CSong::CSong(CCamera * camera, TControlState * state, CSkybox * skybox)
 	  m_skybox(skybox),
 	  m_multipass(false) { }
 
-CSong::~CSong(void) { } // objects are destroyed in children, foreign objects elsewhere
+CSong::~CSong(void) { // objects are destroyed in children, foreign objects elsewhere
+	glDeleteBuffers(1, &m_renderBufferObject);
+	glDeleteBuffers(1, &m_frameBufferObject);
+	glDeleteTextures(1, &m_renderedTex);
+}
 
 void CSong::multipassInit(void) {
 	glGenFramebuffers(1, &m_frameBufferObject);
