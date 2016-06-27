@@ -3,6 +3,8 @@
 ## Introduction
 This is my undergraduate thesis at [FIT CTU](https://www.fit.cvut.cz/en). It visualises MIDI data from incoming stream sourced from samplers, drum machines, gameboys etc.
 
+__The first public performance using this system was on 9. 5. in Prague and it was also [recorded](https://youtu.be/HzFjP2zBFHc).__
+
 I am a big fan of what I call _glitch aesthetics_, commonly seen in the context of the chiptune or algorave scenes. It consists of bright colors, glitches and general randomness. Expect this kind of visual turn-on.
 
 ![Glitchy and colorfull print screen](src/res/printscreen.jpg)
