@@ -8,7 +8,7 @@ CSongSquirrel::CSongSquirrel(CCamera * camera, TControlState * state, CSkybox * 
 	  m_kickCount(0),
 	  m_rideTriggerTime(0),
 	  m_snareTriggerTime(0),
-	  m_camOffset(CAMERA_ROTATE_SPEED) {
+	  m_axis(glm::vec3(1.0f)) {
 
 	m_innerMap = new bool[SQUIR_COUNT];
 	for (int i = 0; i < SQUIR_COUNT; i++) m_innerMap[i] = false;
@@ -132,7 +132,7 @@ void CSongSquirrel::update(double time) {
 	m_squirrel1->updatePtSize(time);
 	m_squirrel2->updatePtSize(time);
 
-	if (m_innerMap[SQUIR_ROTATE]) m_camera->rotate(m_camOffset.x, m_camOffset.y);
+	if (m_innerMap[SQUIR_ROTATE]) m_skybox->rotate(ROTATION_ANGLE_DELTA, m_axis);
 
 	if (m_innerMap[SQUIR_REDUCE] && time - m_rideTriggerTime > BEAT_LENGTH(175)) m_innerMap[SQUIR_REDUCE] = false;
 
@@ -194,10 +194,7 @@ void CSongSquirrel::midiIn(const unsigned int status, const unsigned int note, c
 				m_squirrel2->m_triggerTime = time;
 			}
 			if (m_kickCount >= 16) m_innerMap[SQUIR_ROTATE] = true;
-			if (m_innerMap[SQUIR_ROTATE] && m_kickCount % 16 == 0) {
-				if (rand() > RAND_MAX / 2.0f) m_camOffset.x *= -1;
-				else m_camOffset.y *= -1;
-			}
+			if (m_innerMap[SQUIR_ROTATE] && m_kickCount % 16 == 0) m_axis *= -1.0f;
 			m_kickCount++;
 			break;
 		case MIDI_DRUM_KICK2:

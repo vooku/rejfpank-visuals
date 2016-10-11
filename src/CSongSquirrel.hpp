@@ -31,7 +31,7 @@ protected:
 	unsigned int m_kickCount;
 	double m_rideTriggerTime;
 	double m_snareTriggerTime;
-	glm::vec2 m_camOffset;
+	glm::vec3 m_axis;
 
 	CObjectPix * m_squirrel1;
 	CObjectPix * m_squirrel2;
