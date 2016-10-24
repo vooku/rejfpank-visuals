@@ -285,6 +285,10 @@ void CSongDefinition::midiIn(const unsigned int status, const unsigned int note,
 			break;
 		case MIDI_DRUM_KICK2:
 			m_innerMap[DEF_BACKGROUND] = true;
+			m_triggerTimes[2] = time;
+			m_innerMap[DEF_RED] = true;
+			m_triggerTimes[3] = time;
+			m_innerMap[DEF_BLUE] = true;
 			break;
 		case MIDI_DRUM_SNARE1:
 			m_innerMap[DEF_BANNER1] = true;
@@ -307,8 +311,8 @@ void CSongDefinition::midiIn(const unsigned int status, const unsigned int note,
 			m_triggerTimes[3] = time;
 			m_innerMap[DEF_BLUE] = true;
 			break;
-		//case MIDI_DRUM_TOM_HIGH1: // laser tom
-		//	break;
+		case MIDI_DRUM_TOM_HIGH1: // laser tom
+			break;
 		case MIDI_DRUM_CYMBAL_CRASH1:
 			m_colorShift = (m_colorShift + 1) % 3;
 			break;

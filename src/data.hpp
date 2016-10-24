@@ -50,7 +50,7 @@
 
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 
-#define SONG_COUNT 3
+#define SONG_COUNT 4
 #define FIRST_SONG 0 // for testing
 
 #define BANNER_PARAM_NO_TEX "no_tex"

@@ -4,12 +4,13 @@
 #include "CSongRock.hpp"
 #include "CSongSquirrel.hpp"
 #include "CSongDefinition.hpp"
+#include "CSongSoundcheck.hpp"
 
 CController controller;
 
 CController::CController(void)
 	: m_songCtr(FIRST_SONG),
-	  m_song(NULL) {
+	  m_song(nullptr) {
 
 	for (int i = 0; i < CTRL_COUNT; i++) m_state.ctrlMap[i] = false;
 	for (int i = 0; i < KEY_COUNT; i++) m_state.keyMap[i] = false;
@@ -121,18 +122,21 @@ void CController::redraw(GLFWwindow * window) {
 
 void CController::nextSong(void) {
 	m_state.ctrlMap[CTRL_SONG_SET] = false;
-	if (m_song != NULL) delete m_song;
+	if (m_song != nullptr) delete m_song;
 
 	m_camera.reset();
 
 	switch (m_songCtr) {
 		case 0:
-			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongSoundcheck(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 1:
-			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
+			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			break;
+		case 3:
 			m_song = new CSongSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 	}

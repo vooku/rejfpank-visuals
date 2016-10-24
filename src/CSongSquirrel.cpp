@@ -31,8 +31,6 @@ CSongSquirrel::~CSongSquirrel(void) {
 
 	delete[] m_innerMap;
 
-	glDeleteFramebuffers(1, &m_frameBufferObject);
-
 	std::cout << "destroyed song: Veverka" << std::endl;
 }
 
