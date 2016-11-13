@@ -137,7 +137,7 @@ void CModel::setMaterials(const char * filename) {
 	if (strstr(filename, "lego") != NULL)
 		color = legoBrickColors[m_material.index % LEGO_BRICK_COLORS_COUNT];
 	else if (m_useTex)
-		color = glm::vec3(1.0f);
+		color = glm::vec3(0.0f);
 	else
 		color = glm::vec3(0.7f);
 
@@ -148,7 +148,7 @@ void CModel::setMaterials(const char * filename) {
 }
 
 void CModel::fadeToBlack(void) {
-	glm::vec3 black = glm::vec3(0.0f);
+	glm::vec3 black = glm::vec3(1.0f, 1.0f/5.0f, 1.0f);
 	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
 	m_material.diffuse = black;
 	m_material.shininess = 0.5f;

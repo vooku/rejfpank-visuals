@@ -110,8 +110,7 @@ void CSongRock::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	
 	// lego
 	glUseProgram(m_shaderPrograms[0].program);
-	glUniform1f(m_shaderPrograms[0].whiteFlagLocation, !m_innerMap[ROCK_BLACK]);
-	glUniform1f(m_shaderPrograms[0].redFlagLocation, m_innerMap[ROCK_BLACK]);
+	glUniform1f(m_shaderPrograms[0].whiteFlagLocation, true);
 	glUniform1f(m_shaderPrograms[0].blueFlagLocation, false);
 	glUniform1f(m_shaderPrograms[0].pointFlagLocation, false);
 
@@ -217,7 +216,7 @@ void CSongRock::midiIn(const unsigned int status, const unsigned int note, const
 			else this->setCamFlow(false, false, true, false, true);
 			break;
 		case MPX16_PAD09:
-			this->setCamFlow(false, true, false, false, true);
+			this->setCamFlow(false, true, true, false, true);
 			break;
 		case MPX16_PAD10: // block bass
 			this->setCamFlow(false, false, false, false, false);
@@ -236,7 +235,7 @@ void CSongRock::midiIn(const unsigned int status, const unsigned int note, const
 			}
 			break;
 		case MPX16_PAD13:
-			this->setCamFlow(false, true, false, false, true);
+			this->setCamFlow(false, true, false, true, true);
 			break;
 		case MPX16_PAD14: // block bass
 			this->setCamFlow(false, false, false, false, false);
