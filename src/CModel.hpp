@@ -12,16 +12,20 @@
 class CModel : public CDrawable {
 public:
 	CModel(const char * filename,
-			   const glm::vec3 & position,
-			   const glm::vec3 & scale,
-			   TCommonShaderProgram * shaderProgram,
-			   const char * texname = NULL,
-			   const bool randomizeUV = false,
-			   const CModel * dataObj = NULL,
-			   const unsigned int materialIdx = 0,
-			   const float & alpha = 1.0f);
+		   const glm::vec3 & position,
+		   const glm::vec3 & scale,
+		   TCommonShaderProgram * shaderProgram,
+		   const char * texname = NULL,
+		   const bool randomizeUV = false,
+		   const CModel * dataObj = NULL,
+		   const unsigned int materialIdx = 0,
+		   const float & alpha = 1.0f);
 
-	void setMaterial(const glm::vec3 & ambient, const glm::vec3 & diffuse, const glm::vec3 & specular, const float & shininess, const float & alpha);
+	void setMaterial(const glm::vec3 & ambient,
+					 const glm::vec3 & diffuse,
+					 const glm::vec3 & specular,
+					 const float & shininess,
+					 const float & alpha = 1.0f);
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
 

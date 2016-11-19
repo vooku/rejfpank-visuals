@@ -37,6 +37,7 @@ public:
 	CSkybox(const glm::vec3 & position, const glm::vec3 & scale, TCommonShaderProgram * shaderProgram);
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
+	void reset(void); ///< Resets rotation and color multiplier
 
 	GLfloat m_colorMultiplier;
 protected:

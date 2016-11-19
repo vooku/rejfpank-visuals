@@ -18,7 +18,8 @@ public:
 
 	void updateAlpha(const double & time);
 	void rotate(const float angle, const glm::vec3 & axis);
-	void rotate(const double & time);
+	void scale(const glm::vec3 & scale);
+	void rotate(const double & time); ///< Specific rotation for CSongRock
 	void switchRotAxis(const double & time);
 		
 protected:

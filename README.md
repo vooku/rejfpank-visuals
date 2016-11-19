@@ -35,7 +35,8 @@ The rest of the readme is mostly for myself.
 - multipass postproduction FX
 	+ DES encryption
 	+ diffusion
-- module based visuals 
+- module based visuals
+- think about better containers than arrays 
 
 ## Known Issues
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues

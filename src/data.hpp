@@ -10,13 +10,14 @@
 #include <glm/glm.hpp>
 #include <string>
 
-#define M_PI 3.14159265359f
+// Macros
+#define BEAT_LENGTH(bpm) (60.0f / bpm)
+#define RGB_8BIT(color) (1 / 255.0f) * color
 
-#define MIDI_LONG_BUFFER_SIZE 1024
-
-#define SELECT_MIDI_PORT_MAN true // for testing purposes
+// testing
+#define SELECT_MIDI_PORT_MAN false
 #define SELECT_MIDI_PORT_DEFAULT 11
-#define SELECT_MONITOR_MAN true // for testing purposes
+#define SELECT_MONITOR_MAN false
 #define SELECT_MONITOR_DEFAULT 2
 
 #define INIT_WIN_WIDTH 848 ///< Width to height ratio is 16:9
@@ -35,13 +36,16 @@
 #define CAMERA_ROTATE_SPEED 0.02f
 #define CAMERA_ENCIRCLE_SPEED 0.3f
 
+// Global constants
+#define M_PI 3.14159265359f
+#define MIDI_LONG_BUFFER_SIZE 1024
 #define MOUSE_SENSITIVITY 0.01f
 #define ROTATION_ANGLE_DELTA 0.02f ///< in degrees
 #define STEP_LENGTH 0.1f
 #define ROTATION_SPEED 2.0f
 #define ROTATION_TIME 0.2f
 #define FLOW_MAX_TIME 2.3f
-#define BEAT_LENGTH(bpm) (60.0f / bpm)
+#define EXP_DECAY 0.9f
 #define SCREEN_TEARS 10 // check bannerShader.frag if there's enough space!
 
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
@@ -57,7 +61,7 @@
 #define BANNER_PARAM_NO_TEX_BLACK "no_tex_black"
 #define BANNER_PARAM_MULTIPASS "multipass"
 
-// ---------------------------------------------------------------> resources
+// Resources
 #define TEX_GEN_TEST		"res/tex/gen_test.png"
 #define TEX_GEN_NOISE		"res/tex/gen_noise.jpg"
 #define TEX_GEN_NOISE_4TO3	"res/tex/gen_noise-4to3.jpg"
@@ -93,8 +97,8 @@
 #define MODEL_ROC_LEGO_8	"res/models/roc_lego-brick-4x2.obj"
 #define MODEL_ROC_LEGO_9	"res/models/roc_lego-brick-4x2-low.obj"
 #define MODEL_HER_SPHERE	"res/models/lowpolysphere.obj"
-// <--------------------------------------------------------------- resources
 
+// Song specific constants
 #define DEF_HONEYCOMBS_N_PER_LINE 16
 #define DEF_HONEYCOMBS_LINES_N 5 // only odd numbers, even ones break the pattern
 
@@ -105,10 +109,10 @@
 
 #define LEGO_BRICK_COLORS_COUNT 4
 const glm::vec3 legoBrickColors[LEGO_BRICK_COLORS_COUNT] = {
-	(1 / 255.0f) * glm::vec3(222.0f, 0.0f, 13.0f),
-	(1 / 255.0f) * glm::vec3(0.0f, 150.0f, 36.0f),
-	(1 / 255.0f) * glm::vec3(0.0f, 87.0f, 168.0f),
-	(1 / 255.0f) * glm::vec3(254.0f, 196.0f, 0.0f)
+	RGB_8BIT(glm::vec3(222.0f, 0.0f, 13.0f)),
+	RGB_8BIT(glm::vec3(0.0f, 150.0f, 36.0f)),
+	RGB_8BIT(glm::vec3(0.0f, 87.0f, 168.0f)),
+	RGB_8BIT(glm::vec3(254.0f, 196.0f, 0.0f))
 };
 
 /// controls in controlState
@@ -154,8 +158,9 @@ enum {
 /// controls in CSongHeros
 enum {
 	HER_BANNER0, HER_BANNER1,
-	HER_INVERSE,
-	HEROS_COUNT
+	HER_INVERSE, HER_REDUCE,
+	HER_KICK1, HER_KICK2, HER_SNR, HER_TOM1, HER_TOM2, HER_TOM3,
+	HER_COUNT
 };
 
 #endif // !_REJFPANK_DATA_HPP

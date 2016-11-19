@@ -27,6 +27,10 @@ void CDrawable::rotate(const float angle, const glm::vec3 & axis) {
 	m_rotMatrix = glm::rotate(m_rotMatrix, angle, axis);
 }
 
+void CDrawable::scale(const glm::vec3 & scale) {
+	m_scale = scale;
+}
+
 void CDrawable::rotate(const double & time) {
 	const double elapsedTime = time - m_triggerTime;
 	if (elapsedTime >= ROTATION_TIME) return;

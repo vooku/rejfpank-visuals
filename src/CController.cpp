@@ -159,7 +159,6 @@ void CController::update(void) {
 	if (m_state.keyMap[KEY_Q]) m_camera.roll(ROTATION_ANGLE_DELTA);
 	if (m_state.keyMap[KEY_E]) m_camera.roll(-ROTATION_ANGLE_DELTA);
 
-	// the song has to update first as it could do various funny stuff
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->update(time);
 
 	m_skybox->m_position = m_camera.m_position;

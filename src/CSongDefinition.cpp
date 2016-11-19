@@ -37,7 +37,7 @@ CSongDefinition::~CSongDefinition(void) {
 
 	delete[] m_innerMap;
 
-	m_skybox->m_colorMultiplier = 1.0f;
+	m_skybox->reset();
 
 	std::cout << "destroyed song: Definice" << std::endl;
 }

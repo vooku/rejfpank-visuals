@@ -29,14 +29,16 @@ protected:
 	// own objects
 	CModel * m_sphereData;
 	int m_spheresN;
-	CModel ** m_spheres; // kick1 kick2 snr1 snr2 tom1 tom2
+	CModel ** m_spheres; // kick1 kick2 snr1 snr2 tom3 tom1 tom2
+	glm::vec3 * m_scales;
 	CBanner ** m_banners;
 	int m_bannersN;
 
 	// ptrs to objects from the controller
 	TCommonShaderProgram * m_bannerShaderProgram;
 
-	double m_triggerTimes[4]; // 0 sweep, 1 point light, 2 red light, 3 blue light
+	double * m_triggerTimes;
+	double m_reduceTime;
 	int m_colorShift;
 	float m_r;
 	float m_camOffset;

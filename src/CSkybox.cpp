@@ -1,8 +1,7 @@
 #include "CSkybox.hpp"
 
 CSkybox::CSkybox(const glm::vec3 & position, const glm::vec3 & scale, TCommonShaderProgram * shaderProgram)
-	: CDrawable(position, scale, shaderProgram),
-	  m_colorMultiplier(0.7f) {
+	: CDrawable(position, scale, shaderProgram) {
 	m_geometry.numTriangles = nCubeTriangles;
 
 	glGenVertexArrays(1, &m_geometry.vertexArrayObject);
@@ -19,6 +18,8 @@ CSkybox::CSkybox(const glm::vec3 & position, const glm::vec3 & scale, TCommonSha
 	glEnableVertexAttribArray(shaderProgram->posLocation);
 	glVertexAttribPointer(shaderProgram->posLocation, 3, GL_FLOAT, GL_FALSE, nCubeAttribsPerVertex * sizeof(float), (void *) 0);
 	
+	this->reset();
+
 	glBindVertexArray(0);
 }
 
@@ -33,7 +34,6 @@ void CSkybox::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	m_tempMats.MMatrix = glm::translate(glm::mat4(1.0f), m_position);
 	m_tempMats.MMatrix = glm::scale(m_tempMats.MMatrix, m_scale);
 	m_tempMats.MMatrix = m_tempMats.MMatrix * m_rotMatrix;
-	m_tempMats.MMatrix = glm::rotate(m_tempMats.MMatrix, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	//tempMats.VMatrix = VMatrix;
 	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 
@@ -45,4 +45,10 @@ void CSkybox::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// reset
 	glBindVertexArray(0);
 	glFinish();
+}
+
+void CSkybox::reset(void) {
+	m_colorMultiplier = 0.7f;
+	this->m_rotMatrix = glm::mat4(1.0f);
+	this->rotate(M_PI / 4, glm::vec3(1.0f, 0.0f, 0.0f));
 }
