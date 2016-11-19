@@ -141,17 +141,18 @@ void CModel::setMaterials(const char * filename) {
 	else
 		color = glm::vec3(0.7f);
 
-	m_material.ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
-	m_material.diffuse = color;
-	m_material.specular = MATERIAL_LEGO_SPECULAR;
-	m_material.shininess = MATERIAL_LEGO_SHININES;
+	m_material.m_ambient = color * MATERIAL_GEN_AMBIENT_MULTI;
+	m_material.m_diffuse = color;
+	m_material.m_specular = MATERIAL_LEGO_SPECULAR;
+	m_material.m_shininess = MATERIAL_LEGO_SHININES;
 }
 
-void CModel::fadeToBlack(void) {
-	glm::vec3 black = glm::vec3(1.0f, 1.0f/5.0f, 1.0f);
-	m_material.ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
-	m_material.diffuse = black;
-	m_material.shininess = 0.5f;
+void CModel::setMaterial(const glm::vec3 & ambient, const glm::vec3 & diffuse, const glm::vec3 & specular, const float & shininess, const float & alpha) {
+	m_material.m_ambient = ambient;
+	m_material.m_diffuse = diffuse;
+	m_material.m_specular = specular;
+	m_material.m_shininess = shininess;
+	m_alpha = alpha;
 }
 
 void CModel::sendUniforms(void) {
@@ -161,10 +162,10 @@ void CModel::sendUniforms(void) {
 	glUniformMatrix4fv(m_shaderProgram->VMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.VMatrix));
 	glUniformMatrix4fv(m_shaderProgram->MMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.MMatrix));
 	glUniformMatrix4fv(m_shaderProgram->normalMatrixLocation, 1, GL_FALSE, glm::value_ptr(m_tempMats.normalMatrix));
-	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_material.ambient));
-	glUniform3fv(m_shaderProgram->diffuseLocation, 1, glm::value_ptr(m_material.diffuse));
-	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.specular));
-	glUniform1f(m_shaderProgram->shininessLocation, m_material.shininess);
+	glUniform3fv(m_shaderProgram->ambientLocation, 1, glm::value_ptr(m_material.m_ambient));
+	glUniform3fv(m_shaderProgram->diffuseLocation, 1, glm::value_ptr(m_material.m_diffuse));
+	glUniform3fv(m_shaderProgram->specularLocation, 1, glm::value_ptr(m_material.m_specular));
+	glUniform1f(m_shaderProgram->shininessLocation, m_material.m_shininess);
 	glUniform1f(m_shaderProgram->alphaLocation, m_alpha);
 	glUniform1f(m_shaderProgram->useTexLocation, m_useTex);
 }
@@ -183,9 +184,9 @@ void CModel::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
 	}
-
+	
 	this->sendUniforms();
-
+	
 	glBindVertexArray(m_dataObj->m_geometry.vertexArrayObject);
 	glDrawElements(GL_TRIANGLES, m_dataObj->m_geometry.numTriangles * 3, GL_UNSIGNED_INT, 0);
 

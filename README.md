@@ -12,7 +12,7 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 The rest of the readme is mostly for myself. 
 
 ## Don't forget
-- GLFW 3.2 should be released soon and should support toggling fullscreen
+- revise lighting model
 - setup setlist on app start
 - differentiate trigger times in CDrawable
 - revise count/n variables and constants
@@ -35,6 +35,7 @@ The rest of the readme is mostly for myself.
 - multipass postproduction FX
 	+ DES encryption
 	+ diffusion
+- module based visuals 
 
 ## Known Issues
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues

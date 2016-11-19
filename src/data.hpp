@@ -50,8 +50,8 @@
 
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 
-#define SONG_COUNT 4
-#define FIRST_SONG 0 // for testing
+#define SONG_COUNT 5
+#define FIRST_SONG 1 // for testing
 
 #define BANNER_PARAM_NO_TEX "no_tex"
 #define BANNER_PARAM_NO_TEX_BLACK "no_tex_black"
@@ -73,6 +73,8 @@
 #define TEX_DEF_MEANEYE		"res/tex/def_mean-eye.png"
 #define TEX_DEF_IMPACT		"res/tex/def_impact.png"
 #define TEX_DEF_FMOON		"res/tex/def_fmoon.jpg"
+#define TEX_HER_1			"res/tex/her_1.png"
+#define TEX_HER_2			"res/tex/her_2.png"
 
 #define IMG_GEN_TEST		"res/img/gen_test.png"
 #define IMG_SQI_SQUIRREL1	"res/img/sqi_hairy.png"
@@ -90,6 +92,7 @@
 #define MODEL_ROC_LEGO_7	"res/models/roc_lego-brick-4x1-low.obj"
 #define MODEL_ROC_LEGO_8	"res/models/roc_lego-brick-4x2.obj"
 #define MODEL_ROC_LEGO_9	"res/models/roc_lego-brick-4x2-low.obj"
+#define MODEL_HER_SPHERE	"res/models/lowpolysphere.obj"
 // <--------------------------------------------------------------- resources
 
 #define DEF_HONEYCOMBS_N_PER_LINE 16
@@ -146,6 +149,13 @@ enum {
 	SQUIR_SQUIRREL1, SQUIR_SQUIRREL2,
 	SQUIR_BANNER0, SQUIR_BANNER1, SQUIR_BANNER2,
 	SQUIR_COUNT
+};
+
+/// controls in CSongHeros
+enum {
+	HER_BANNER0, HER_BANNER1,
+	HER_INVERSE,
+	HEROS_COUNT
 };
 
 #endif // !_REJFPANK_DATA_HPP

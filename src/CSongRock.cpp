@@ -230,7 +230,12 @@ void CSongRock::midiIn(const unsigned int status, const unsigned int note, const
 			m_banners[0]->m_triggerTime = glfwGetTime();
 			if (!m_innerMap[ROCK_BLACK]) {
 				m_innerMap[ROCK_BLACK] = true;
-				for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) m_lego[i]->fadeToBlack();
+				glm::vec3 black = glm::vec3(1.0f, 1.0f / 5.0f, 1.0f);
+				glm::vec3 ambient = black * MATERIAL_GEN_AMBIENT_MULTI;
+				glm::vec3 diffuse = black;
+				glm::vec3 specular = black; // TODO ??
+				float shininess = 0.5f;
+				for (int i = 0; i < LEGO_BRICKS_LOOPS * LEGO_BRICKS_COUNT; i++) m_lego[i]->setMaterial(ambient, diffuse, specular, shininess, 1.0f);
 				m_skybox->m_colorMultiplier = 0.1f;
 			}
 			break;

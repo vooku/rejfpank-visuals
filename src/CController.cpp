@@ -5,6 +5,7 @@
 #include "CSongSquirrel.hpp"
 #include "CSongDefinition.hpp"
 #include "CSongSoundcheck.hpp"
+#include "CSongHeros.hpp"
 
 CController controller;
 
@@ -131,12 +132,15 @@ void CController::nextSong(void) {
 			m_song = new CSongSoundcheck(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 1:
-			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongHeros(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 3:
+			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			break;
+		case 4:
 			m_song = new CSongSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 	}
