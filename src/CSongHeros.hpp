@@ -38,7 +38,7 @@ protected:
 	TCommonShaderProgram * m_bannerShaderProgram;
 
 	double * m_triggerTimes;
-	double m_reduceTime;
+	double m_reduceTime, m_strobeTime;
 	int m_colorShift;
 	float m_r;
 	float m_camOffset;

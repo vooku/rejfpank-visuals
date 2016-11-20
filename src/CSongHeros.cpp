@@ -10,7 +10,8 @@ CSongHeros::CSongHeros(CCamera * camera, TControlState * state, CSkybox * skybox
 	: CSong(camera, state, skybox),
 	m_bannerShaderProgram(bannerShaderProgram),
 	m_colorShift(0),
-	m_reduceTime(0.0) {
+	m_reduceTime(0.0),
+	m_strobeTime(0.0) {
 
 	m_innerMap = new bool[HER_COUNT];
 	for (int i = 0; i < HER_COUNT; i++) m_innerMap[i] = false;
@@ -60,10 +61,8 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glUniform1f(m_shaderPrograms[0].whiteFlagLocation, true);
 	if (m_innerMap[HER_KICK1]) m_spheres[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_KICK2]) m_spheres[1]->draw(PMatrix, VMatrix);
-	if (m_innerMap[HER_SNR]) {
-		m_spheres[2]->draw(PMatrix, VMatrix);
-		m_spheres[3]->draw(PMatrix, VMatrix);
-	}
+	if (m_innerMap[HER_SNR1]) m_spheres[2]->draw(PMatrix, VMatrix);
+	if (m_innerMap[HER_SNR2]) m_spheres[3]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_TOM1]) m_spheres[5]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_TOM2]) m_spheres[6]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_TOM3]) m_spheres[4]->draw(PMatrix, VMatrix);
@@ -86,9 +85,26 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 }
 
 void CSongHeros::update(double time) {
+	const double halftime = BEAT_LENGTH(175) / 16.0;
+	const double fulltime = BEAT_LENGTH(175) / 8.0;
+
 	m_skybox->rotate(0.1f * ROTATION_ANGLE_DELTA, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	if (time - m_reduceTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_REDUCE] = false;
+
+	if (m_innerMap[HER_STROBE]) {
+		if (time - m_strobeTime >= fulltime) m_strobeTime = time;
+
+		if (time - m_strobeTime < halftime) {
+			m_innerMap[HER_BANNER0] = true;
+			m_innerMap[HER_BANNER1] = false;
+		}
+		else {
+			m_innerMap[HER_BANNER0] = false;
+			m_innerMap[HER_BANNER1] = true;
+		}
+	}
+	else m_innerMap[HER_BANNER0] = m_innerMap[HER_BANNER1] = false;
 
 	for (int i = 0; i < m_spheresN; i++) {
 		m_spheres[i]->rotate(ROTATION_ANGLE_DELTA, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -192,29 +208,77 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 	//-------------------------------------------------------------------> AKAI MPX16
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
-		case MPX16_PAD01:
+		case MPX16_PAD01: // bass1
 			break;
-		case MPX16_PAD02:
+		case MPX16_PAD02: // bass2
 			break;
-		case MPX16_PAD03:
+		case MPX16_PAD03: // vox1
+			m_innerMap[HER_STROBE] = true;
+			m_strobeTime = time;
 			break;
-		case MPX16_PAD04:
+		case MPX16_PAD04: // vox2
+			m_innerMap[HER_STROBE] = true;
+			m_strobeTime = time;
 			break;
-		case MPX16_PAD05:
+		case MPX16_PAD05: // block bass1
 			break;
-		case MPX16_PAD06:
+		case MPX16_PAD06: // block bass2
 			break;
 		case MPX16_PAD07:
 			break;
 		case MPX16_PAD08:
 			break;
-		case MPX16_PAD09:
+		case MPX16_PAD09: // vox3
+			m_innerMap[HER_STROBE] = true;
+			m_strobeTime = time;
 			break;
 		case MPX16_PAD10:
 			break;
 		case MPX16_PAD11:
 			break;
-		case MPX16_PAD12:
+		case MPX16_PAD12: // intro
+			break;
+		case MPX16_PAD13:
+			break;
+		case MPX16_PAD14:
+			break;
+		case MPX16_PAD15:
+			break;
+		case MPX16_PAD16:
+			break;
+		default:
+			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
+			break;
+		}
+	}
+	else if (status == MIDI_NOTE_OFF_CH10) {
+		switch (note) {
+		case MPX16_PAD01: // bass1
+			break;
+		case MPX16_PAD02: // bass2
+			break;
+		case MPX16_PAD03: // vox1
+			m_innerMap[HER_STROBE] = false;
+			break;
+		case MPX16_PAD04: // vox2
+			m_innerMap[HER_STROBE] = false;
+			break;
+		case MPX16_PAD05: // block bass1
+			break;
+		case MPX16_PAD06: // block bass2
+			break;
+		case MPX16_PAD07:
+			break;
+		case MPX16_PAD08:
+			break;
+		case MPX16_PAD09: // vox3
+			m_innerMap[HER_STROBE] = false;
+			break;
+		case MPX16_PAD10:
+			break;
+		case MPX16_PAD11:
+			break;
+		case MPX16_PAD12: // intro
 			break;
 		case MPX16_PAD13:
 			break;
@@ -242,11 +306,10 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			m_triggerTimes[1] = time;
 			break;
 		case MIDI_DRUM_SNARE1:
-			m_innerMap[HER_SNR] = true;
+			m_innerMap[HER_SNR1] = true;
 			m_triggerTimes[2] = time;
-			m_triggerTimes[3] = time;
 			break;
-		case MIDI_DRUM_SNARE2:
+		case MIDI_DRUM_SNARE2: // not a snare here
 			break;
 		case MIDI_DRUM_HIHAT_OPEN:
 			m_colorShift = (m_colorShift + 1) % 3;
@@ -273,7 +336,9 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			m_innerMap[HER_REDUCE] = true;
 			m_reduceTime = time;
 			break;
-		case MIDI_DRUM_CYMBAL_RIDE1: // snare lol
+		case MIDI_DRUM_CYMBAL_RIDE1:
+			m_innerMap[HER_SNR2] = true;
+			m_triggerTimes[3] = time;
 			break;
 		default:
 			std::cout << "Unresolved midi note from SR16: " << status << " " << note << " " << velocity << std::endl;

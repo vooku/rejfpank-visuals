@@ -84,9 +84,9 @@ void CSongDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatri
 }
 
 void CSongDefinition::update(double time) {
-	float halftime = BEAT_LENGTH(175) / 32.0f;
-	float fulltime = BEAT_LENGTH(175) / 16.0f;
-	float triplet  = BEAT_LENGTH(175) / 3.0f;
+	const double halftime = BEAT_LENGTH(175) / 32.0;
+	const double fulltime = BEAT_LENGTH(175) / 16.0;
+	const double triplet  = BEAT_LENGTH(175) / 3.0;
 
 	if (m_innerMap[DEF_BANNER0]) {
 		if (time - m_banners[0]->m_triggerTime > halftime) m_innerMap[DEF_INVERSE] = true;

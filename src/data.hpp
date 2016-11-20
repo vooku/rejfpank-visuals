@@ -11,7 +11,7 @@
 #include <string>
 
 // Macros
-#define BEAT_LENGTH(bpm) (60.0f / bpm)
+#define BEAT_LENGTH(bpm) (60.0 / bpm)
 #define RGB_8BIT(color) (1 / 255.0f) * color
 
 // testing
@@ -158,8 +158,8 @@ enum {
 /// controls in CSongHeros
 enum {
 	HER_BANNER0, HER_BANNER1,
-	HER_INVERSE, HER_REDUCE,
-	HER_KICK1, HER_KICK2, HER_SNR, HER_TOM1, HER_TOM2, HER_TOM3,
+	HER_INVERSE, HER_REDUCE, HER_STROBE,
+	HER_KICK1, HER_KICK2, HER_SNR1, HER_SNR2, HER_TOM1, HER_TOM2, HER_TOM3,
 	HER_COUNT
 };
 
