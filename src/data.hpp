@@ -15,26 +15,10 @@
 #define RGB_8BIT(color) (1 / 255.0f) * color
 
 // testing
-#define SELECT_MIDI_PORT_MAN false
+#define SELECT_MIDI_PORT_MAN true
 #define SELECT_MIDI_PORT_DEFAULT 11
-#define SELECT_MONITOR_MAN false
+#define SELECT_MONITOR_MAN true
 #define SELECT_MONITOR_DEFAULT 2
-
-#define INIT_WIN_WIDTH 848 ///< Width to height ratio is 16:9
-#define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
-#define WIN_TITLE "rejfpank visuals"
-
-#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
-#define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
-#define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
-#define CAMERA_INIT_FREE true
-#define CAMERA_VIEW_ANGLE 65.0f
-#define CAMERA_VIEW_START 0.01f
-#define CAMERA_VIEW_DIST 200.0f
-#define CAMERA_DIR_FORWARD 1
-#define CAMERA_DIR_BACKWARD -1
-#define CAMERA_ROTATE_SPEED 0.02f
-#define CAMERA_ENCIRCLE_SPEED 0.3f
 
 // Global constants
 #define M_PI 3.14159265359f
@@ -52,14 +36,29 @@
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
 
-#define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
-
 #define SONG_COUNT 5
 #define FIRST_SONG 1 // for testing
 
+#define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 #define BANNER_PARAM_NO_TEX "no_tex"
 #define BANNER_PARAM_NO_TEX_BLACK "no_tex_black"
 #define BANNER_PARAM_MULTIPASS "multipass"
+
+#define INIT_WIN_WIDTH 848 ///< Width to height ratio is 16:9
+#define INIT_WIN_HEIGHT 480 ///< Width to height ratio is 16:9
+#define WIN_TITLE "rejfpank visuals"
+
+#define CAMERA_INIT_POS glm::vec3(0.0f, 0.0f, -6.0f)
+#define CAMERA_INIT_DIR glm::vec3(0.0f, 0.0f, 1.0f)
+#define CAMERA_INIT_UP  glm::vec3(0.0f, 1.0f, 0.0f)
+#define CAMERA_INIT_FREE true
+#define CAMERA_VIEW_ANGLE 65.0f
+#define CAMERA_VIEW_START 0.01f
+#define CAMERA_VIEW_DIST 200.0f
+#define CAMERA_DIR_FORWARD 1
+#define CAMERA_DIR_BACKWARD -1
+#define CAMERA_ROTATE_SPEED 0.02f
+#define CAMERA_ENCIRCLE_SPEED 0.3f
 
 // Resources
 #define TEX_GEN_TEST		"res/tex/gen_test.png"
@@ -99,6 +98,9 @@
 #define MODEL_HER_SPHERE	"res/models/lowpolysphere.obj"
 
 // Song specific constants
+#define HER_PROB1 0.3f
+#define HER_PROB2 0.5f
+
 #define DEF_HONEYCOMBS_N_PER_LINE 16
 #define DEF_HONEYCOMBS_LINES_N 5 // only odd numbers, even ones break the pattern
 
@@ -159,7 +161,7 @@ enum {
 enum {
 	HER_BANNER0, HER_BANNER1,
 	HER_INVERSE, HER_REDUCE, HER_STROBE,
-	HER_KICK1, HER_KICK2, HER_SNR1, HER_SNR2, HER_TOM1, HER_TOM2, HER_TOM3,
+	HER_KICK1, HER_KICK2, HER_SNR1, HER_SNR2, HER_TOM1, HER_TOM2, HER_TOM3, HER_BASS1, HER_BASS2,
 	HER_COUNT
 };
 

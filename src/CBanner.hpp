@@ -19,9 +19,13 @@ public:
 	~CBanner(void);
 
 	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix);
-	void draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette, const int colorShift = 0);
 
 	bool setColor(const glm::vec3 & color);
+	void setInverse(const bool inverse);
+	void setReducePalette(const bool reducePalette);
+	void setDeadPix(const bool deadPix, const float & deadPixP);
+	void setColorShift(const int & colorShift);
+
 	void tear(void);
 	void untear(void);
 
@@ -31,6 +35,8 @@ protected:
 	bool m_useTex;
 	bool m_inverse;
 	bool m_reducePalette;
+	bool m_deadPix;
+	float m_deadPixP;
 	bool m_tear;
 
 	int m_colorShift;

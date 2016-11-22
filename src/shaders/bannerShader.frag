@@ -8,6 +8,8 @@ uniform float alpha;
 uniform bool useTex;
 uniform bool inverse;
 uniform bool reducePalette;
+uniform bool deadPix;
+uniform float deadPixP;
 uniform bool tearFlag;
 uniform int tearN; // actual number of tear borders
 uniform float tearBorders[10]; // enough space for max 10
@@ -15,6 +17,11 @@ uniform float tearOffsets[11]; // enough space for max 11
 uniform int colorShift;
 
 out vec4 colorOut;
+
+// magic noise function
+float rand(vec2 co){
+    return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+}
 
 vec2 getTear(void) {
 	vec2 texCoordsOut = texCoordsTrans;
@@ -37,6 +44,11 @@ vec3 getReducePalette(vec3 color) {
 	return round(color);;
 }
 
+vec3 getDeadPix(vec3 color) {
+	if (rand(colorOut.xy) <= deadPixP) return vec3(rand(colorOut.yz), rand(colorOut.zw), rand(colorOut.wx));
+	return color;
+}
+
 vec3 getColorShift(vec3 color) {
 	if (colorShift == 1) return color.gbr;
 	else if (colorShift == 2) return color.brg;
@@ -54,7 +66,8 @@ void main(void) {
 	
 	if (inverse) colorTemp = getInverse(colorTemp);
 	if (reducePalette) colorTemp = getReducePalette(colorTemp);
-	
+	if (deadPix) colorTemp = getDeadPix(colorTemp);
+
 	colorTemp = getColorShift(colorTemp);
 
 	colorOut = vec4(colorTemp, alpha);

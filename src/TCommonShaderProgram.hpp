@@ -37,6 +37,8 @@ struct TCommonShaderProgram {
 	// multipass effects
 	GLint inverseLocation;
 	GLint reducePaletteLocation;
+	GLint deadPixLocation;
+	GLint deadPixPLocation;
 	GLint tearFlagLocation;
 	GLint tearNLocation;
 	GLint tearBordersLocation;

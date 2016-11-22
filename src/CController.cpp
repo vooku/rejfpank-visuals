@@ -58,6 +58,8 @@ void CController::shadersInit(void) {
 		m_bannerShaderProgram.useTexLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "useTex");
 		m_bannerShaderProgram.inverseLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "inverse");
 		m_bannerShaderProgram.reducePaletteLocation = glGetUniformLocation(m_bannerShaderProgram.program, "reducePalette");
+		m_bannerShaderProgram.deadPixLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "deadPix");
+		m_bannerShaderProgram.deadPixPLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "deadPixP");
 		m_bannerShaderProgram.tearFlagLocation		= glGetUniformLocation(m_bannerShaderProgram.program, "tearFlag");
 		m_bannerShaderProgram.tearNLocation			= glGetUniformLocation(m_bannerShaderProgram.program, "tearN");
 		m_bannerShaderProgram.tearBordersLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "tearBorders");

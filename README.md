@@ -11,10 +11,10 @@ I am a big fan of what I call _glitch aesthetics_, commonly seen in the context 
 
 The rest of the readme is mostly for myself. 
 
-## Don't forget
-- revise lighting model
+## TODO
+- revise lighting model, make lights changeable for each song
 - setup setlist on app start
-- differentiate trigger times in CDrawable
+- completely rework trigger times (use std::map?)
 - revise count/n variables and constants
 - make multipass banner standalone object
 - add support for any axes in CCamera::placeOnCircle()
@@ -36,7 +36,8 @@ The rest of the readme is mostly for myself.
 	+ DES encryption
 	+ diffusion
 - module based visuals
-- think about better containers than arrays 
+- think about better containers than arrays
+- use raytracing!
 
 ## Known Issues
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues

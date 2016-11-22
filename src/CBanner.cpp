@@ -18,6 +18,7 @@ CBanner::CBanner(CCamera * camera, TCommonShaderProgram * shaderProgram, const c
 	  m_camera(camera),
 	  m_inverse(false),
 	  m_reducePalette(false),
+	  m_deadPix(false),
 	  m_colorShift(0),
 	  m_tear(false),
 	  m_tearN(0) {
@@ -69,6 +70,23 @@ bool CBanner::setColor(const glm::vec3 & color) {
 	return true;
 }
 
+void CBanner::setInverse(const bool inverse) {
+	m_inverse = inverse;
+}
+
+void CBanner::setReducePalette(const bool reducePalette) {
+	m_reducePalette = reducePalette;
+}
+
+void CBanner::setDeadPix(const bool deadPix, const float & deadPixP) {
+	m_deadPix = deadPix;
+	m_deadPixP = deadPixP;
+}
+
+void CBanner::setColorShift(const int & colorShift) {
+	m_colorShift = colorShift;
+}
+
 void CBanner::tear(void) {
 	m_tear = true;
 	m_tearN = rand() % SCREEN_TEARS + 1;
@@ -117,13 +135,6 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix, bool inverse, bool reducePalette, const int colorShift) {
-	m_inverse = inverse;
-	m_reducePalette = reducePalette;
-	m_colorShift = colorShift;
-	this->draw(PMatrix, VMatrix);
-}
-
 void CBanner::sendUniforms(void) {
 	glUseProgram(m_shaderProgram->program);
 
@@ -134,6 +145,8 @@ void CBanner::sendUniforms(void) {
 	glUniform1i(m_shaderProgram->useTexLocation, m_useTex);
 	glUniform1i(m_shaderProgram->inverseLocation, m_inverse);
 	glUniform1i(m_shaderProgram->reducePaletteLocation, m_reducePalette);
+	glUniform1i(m_shaderProgram->deadPixLocation, m_deadPix);
+	glUniform1f(m_shaderProgram->deadPixPLocation, m_deadPixP);
 	glUniform1i(m_shaderProgram->tearFlagLocation, m_tear);
 	glUniform1i(m_shaderProgram->tearNLocation, m_tearN);
 	glUniform1fv(m_shaderProgram->tearBordersLocation, m_tearN, m_tearBorders);

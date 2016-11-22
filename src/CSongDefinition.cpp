@@ -79,7 +79,10 @@ void CSongDefinition::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatri
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[DEF_INVERSE], m_innerMap[DEF_REDUCE], m_colorShift);
+		m_banners[3]->setInverse(m_innerMap[DEF_INVERSE]);
+		m_banners[3]->setReducePalette(m_innerMap[DEF_REDUCE]);
+		m_banners[3]->setColorShift(m_colorShift);
+		m_banners[3]->draw(PMatrix, VMatrix);
 	}
 }
 

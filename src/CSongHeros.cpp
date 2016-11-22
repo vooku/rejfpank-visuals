@@ -11,7 +11,8 @@ CSongHeros::CSongHeros(CCamera * camera, TControlState * state, CSkybox * skybox
 	m_bannerShaderProgram(bannerShaderProgram),
 	m_colorShift(0),
 	m_reduceTime(0.0),
-	m_strobeTime(0.0) {
+	m_strobeTime(0.0),
+	m_bassTime(0.0) {
 
 	m_innerMap = new bool[HER_COUNT];
 	for (int i = 0; i < HER_COUNT; i++) m_innerMap[i] = false;
@@ -80,7 +81,12 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[2]->draw(PMatrix, VMatrix, m_innerMap[HER_INVERSE], m_innerMap[HER_REDUCE], m_colorShift);
+		m_banners[2]->setReducePalette(m_innerMap[HER_REDUCE]);
+		m_banners[2]->setColorShift(m_colorShift);
+		if (m_innerMap[HER_BASS1]) m_banners[2]->setDeadPix(true, HER_PROB1);
+		else if (m_innerMap[HER_BASS2]) m_banners[2]->setDeadPix(true, HER_PROB2);
+		else m_banners[2]->setDeadPix(false, 0.0f);
+		m_banners[2]->draw(PMatrix, VMatrix);
 	}
 }
 
@@ -105,6 +111,9 @@ void CSongHeros::update(double time) {
 		}
 	}
 	else m_innerMap[HER_BANNER0] = m_innerMap[HER_BANNER1] = false;
+
+	if (m_innerMap[HER_BASS1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS1] = false;
+	if (m_innerMap[HER_BASS2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS2] = false;
 
 	for (int i = 0; i < m_spheresN; i++) {
 		m_spheres[i]->rotate(ROTATION_ANGLE_DELTA, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -209,8 +218,14 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 	if (status == MIDI_NOTE_ON_CH10) {
 		switch (note) {
 		case MPX16_PAD01: // bass1
+			m_innerMap[HER_BASS1] = true;
+			m_innerMap[HER_BASS2] = false;
+			m_bassTime = time;
 			break;
 		case MPX16_PAD02: // bass2
+			m_innerMap[HER_BASS1] = false;
+			m_innerMap[HER_BASS2] = true;
+			m_bassTime = time;
 			break;
 		case MPX16_PAD03: // vox1
 			m_innerMap[HER_STROBE] = true;
@@ -221,8 +236,12 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			m_strobeTime = time;
 			break;
 		case MPX16_PAD05: // block bass1
+			m_innerMap[HER_BASS1] = false;
+			m_innerMap[HER_BASS2] = false;
 			break;
 		case MPX16_PAD06: // block bass2
+			m_innerMap[HER_BASS1] = false;
+			m_innerMap[HER_BASS2] = false;
 			break;
 		case MPX16_PAD07:
 			break;

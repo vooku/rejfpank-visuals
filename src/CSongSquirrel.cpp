@@ -118,7 +118,9 @@ void CSongSquirrel::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix)
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[3]->draw(PMatrix, VMatrix, m_innerMap[SQUIR_INVERSE], m_innerMap[SQUIR_REDUCE]);
+		m_banners[3]->setInverse(m_innerMap[SQUIR_INVERSE]);
+		m_banners[3]->setReducePalette(m_innerMap[SQUIR_REDUCE]);
+		m_banners[3]->draw(PMatrix, VMatrix);
 	}
 }
 

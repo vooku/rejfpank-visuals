@@ -40,7 +40,8 @@ void CSongSoundcheck::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatri
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[0]->draw(PMatrix, VMatrix, false, false, m_colorShift);
+		m_banners[0]->setColorShift(m_colorShift);
+		m_banners[0]->draw(PMatrix, VMatrix);
 	}
 }
 
