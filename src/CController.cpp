@@ -6,6 +6,7 @@
 #include "CSongDefinition.hpp"
 #include "CSongSoundcheck.hpp"
 #include "CSongHeros.hpp"
+#include "CSongStrobe.hpp"
 
 CController controller;
 
@@ -144,6 +145,9 @@ void CController::nextSong(void) {
 			break;
 		case 4:
 			m_song = new CSongSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			break;
+		case 5:
+			m_song = new CSongStrobe(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 	}
 

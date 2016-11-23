@@ -21,6 +21,8 @@
 #define SELECT_MONITOR_DEFAULT 2
 
 // Global constants
+#define SONG_COUNT 6
+#define FIRST_SONG 0
 #define M_PI 3.14159265359f
 #define MIDI_LONG_BUFFER_SIZE 1024
 #define MOUSE_SENSITIVITY 0.01f
@@ -35,9 +37,6 @@
 #define MATERIAL_GEN_AMBIENT_MULTI 0.1f
 #define MATERIAL_LEGO_SPECULAR glm::vec3(0.3f)
 #define MATERIAL_LEGO_SHININES 3.0f
-
-#define SONG_COUNT 5
-#define FIRST_SONG 1 // for testing
 
 #define BANNER_SIZE (2 * glm::tan(glm::radians(CAMERA_VIEW_ANGLE / 2.0f)))
 #define BANNER_PARAM_NO_TEX "no_tex"
@@ -76,8 +75,8 @@
 #define TEX_DEF_MEANEYE		"res/tex/def_mean-eye.png"
 #define TEX_DEF_IMPACT		"res/tex/def_impact.png"
 #define TEX_DEF_FMOON		"res/tex/def_fmoon.jpg"
-#define TEX_HER_1			"res/tex/her_1.png"
-#define TEX_HER_2			"res/tex/her_2.png"
+#define TEX_HER_1			"res/tex/her1.jpg"
+#define TEX_HER_2			"res/tex/her2.jpg"
 
 #define IMG_GEN_TEST		"res/img/gen_test.png"
 #define IMG_SQI_SQUIRREL1	"res/img/sqi_hairy.png"
