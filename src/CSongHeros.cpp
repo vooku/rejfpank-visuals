@@ -12,7 +12,8 @@ CSongHeros::CSongHeros(CCamera * camera, TControlState * state, CSkybox * skybox
 	m_colorShift(0),
 	m_reduceTime(0.0),
 	m_strobeTime(0.0),
-	m_bassTime(0.0) {
+	m_bassTime(0.0),
+	m_hetfTime(0.0) {
 
 	m_innerMap = new bool[HER_COUNT];
 	for (int i = 0; i < HER_COUNT; i++) m_innerMap[i] = false;
@@ -72,6 +73,7 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// banners
 	if (m_innerMap[HER_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
+	if (m_innerMap[HER_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
 
 	glDisable(GL_BLEND);
 
@@ -81,12 +83,12 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		glBindTexture(GL_TEXTURE_2D, m_renderedTex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		m_banners[2]->setReducePalette(m_innerMap[HER_REDUCE]);
-		m_banners[2]->setColorShift(m_colorShift);
-		if (m_innerMap[HER_BASS1]) m_banners[2]->setDeadPix(true, HER_PROB1);
-		else if (m_innerMap[HER_BASS2]) m_banners[2]->setDeadPix(true, HER_PROB2);
-		else m_banners[2]->setDeadPix(false, 0.0f);
-		m_banners[2]->draw(PMatrix, VMatrix);
+		m_banners[3]->setReducePalette(m_innerMap[HER_REDUCE]);
+		m_banners[3]->setColorShift(m_colorShift);
+		if (m_innerMap[HER_BASS1]) m_banners[3]->setDeadPix(true, HER_PROB1);
+		else if (m_innerMap[HER_BASS2]) m_banners[3]->setDeadPix(true, HER_PROB2);
+		else m_banners[3]->setDeadPix(false, 0.0f);
+		m_banners[3]->draw(PMatrix, VMatrix);
 	}
 }
 
@@ -111,6 +113,15 @@ void CSongHeros::update(double time) {
 		}
 	}
 	else m_innerMap[HER_BANNER0] = m_innerMap[HER_BANNER1] = false;
+
+	if (m_innerMap[HER_HETFIELD]) {
+		if (time - m_hetfTime >= fulltime) m_hetfTime = time;
+
+		if (time - m_hetfTime < halftime) m_innerMap[HER_BANNER2] = true;
+		else m_innerMap[HER_BANNER2] = false;
+	}
+	else m_innerMap[HER_BANNER2] = false;
+
 
 	if (m_innerMap[HER_BASS1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS1] = false;
 	if (m_innerMap[HER_BASS2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS2] = false;
@@ -205,11 +216,12 @@ void CSongHeros::modelsInit(void) {
 	for (int i = 0; i < m_spheresN; i++) m_triggerTimes[i] = 0.0;
 
 	// banners
-	m_bannersN = 3;
+	m_bannersN = 5;
 	m_banners = new CBanner *[m_bannersN];
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_1);
 	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_2);
-	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
+	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_3);
+	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
 }
 
 void CSongHeros::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -259,7 +271,9 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			break;
 		case MPX16_PAD13:
 			break;
-		case MPX16_PAD14:
+		case MPX16_PAD14: // hetfield
+			m_innerMap[HER_HETFIELD] = true;
+			m_hetfTime = time;
 			break;
 		case MPX16_PAD15:
 			break;
@@ -301,7 +315,8 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			break;
 		case MPX16_PAD13:
 			break;
-		case MPX16_PAD14:
+		case MPX16_PAD14: // hetfield
+			m_innerMap[HER_HETFIELD] = false;
 			break;
 		case MPX16_PAD15:
 			break;

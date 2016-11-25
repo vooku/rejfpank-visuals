@@ -77,6 +77,8 @@
 #define TEX_DEF_FMOON		"res/tex/def_fmoon.jpg"
 #define TEX_HER_1			"res/tex/her1.jpg"
 #define TEX_HER_2			"res/tex/her2.jpg"
+#define TEX_HER_3			"res/tex/her3.jpg"
+#define TEX_HER_4			"res/tex/her4.jpg"
 
 #define IMG_GEN_TEST		"res/img/gen_test.png"
 #define IMG_SQI_SQUIRREL1	"res/img/sqi_hairy.png"
@@ -158,8 +160,8 @@ enum {
 
 /// controls in CSongHeros
 enum {
-	HER_BANNER0, HER_BANNER1,
-	HER_INVERSE, HER_REDUCE, HER_STROBE,
+	HER_BANNER0, HER_BANNER1, HER_BANNER2,
+	HER_INVERSE, HER_REDUCE, HER_STROBE, HER_HETFIELD,
 	HER_KICK1, HER_KICK2, HER_SNR1, HER_SNR2, HER_TOM1, HER_TOM2, HER_TOM3, HER_BASS1, HER_BASS2,
 	HER_COUNT
 };

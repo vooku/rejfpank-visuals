@@ -138,10 +138,10 @@ void CController::nextSong(void) {
 			m_song = new CSongHeros(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 2:
-			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 3:
-			m_song = new CSongDefinition(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
+			m_song = new CSongRock(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
 			break;
 		case 4:
 			m_song = new CSongSquirrel(&m_camera, &m_state, m_skybox, &m_bannerShaderProgram);
@@ -172,8 +172,8 @@ void CController::update(void) {
 
 void CController::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
 	if (m_songCtr == 0 && status == MIDI_NOTE_ON_CH10) {
-		if (note == MPX16_PAD16) m_state.ctrlMap[CTRL_FIN] = true;
-		else if (note == MPX16_PAD12) m_state.ctrlMap[CTRL_FIN] = false;
+		if (note == MPX16_PAD14) m_state.ctrlMap[CTRL_FIN] = true;
+		else if (note == MPX16_PAD10) m_state.ctrlMap[CTRL_FIN] = false;
 	}
 	if (m_state.ctrlMap[CTRL_SONG_SET]) m_song->midiIn(status, note, velocity);
 	else std::cerr << "No song currently set, MIDI message discarded: " << status << " " << note << " " << velocity << std::endl;
