@@ -13,7 +13,7 @@ CSongHeros::CSongHeros(CCamera * camera, TControlState * state, CSkybox * skybox
 	m_reduceTime(0.0),
 	m_strobeTime(0.0),
 	m_bassTime(0.0),
-	m_hetfTime(0.0) {
+    m_katarTime(0.0) {
 
 	m_innerMap = new bool[HER_COUNT];
 	for (int i = 0; i < HER_COUNT; i++) m_innerMap[i] = false;
@@ -73,7 +73,9 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	// banners
 	if (m_innerMap[HER_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_BANNER1]) m_banners[1]->draw(PMatrix, VMatrix);
-	if (m_innerMap[HER_BANNER2]) m_banners[2]->draw(PMatrix, VMatrix);
+	if (m_innerMap[HER_KATAR1]) m_banners[2]->draw(PMatrix, VMatrix);
+    if (m_innerMap[HER_KATAR2]) m_banners[4]->draw(PMatrix, VMatrix);
+    if (m_innerMap[HER_KATAR3]) m_banners[5]->draw(PMatrix, VMatrix);
 
 	glDisable(GL_BLEND);
 
@@ -85,6 +87,7 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 
 		m_banners[3]->setReducePalette(m_innerMap[HER_REDUCE]);
 		m_banners[3]->setColorShift(m_colorShift);
+        m_banners[3]->setInverse(m_innerMap[HER_INVERSE]);
 		if (m_innerMap[HER_BASS1]) m_banners[3]->setDeadPix(true, HER_PROB1);
 		else if (m_innerMap[HER_BASS2]) m_banners[3]->setDeadPix(true, HER_PROB2);
 		else m_banners[3]->setDeadPix(false, 0.0f);
@@ -114,17 +117,16 @@ void CSongHeros::update(double time) {
 	}
 	else m_innerMap[HER_BANNER0] = m_innerMap[HER_BANNER1] = false;
 
-	if (m_innerMap[HER_HETFIELD]) {
-		if (time - m_hetfTime >= fulltime) m_hetfTime = time;
-
-		if (time - m_hetfTime < halftime) m_innerMap[HER_BANNER2] = true;
-		else m_innerMap[HER_BANNER2] = false;
-	}
-	else m_innerMap[HER_BANNER2] = false;
-
-
 	if (m_innerMap[HER_BASS1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS1] = false;
 	if (m_innerMap[HER_BASS2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS2] = false;
+
+    if (m_innerMap[HER_KATAR1] || m_innerMap[HER_KATAR2] || m_innerMap[HER_KATAR3]) {
+        if (time - m_katarTime > fulltime) m_katarTime = time;
+
+        if (time - m_katarTime > halftime) m_innerMap[HER_INVERSE] = true;
+        else m_innerMap[HER_INVERSE] = false;
+    }
+
 
 	for (int i = 0; i < m_spheresN; i++) {
 		m_spheres[i]->rotate(ROTATION_ANGLE_DELTA, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -216,12 +218,14 @@ void CSongHeros::modelsInit(void) {
 	for (int i = 0; i < m_spheresN; i++) m_triggerTimes[i] = 0.0;
 
 	// banners
-	m_bannersN = 5;
+	m_bannersN = 6;
 	m_banners = new CBanner *[m_bannersN];
 	m_banners[0] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_1);
 	m_banners[1] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_2);
 	m_banners[2] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_3);
 	m_banners[3] = new CBanner(m_camera, m_bannerShaderProgram, BANNER_PARAM_MULTIPASS, m_renderedTex); // multipass
+    m_banners[4] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_4);
+    m_banners[5] = new CBanner(m_camera, m_bannerShaderProgram, TEX_HER_5);
 }
 
 void CSongHeros::midiIn(const unsigned int status, const unsigned int note, const unsigned int velocity) {
@@ -271,13 +275,17 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			break;
 		case MPX16_PAD13:
 			break;
-		case MPX16_PAD14: // hetfield
-			m_innerMap[HER_HETFIELD] = true;
-			m_hetfTime = time;
+		case MPX16_PAD14:
+			m_innerMap[HER_KATAR1] = true;
+            m_katarTime = time;
 			break;
 		case MPX16_PAD15:
-			break;
+            m_innerMap[HER_KATAR2] = true;
+            m_katarTime = time;
+            break;
 		case MPX16_PAD16:
+            m_innerMap[HER_KATAR3] = true;
+            m_katarTime = time;
 			break;
 		default:
 			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;
@@ -315,12 +323,14 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			break;
 		case MPX16_PAD13:
 			break;
-		case MPX16_PAD14: // hetfield
-			m_innerMap[HER_HETFIELD] = false;
+		case MPX16_PAD14:
+			m_innerMap[HER_KATAR1] = false;
 			break;
 		case MPX16_PAD15:
+            m_innerMap[HER_KATAR2] = false;
 			break;
 		case MPX16_PAD16:
+            m_innerMap[HER_KATAR3] = false;
 			break;
 		default:
 			std::cout << "Unresolved midi note from MPX16:" << status << " " << note << " " << velocity << std::endl;

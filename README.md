@@ -13,9 +13,9 @@ The rest of the readme is mostly for myself.
 
 ## TODO
 - revise lighting model, make lights changeable for each song
-- setup setlist on app start
+- setup setlist on app star
 - completely rework trigger times (use std::map?)
-- revise count/n variables and constants
+- revise count/n variables and constant
 - make multipass banner standalone object
 - add support for any axes in CCamera::placeOnCircle()
 - replace CCamera::flow()
@@ -37,8 +37,8 @@ The rest of the readme is mostly for myself.
 	+ diffusion
 - module based visuals
 - think about better containers than arrays
-- use raytracing!
-
+- use raytracing
+!
 ## Known Issues
 - When resizing window, objects keep their sizes. Also while resizing, aspect ratio specific items might bring up issues
 - point light attenuation not behaving correctly

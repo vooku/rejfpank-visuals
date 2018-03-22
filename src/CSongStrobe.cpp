@@ -9,14 +9,14 @@ CSongStrobe::CSongStrobe(CCamera * camera, TControlState * state, CSkybox * skyb
 	this->shadersInit();
 	this->modelsInit();
 
-	std::cout << "loaded song: Soundcheck" << std::endl;
+	std::cout << "loaded song: Strobe" << std::endl;
 }
 
 CSongStrobe::~CSongStrobe(void) {
 	for (unsigned int i = 0; i < m_bannersCount; i++) delete m_banners[i];
 	delete[] m_banners;
 
-	std::cout << "destroyed song: Soundcheck" << std::endl;
+	std::cout << "destroyed song: Strobe" << std::endl;
 }
 
 void CSongStrobe::shadersInit(void) { }
