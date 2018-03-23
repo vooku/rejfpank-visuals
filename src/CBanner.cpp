@@ -5,6 +5,8 @@
 
 #include "pgr\pgr.hpp"
 
+float CBanner::m_time = 0.0f;
+
 float bannerVertices[nBannerVertices * nBannerAttribsPerVertex] = {
 	// x      y           z     u     v
 	-1.0f, -9.0f / 16.0f, 0.0f, 0.0f, 0.0f,
@@ -123,7 +125,8 @@ void CBanner::draw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	m_tempMats.PVMMatrix = PMatrix * VMatrix * m_tempMats.MMatrix;
 	
 	this->sendUniforms();
-	
+    CHECK_GL_ERROR();
+
 	glBindVertexArray(m_geometry.vertexArrayObject);
 	if (m_useTex) glBindTexture(GL_TEXTURE_2D, m_geometry.texture);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, nBannerVertices);
@@ -152,4 +155,5 @@ void CBanner::sendUniforms(void) {
 	glUniform1fv(m_shaderProgram->tearBordersLocation, m_tearN, m_tearBorders);
 	glUniform1fv(m_shaderProgram->tearOffsetsLocation, m_tearN + 1, m_tearOffsets);
 	glUniform1i(m_shaderProgram->colorShiftLocation, m_colorShift);
+    glUniform1f(m_shaderProgram->timeLocation, m_time);
 }

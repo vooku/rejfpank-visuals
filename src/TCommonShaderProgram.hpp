@@ -34,6 +34,7 @@ struct TCommonShaderProgram {
 	// various
 	GLint colorMultiplierLocation;
 	GLint offsetLocation;
+    GLint timeLocation;
 	// multipass effects
 	GLint inverseLocation;
 	GLint reducePaletteLocation;

@@ -25,6 +25,7 @@ public:
 	void setReducePalette(const bool reducePalette);
 	void setDeadPix(const bool deadPix, const float & deadPixP);
 	void setColorShift(const int & colorShift);
+    static void setTime(float time) { m_time = time; }
 
 	void tear(void);
 	void untear(void);
@@ -38,15 +39,15 @@ protected:
 	bool m_deadPix;
 	float m_deadPixP;
 	bool m_tear;
-
-	int m_colorShift;
-
-	int m_tearN;
+    int m_colorShift;
+    int m_tearN;
 	float m_tearBorders[SCREEN_TEARS];
 	GLfloat m_tearOffsets[SCREEN_TEARS + 1];
+    glm::vec3 m_color;
+	
+    static float m_time;
 
-	glm::vec3 m_color;
-	const CCamera * m_camera;
+    const CCamera * m_camera;
 };
 
 #endif // !_REJFPANK_CBANNER

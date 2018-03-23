@@ -66,6 +66,7 @@ void CController::shadersInit(void) {
 		m_bannerShaderProgram.tearBordersLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "tearBorders");
 		m_bannerShaderProgram.tearOffsetsLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "tearOffsets");
 		m_bannerShaderProgram.colorShiftLocation	= glGetUniformLocation(m_bannerShaderProgram.program, "colorShift");
+        m_bannerShaderProgram.timeLocation          = glGetUniformLocation(m_bannerShaderProgram.program, "time");
 		// Get input locations
 		m_bannerShaderProgram.posLocation		= glGetAttribLocation(m_bannerShaderProgram.program, "position");
 		m_bannerShaderProgram.texCoordsLocation	= glGetAttribLocation(m_bannerShaderProgram.program, "texCoords");
@@ -157,6 +158,7 @@ void CController::nextSong(void) {
 
 void CController::update(void) {
 	const double time = glfwGetTime();
+    CBanner::setTime(time);
 
 	if (m_state.keyMap[KEY_UP]    || m_state.keyMap[KEY_W]) m_camera.move(STEP_LENGTH);
 	if (m_state.keyMap[KEY_DOWN]  || m_state.keyMap[KEY_S]) m_camera.move(-STEP_LENGTH);

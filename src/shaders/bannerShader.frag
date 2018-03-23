@@ -15,6 +15,7 @@ uniform int tearN; // actual number of tear borders
 uniform float tearBorders[10]; // enough space for max 10
 uniform float tearOffsets[11]; // enough space for max 11
 uniform int colorShift;
+uniform float time;
 
 out vec4 colorOut;
 
