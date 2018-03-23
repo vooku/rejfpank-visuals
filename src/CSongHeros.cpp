@@ -67,8 +67,7 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 	if (m_innerMap[HER_SNR2]) m_spheres[3]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_TOM1]) m_spheres[5]->draw(PMatrix, VMatrix);
 	if (m_innerMap[HER_TOM2]) m_spheres[6]->draw(PMatrix, VMatrix);
-	if (m_innerMap[HER_TOM3]) m_spheres[4]->draw(PMatrix, VMatrix);
-	
+	if (m_innerMap[HER_TOM3]) m_spheres[4]->draw(PMatrix, VMatrix);	
 
 	// banners
 	if (m_innerMap[HER_BANNER0]) m_banners[0]->draw(PMatrix, VMatrix);
@@ -88,9 +87,14 @@ void CSongHeros::redraw(const glm::mat4 & PMatrix, const glm::mat4 & VMatrix) {
 		m_banners[3]->setReducePalette(m_innerMap[HER_REDUCE]);
 		m_banners[3]->setColorShift(m_colorShift);
         m_banners[3]->setInverse(m_innerMap[HER_INVERSE]);
-		if (m_innerMap[HER_BASS1]) m_banners[3]->setDeadPix(true, HER_PROB1);
-		else if (m_innerMap[HER_BASS2]) m_banners[3]->setDeadPix(true, HER_PROB2);
-		else m_banners[3]->setDeadPix(false, 0.0f);
+        
+        float p = 0.0f;
+        if      (m_innerMap[HER_BASS1]) p = HER_PROB1;
+		else if (m_innerMap[HER_BASS2]) p = HER_PROB2;
+        else if (m_innerMap[HER_SUB1])  p = HER_PROB3;
+        else if (m_innerMap[HER_SUB2])  p = HER_PROB4;
+		m_banners[3]->setDeadPix(true, p);
+
 		m_banners[3]->draw(PMatrix, VMatrix);
 	}
 }
@@ -119,6 +123,8 @@ void CSongHeros::update(double time) {
 
 	if (m_innerMap[HER_BASS1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS1] = false;
 	if (m_innerMap[HER_BASS2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_BASS2] = false;
+    if (m_innerMap[HER_SUB1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_SUB1] = false;
+    if (m_innerMap[HER_SUB2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_SUB2] = false;
 
     if (m_innerMap[HER_KATAR1] || m_innerMap[HER_KATAR2] || m_innerMap[HER_KATAR3]) {
         if (time - m_katarTime > fulltime) m_katarTime = time;
@@ -126,8 +132,7 @@ void CSongHeros::update(double time) {
         if (time - m_katarTime > halftime) m_innerMap[HER_INVERSE] = true;
         else m_innerMap[HER_INVERSE] = false;
     }
-
-
+    
 	for (int i = 0; i < m_spheresN; i++) {
 		m_spheres[i]->rotate(ROTATION_ANGLE_DELTA, glm::vec3(1.0f, 0.0f, 0.0f));
 		
@@ -237,12 +242,16 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 		case MPX16_PAD01: // bass1
 			m_innerMap[HER_BASS1] = true;
 			m_innerMap[HER_BASS2] = false;
+            m_innerMap[HER_SUB1]  = false;
+            m_innerMap[HER_SUB2]  = false;
 			m_bassTime = time;
 			break;
 		case MPX16_PAD02: // bass2
-			m_innerMap[HER_BASS1] = false;
-			m_innerMap[HER_BASS2] = true;
-			m_bassTime = time;
+            m_innerMap[HER_BASS1] = false;
+            m_innerMap[HER_BASS2] = true;
+            m_innerMap[HER_SUB1]  = false;
+            m_innerMap[HER_SUB2]  = false;
+            m_bassTime = time;
 			break;
 		case MPX16_PAD03: // vox1
 			m_innerMap[HER_STROBE] = true;
@@ -252,13 +261,19 @@ void CSongHeros::midiIn(const unsigned int status, const unsigned int note, cons
 			m_innerMap[HER_STROBE] = true;
 			m_strobeTime = time;
 			break;
-		case MPX16_PAD05: // block bass1
-			m_innerMap[HER_BASS1] = false;
-			m_innerMap[HER_BASS2] = false;
-			break;
-		case MPX16_PAD06: // block bass2
-			m_innerMap[HER_BASS1] = false;
-			m_innerMap[HER_BASS2] = false;
+		case MPX16_PAD05: // sub1
+            m_innerMap[HER_BASS1] = false;
+            m_innerMap[HER_BASS2] = false;
+            m_innerMap[HER_SUB1]  = true;
+            m_innerMap[HER_SUB2]  = false;
+            m_bassTime = time;		
+            break;
+		case MPX16_PAD06: // sub2
+            m_innerMap[HER_BASS1] = false;
+            m_innerMap[HER_BASS2] = false;
+            m_innerMap[HER_SUB1]  = false;
+            m_innerMap[HER_SUB2]  = true;
+            m_bassTime = time;
 			break;
 		case MPX16_PAD07:
 			break;

@@ -23,6 +23,7 @@ public:
 	bool setColor(const glm::vec3 & color);
 	void setInverse(const bool inverse);
 	void setReducePalette(const bool reducePalette);
+    //! \deprecated \param deadPix, use deadPixP = 0 instead
 	void setDeadPix(const bool deadPix, const float & deadPixP);
 	void setColorShift(const int & colorShift);
     static void setTime(float time) { m_time = time; }
