@@ -20,7 +20,7 @@ out vec4 colorOut;
 
 // magic noise function
 float rand(vec2 co){
-    return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+    return fract(sin(dot(co.xy, vec2(12.9898f,78.233f))) * 43758.5453f);
 }
 
 vec2 getTear(void) {
@@ -45,7 +45,8 @@ vec3 getReducePalette(vec3 color) {
 }
 
 vec3 getDeadPix(vec3 color) {
-	if (rand(colorOut.xy) <= deadPixP) return vec3(rand(colorOut.yz), rand(colorOut.zw), rand(colorOut.wx));
+	if (rand(texCoordsTrans) < deadPixP)
+		return vec3(rand(color.yz), rand(color.zx), rand(vec2(tearN, deadPixP)));
 	return color;
 }
 
