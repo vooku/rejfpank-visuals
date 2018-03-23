@@ -126,11 +126,10 @@ void CSongHeros::update(double time) {
     if (m_innerMap[HER_SUB1] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_SUB1] = false;
     if (m_innerMap[HER_SUB2] && time - m_bassTime > 2 * BEAT_LENGTH(175)) m_innerMap[HER_SUB2] = false;
 
+    m_innerMap[HER_INVERSE] = false;
     if (m_innerMap[HER_KATAR1] || m_innerMap[HER_KATAR2] || m_innerMap[HER_KATAR3]) {
         if (time - m_katarTime > fulltime) m_katarTime = time;
-
         if (time - m_katarTime > halftime) m_innerMap[HER_INVERSE] = true;
-        else m_innerMap[HER_INVERSE] = false;
     }
     
 	for (int i = 0; i < m_spheresN; i++) {
